@@ -1763,27 +1763,40 @@ namespace DOL.GS.Commands
 					}
 						break;
 					#endregion Quit/Leave
-						#region Promote
-						// --------------------------------------------------------------------------------
-						// PROMOTE
-						// /gc promote [name] <rank#>' to promote player to a superior rank
-						// --------------------------------------------------------------------------------
+					#region Promote
+					// --------------------------------------------------------------------------------
+					// PROMOTE
+					// '/gc promote <playerName> <rank#>'
+					// Promotes the player to the identified guild rank. The new rank must be higher than their current rank.
+					// --------------------------------------------------------------------------------
 					case "promote":
 						{
 							if (client.Player.Guild == null)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must be a member of a guild to use any guild commands.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
 								return;
 							}
+							
 							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Promote))
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You do not have sufficient privileges in your guild to use that command.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
 								return;
 							}
 
 							if (args.Length < 3)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildPromote"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: '/gc promote <playerName> <rank#>' - Promotes the player to the identified guild rank. The new rank must be higher than their current rank.
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.Help.GuildPromote", null);
+								return;
+							}
+							
+							// You can't promote yourself
+							if (client.Player.Name == args[2] && client.Account.PrivLevel == 1 && !client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
+							{
+								// Message: You cannot promote yourself!
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.Help.CannotPromoteSelf", null);
 								return;
 							}
 
@@ -1803,6 +1816,7 @@ namespace DOL.GS.Commands
 							else
 							{
 								GameClient onlineClient = WorldMgr.GetClientByPlayerName(playerName, true, false);
+								
 								if (onlineClient == null)
 								{
 									// Patch 1.84: look for offline players
@@ -1814,21 +1828,33 @@ namespace DOL.GS.Commands
 									obj = onlineClient.Player;
 								}
 							}
+							
+							if (obj == client.Player)
+							{
+								// Message: You cannot demote yourself!
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.Help.CannotDemoteSelf", null);
+								return;
+							}
 
 							if (obj == null)
 							{
 								if (useDB)
 								{
-									client.Out.SendMessage("No player with that name can be found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									// Message: No player was found with that name.
+									ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPlayerFound", null);
 								}
 								else if (playerName == string.Empty)
 								{
-									client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPlayerSelected"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									// Message: You must target a player or provide a player name.
+									ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPlayerSelected", null);
 								}
 								else
 								{
-									client.Out.SendMessage("You need to target a player or provide a player name!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildPromote"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									// Message: You must target a player or provide a player name.
+									ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPlayerSelected", null);
+									
+									// Message: '/gc promote <playerName> <rank#>' - Promotes the player to the identified guild rank. The new rank must be higher than their current rank.
+									ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.Help.GuildPromote", null);
 								}
 								return;
 							}
@@ -1853,17 +1879,19 @@ namespace DOL.GS.Commands
 							}
 							else
 							{
-								client.Out.SendMessage("Error during promotion, player not found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: Error encountered while executing command. Player not found.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.ErrorFound", null);
 								return;
 							}
 
 							if (guildId != client.Player.GuildID)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotInYourGuild"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: That player is not in your guild.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotInYourGuild", null);
 								return;
 							}
+							
 							//Second Check, Autorisation Checks, a player can promote another to it's own RealmRank or above only if: newrank(rank to be applied) >= commandUserGuildRank(usercommandRealmRank)
-
 							ushort commandUserGuildRank = client.Player.GuildRank.RankLevel;
 							ushort newrank;
 							try
@@ -1872,34 +1900,56 @@ namespace DOL.GS.Commands
 
 								if (newrank > 9)
 								{
-									client.Out.SendMessage("Error changing to new rank! Realm Rank have to be set to 0-9.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									// Message: Set a guild rank between 0-9.
+									ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.SetRankCorrect", null);
 									return;
 								}
 							}
 							catch
 							{
-								client.Out.SendMessage("Error changing to new rank!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildPromote"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+								// Message: '/gc promote <playerName> <rank#>' - Promotes the player to the identified guild rank. The new rank must be higher than their current rank.
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.Help.GuildPromote", null);
 								return;
 							}
+							
 							//if (commandUserGuildRank != 0 && (newrank < commandUserGuildRank || newrank < 0)) // Do we have to authorize Self Retrograde for GuildMaster?
 							if ((newrank < commandUserGuildRank) || (newrank < 0))
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.PromoteHigherThanPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You can only promote to ranks below your own.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.PromoteHigherThanPlayer", null);
 								return;
 							}
+							
 							if (newrank > currentTargetGuildRank && commandUserGuildRank != 0)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.PromoteHaveToUseDemote"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You can't demote the guild rank of this players with promote commands. Use '/gc demote <playerName> <rank#>'.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.PromoteHaveToUseDemote", null);
 								return;
 							}
+							
 							if (obj is GamePlayer)
 							{
 								ply.GuildRank = client.Player.Guild.GetRankByID(newrank);
 								ply.SaveIntoDatabase();
 								currentTargetGuildRank = ply.GuildRank.RankLevel;
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.PromotedSelf", plyName, newrank.ToString(), currentTargetGuildRank.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-								client.Player.Guild.SendMessageToGuildMembers(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.PromotedOther", client.Player.Name, plyName, newrank.ToString(), currentTargetGuildRank.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+								
+								// Message: You have set {0}'s guild rank to Rank {1} ({2}).
+								ChatUtil.SendTypeMessage((int)eMsg.Important, client, "Scripts.Player.Guild.PromotedSelf", plyName, newrank.ToString(), currentTargetGuildRank.ToString());
+								
+								// Notify everyone in the guild online
+								foreach (GamePlayer guildMember in client.Player.Guild.GetListOfOnlineMembers())
+								{
+									if (guildMember != obj && guildMember.Guild.HasRank(guildMember, Guild.eRank.GcHear) && guildMember != client.Player)
+									{
+										// Message: {0} has promoted {1} to {2}.
+										ChatUtil.SendTypeMessage((int)eMsg.Important, guildMember, "Scripts.Player.Guild.PromotedOther", client.Player.Name, plyName, ply.GuildRank.ToString());
+									}
+									else if (guildMember == obj)
+										// Message: {0} has promoted you to {1}.
+										ChatUtil.SendTypeMessage((int)eMsg.Important, guildMember, "Scripts.Player.Guild.GuildPromotedYou", client.Player.Name, ply.GuildRank.ToString());
+										
+									guildMember.Guild.UpdateGuildWindow();
+								}
 							}
 							else
 							{
@@ -1907,13 +1957,29 @@ namespace DOL.GS.Commands
 								GameServer.Database.SaveObject(ch);
 								GameServer.Database.FillObjectRelations(ch);
 								currentTargetGuildRank = ch.GuildRank;
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.PromotedSelf", plyName, newrank.ToString(), currentTargetGuildRank.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-								client.Player.Guild.SendMessageToGuildMembers(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.PromotedOther", client.Player.Name, plyName, newrank.ToString(), currentTargetGuildRank.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+								
+								// Message: You have set {0}'s guild rank to Rank {1} ({2}).
+								ChatUtil.SendTypeMessage((int)eMsg.Important, client, "Scripts.Player.Guild.PromotedSelf", plyName, newrank.ToString(), currentTargetGuildRank.ToString());
+								
+								// Notify everyone in the guild online
+								foreach (GamePlayer guildMember in client.Player.Guild.GetListOfOnlineMembers())
+								{
+									if (guildMember != obj && guildMember.Guild.HasRank(guildMember, Guild.eRank.GcHear) && guildMember != client.Player)
+									{
+										// Message: {0} has promoted {1} to {2}.
+										ChatUtil.SendTypeMessage((int)eMsg.Important, guildMember, "Scripts.Player.Guild.PromotedOther", client.Player.Name, plyName, ply.GuildRank.ToString());
+									}
+									else if (guildMember == obj)
+										// Message: {0} has promoted you to {1}.
+										ChatUtil.SendTypeMessage((int)eMsg.Important, guildMember, "Scripts.Player.Guild.GuildPromotedYou", client.Player.Name, ply.GuildRank.ToString());
+										
+									guildMember.Guild.UpdateGuildWindow();
+								}
 							}
 							client.Player.Guild.UpdateGuildWindow();
 						}
 						break;
-					#endregion
+					#endregion Promote
 						#region Demote
 						// --------------------------------------------------------------------------------
 						// DEMOTE
