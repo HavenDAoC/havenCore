@@ -39,9 +39,9 @@ namespace DOL.GS.Commands
 		"/gc <option>")]
 	public class GuildCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		
 		private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		public long GuildFormCost = Money.GetMoney(0, 0, 1, 0, 0); //Cost to form guild : live = 1g : (mith/plat/gold/silver/copper)
+		
 		/// <summary>
 		/// Checks if a guildname has valid characters
 		/// </summary>
@@ -68,20 +68,22 @@ namespace DOL.GS.Commands
 		private static bool GuildFormCheck(GamePlayer leader)
 		{
 			Group group = leader.Group;
-			#region No group check - Ensure we still have a group
+			
+			// Check to make sure the forming leader is in a group
 			if (group == null)
 			{
-				leader.Out.SendMessage(LanguageMgr.GetTranslation(leader.Client.Account.Language, "Scripts.Player.Guild.FormNoGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				// Message: You must be in a group to form a guild.
+				ChatUtil.SendTypeMessage((int)eMsg.Error, leader, "Scripts.Player.Guild.FormNoGroup", null);
 				return false;
 			}
-			#endregion
-			#region Enough members to form Check - Ensure our group still has enough players in to form
+			
+			// The group must consist of the full required amount to form a guild
 			if (group.MemberCount < Properties.GUILD_NUM)
 			{
-				leader.Out.SendMessage(LanguageMgr.GetTranslation(leader.Client.Account.Language, "Scripts.Player.Guild.FormNoMembers" + Properties.GUILD_NUM), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				// Message: You need {0} members in your group to form a guild.
+				ChatUtil.SendTypeMessage((int)eMsg.Error, leader, "Scripts.Player.Guild.FormNoMembers", Properties.GUILD_NUM);
 				return false;
 			}
-			#endregion
 
 			return true;
 		}
@@ -90,41 +92,56 @@ namespace DOL.GS.Commands
 		{
 			if (player.Group == null)
 			{
-				player.Out.SendMessage("There was an issue processing guild request. Please try again.", eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+				// Message: There was an issue processing the guild formation request. Please try again.
+				ChatUtil.SendTypeMessage((int)eMsg.Error, player, "Scripts.Player.Guild.ErrorForming", null);
 				return;
 			}
 
 			#region Player Declines
 			if (response != 0x01)
 			{
-				//remove all guild consider to enable re try
+				// Inform all players that leader has not agreed to form the guild
+				// Remove all guild consider states to enable retry
 				foreach (GamePlayer ply in player.Group.GetPlayersInTheGroup())
 				{
 					ply.TempProperties.removeProperty("Guild_Consider");
+					// Message: {0} has declined to form the guild.
+					ChatUtil.SendTypeMessage((int)eMsg.Important, ply, "Scripts.Player.Guild.DeclinesToForm", player.Name);
 				}
+				
 				player.Group.Leader.TempProperties.removeProperty("Guild_Name");
-				player.Group.SendMessageToGroupMembers(player, "Declines to form the guild", eChatType.CT_Group, eChatLoc.CL_ChatWindow);
+				
 				return;
 			}
-			#endregion
+			#endregion Player Declines
+			
 			#region Player Accepts
-			player.Group.SendMessageToGroupMembers(player, "Agrees to form the guild", eChatType.CT_Group, eChatLoc.CL_ChatWindow);
+			// Inform each player that the group leader is agreeing to form the guild.
+			foreach (GamePlayer ply in player.Group.GetPlayersInTheGroup())
+			{
+				ply.TempProperties.removeProperty("Guild_Consider");
+				// Message: {0} has agreed to form the guild!
+				ChatUtil.SendTypeMessage((int)eMsg.Important, ply, "Scripts.Player.Guild.AgreesToForm", player.Name);
+			}
+
 			player.TempProperties.setProperty("Guild_Consider", true);
-			var guildname = player.Group.Leader.TempProperties.getProperty<string>("Guild_Name");
+			var guildName = player.Group.Leader.TempProperties.getProperty<string>("Guild_Name");
 
-			var memnum = player.Group.GetPlayersInTheGroup().Count(p => p.TempProperties.getProperty<bool>("Guild_Consider"));
+			var memNum = player.Group.GetPlayersInTheGroup().Count(p => p.TempProperties.getProperty<bool>("Guild_Consider"));
 
-			if (!GuildFormCheck(player) || memnum != player.Group.MemberCount) return;
+			if (!GuildFormCheck(player) || memNum != player.Group.MemberCount) return;
 
+			// Behaviors to follow if guilds require more than one player to form
 			if (Properties.GUILD_NUM > 1)
 			{
 				Group group = player.Group;
 				lock (group)
 				{
-					Guild newGuild = GuildMgr.CreateGuild(player.Realm, guildname, player);
+					Guild newGuild = GuildMgr.CreateGuild(player.Realm, guildName, player);
 					if (newGuild == null)
 					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Guild.UnableToCreateLead", guildname, player.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						// Message: The guild {0} was unable to be created with {1} as its leader.
+						ChatUtil.SendTypeMessage((int)eMsg.Error, player, "Scripts.Player.Guild.UnableToCreateLead", guildName, player.Name);
 					}
 					else
 					{
@@ -142,27 +159,31 @@ namespace DOL.GS.Commands
 						}
 						player.Group.Leader.TempProperties.removeProperty("Guild_Name");
 						player.Group.Leader.RemoveMoney(GuildFormCost);
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Guild.GuildCreated", guildname, player.Group.Leader.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+						
+						// Message: {0} is formed. {1} is the Guildmaster and must now adjust the settings for all members.
+						ChatUtil.SendTypeMessage((int)eMsg.Important, player, "Scripts.Player.Guild.GuildCreated", guildName, player.Group.Leader.Name);
 					}
 				}
 			}
 			else
 			{
-				Guild newGuild = GuildMgr.CreateGuild(player.Realm, guildname, player);
+				Guild newGuild = GuildMgr.CreateGuild(player.Realm, guildName, player);
 
 				if (newGuild == null)
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Guild.UnableToCreateLead", guildname, player.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					// Message: The guild {0} was unable to be created with {1} as its leader.
+					ChatUtil.SendTypeMessage((int)eMsg.Error, player, "Scripts.Player.Guild.UnableToCreateLead", guildName, player.Name);
 				}
 				else
 				{
 					newGuild.AddPlayer(player, newGuild.GetRankByID(0));
 					player.TempProperties.removeProperty("Guild_Name");
 					player.RemoveMoney(10000);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Guild.GuildCreated", guildname, player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+					// Message: {0} is formed. {1} is the Guildmaster and must now adjust the settings for all members.
+					ChatUtil.SendTypeMessage((int)eMsg.Important, player, "Scripts.Player.Guild.GuildCreated", guildName, player.Group.Leader.Name);
 				}
 			}
-			#endregion
+			#endregion Player Accepts
 		}
 
 		/// <summary>
