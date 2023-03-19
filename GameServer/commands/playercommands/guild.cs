@@ -1485,27 +1485,40 @@ namespace DOL.GS.Commands
 							break;
 						}
 					#endregion Ranks
-						#region Webpage
+					#region Webpage
+					// --------------------------------------------------------------------------------
+					// WEBPAGE
+					// '/gc webpage <webURL>'
+					// Displays a website address, typically one associated with a guild website. This
+					// is shown on the Herald, as well as to members that use the '/gc info' command.
+					// --------------------------------------------------------------------------------
 					case "webpage":
+					{
+						// Obviously need to be a member of a guild to use this command
+						if (client.Player.Guild == null)
 						{
-							if (client.Player.Guild == null)
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							client.Player.Guild.UpdateGuildWindow();
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							message = String.Join(" ", args, 2, args.Length - 2);
-							client.Player.Guild.Webpage = message;
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.WebpageSet", client.Player.Guild.Webpage), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-							client.Player.Guild.UpdateGuildWindow();
-							break;
+							// Message: You must be a member of a guild to use any guild commands.
+							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
+							return;
 						}
-						#endregion
+							
+						client.Player.Guild.UpdateGuildWindow();
+							
+						// You need to be Guildmaster to use this command
+						if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
+						{
+							// Message: You do not have sufficient privileges in your guild to use that command.
+							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
+						}
+							
+						message = String.Join(" ", args, 2, args.Length - 2);
+						client.Player.Guild.Webpage = message;
+							
+						// Message: You have set the guild webpage to {0}.
+						ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.WebpageSet", client.Player.Guild.Webpage);
+						break;
+					}
+					#endregion Webpage
 						#region Email
 					case "email":
 						{
