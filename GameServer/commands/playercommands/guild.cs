@@ -2799,17 +2799,19 @@ namespace DOL.GS.Commands
 						}
 						break;
 					#endregion Alliance Leader
-						#region Alliance Invite Accept
-						// --------------------------------------------------------------------------------
-						// AINVITE
-						// --------------------------------------------------------------------------------
+					#region Alliance Invite Accept
+					// --------------------------------------------------------------------------------
+					// AACCEPT
+					// '/gc aaccept'
+					// Accepts an alliance invitation sent to your guild.	
+					// --------------------------------------------------------------------------------
 					case "aaccept":
 						{
 							AllianceInvite(client.Player, 0x01);
 							client.Player.Guild.UpdateGuildWindow();
 							return;
 						}
-						#endregion
+					#endregion
 						#region Alliance Invite Cancel
 						// --------------------------------------------------------------------------------
 						// ACANCEL
@@ -3383,53 +3385,81 @@ namespace DOL.GS.Commands
 
 
 		/// <summary>
-		/// method to handle the aliance invite
+		/// Method to handle the alliance invite
 		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="reponse"></param>
+		/// <param name="player">The character inviting the guild to an alliance.</param>
+		/// <param name="reponse">The required response to accept the alliance invite.</param>
 		protected void AllianceInvite(GamePlayer player, byte reponse)
 		{
+			// Dialog response to decline
 			if (reponse != 0x01)
 				return; //declined
 
-			GamePlayer inviter = player.TempProperties.getProperty<object>("allianceinvite", null) as GamePlayer;
+			GamePlayer invitee = player.TempProperties.getProperty<object>("allianceinvite", null) as GamePlayer;
 
+			// Check to make sure the player is part of a guild
 			if (player.Guild == null)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				// Message: You must be a member of a guild to use any guild commands.
+				ChatUtil.SendTypeMessage((int)eMsg.Error, player, "Scripts.Player.Guild.NotMember", null);
+				return;
+			}
+			
+			// Make sure the invitee exists
+			if (invitee == null)
+			{
+				// Message: You cannot form an alliance with that target.
+				ChatUtil.SendTypeMessage((int)eMsg.Error, player, "Scripts.Player.Guild.InvalidPlayer", null);
+				return;
+			}
+			
+			// Make sure the invitee is part of a guild
+			if (invitee.Guild == null)
+			{
+				// Message: That player is not a member of a guild.
+				ChatUtil.SendTypeMessage((int)eMsg.Error, player, "Scripts.Player.Guild.PlayerNotInGuild", null);
 				return;
 			}
 
-			if (inviter == null || inviter.Guild == null)
+			// Check to make sure the player has sufficient permission
+			if (!player.Guild.HasRank(player, Guild.eRank.Leader))
 			{
+				// Message: You do not have sufficient privileges in your guild to use that command.
+				ChatUtil.SendTypeMessage((int)eMsg.Error, player, "Scripts.Player.Guild.NoPrivileges", null);
 				return;
 			}
-
-			if (!player.Guild.HasRank(player, Guild.eRank.Alli))
+			
+			// Check to make sure the player has sufficient permission
+			if (!invitee.Guild.HasRank(invitee, Guild.eRank.Leader))
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				// Message: You must target or specify the Guildmaster for the guild you want to invite.
+				ChatUtil.SendTypeMessage((int)eMsg.Error, invitee, "Scripts.Player.Guild.AllianceNoGMSelected", null);
 				return;
 			}
+			
 			player.TempProperties.removeProperty("allianceinvite");
 
-			if (inviter.Guild.alliance == null)
+			// Trigger if the guild is not part of an alliance
+			if (player.Guild.alliance == null)
 			{
-				//create alliance
+				// Create a new alliance with the inviting guild as leader
 				Alliance alli = new Alliance();
 				DBAlliance dballi = new DBAlliance();
-				dballi.AllianceName = inviter.Guild.Name;
-				dballi.LeaderGuildID = inviter.GuildID;
+				dballi.AllianceName = player.Guild.Name;
+				dballi.LeaderGuildID = player.GuildID;
 				dballi.DBguildleader = null;
 				dballi.Motd = "";
 				alli.Dballiance = dballi;
-				alli.Guilds.Add(inviter.Guild);
-				inviter.Guild.alliance = alli;
-				inviter.Guild.AllianceId = inviter.Guild.alliance.Dballiance.ObjectId;
+				alli.Guilds.Add(invitee.Guild);
+				player.Guild.alliance = alli;
+				player.Guild.AllianceId = player.Guild.alliance.Dballiance.ObjectId;
 			}
-			inviter.Guild.alliance.AddGuild(player.Guild);
-			inviter.Guild.alliance.SaveIntoDatabase();
+			
+			// Adds the guild to the alliance
+			invitee.Guild.alliance.AddGuild(player.Guild);
+			invitee.Guild.alliance.SaveIntoDatabase();
 			player.Guild.UpdateGuildWindow();
-			inviter.Guild.UpdateGuildWindow();
+			invitee.Guild.UpdateGuildWindow();
 		}
 
 		/// <summary>
