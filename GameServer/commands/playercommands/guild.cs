@@ -294,31 +294,41 @@ namespace DOL.GS.Commands
 						}
 						break;
 					#endregion Create (Admin/GM command)
-						#region Purge
-						// --------------------------------------------------------------------------------
-						// PURGE
-						// --------------------------------------------------------------------------------
+					#region Purge (Admin/GM command)
+					// --------------------------------------------------------------------------------
+					// PURGE (Admin/GM command)
+					// '/gc purge <guildName>'
+					// Deletes a guild completely from the database and disbands all members.
+					// --------------------------------------------------------------------------------
 					case "purge":
-						{
-							if (client.Account.PrivLevel == (uint)ePrivLevel.Player)
-								return;
+					{
+						// Players cannot perform this command
+						if (client.Account.PrivLevel == (uint)ePrivLevel.Player)
+							return;
 
-							if (args.Length < 3)
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildGMPurge"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							string guildname = String.Join(" ", args, 2, args.Length - 2);
-							if (!GuildMgr.DoesGuildExist(guildname))
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.GuildNotExist"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							if (GuildMgr.DeleteGuild(guildname))
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Purged", guildname), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						if (args.Length < 3)
+						{
+							// Message: '/gc purge <guildName>' - Disbands and deletes a guild completely.
+							ChatUtil.SendTypeMessage((int)eMsg.CmdSyntax, client, "Scripts.Player.Guild.Help.GuildGMPurge", null);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildGMPurge"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
 						}
+						string guildname = String.Join(" ", args, 2, args.Length - 2);
+						if (!GuildMgr.DoesGuildExist(guildname))
+						{
+							// Message: No guild exists with that name.
+							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.GuildNotExist", null);
+							return;
+						}
+
+						// Delete the guild
+						GuildMgr.DeleteGuild(guildname);
+							
+						// Message: {0} has been deleted from the database and all guild members disbanded.
+						ChatUtil.SendTypeMessage((int)eMsg.Debug, client, "Scripts.Player.Guild.Purged", guildname);
+					}
 						break;
-						#endregion
+					#endregion Purge (Admin/GM command)
 						#region Rename
 						// --------------------------------------------------------------------------------
 						// RENAME
