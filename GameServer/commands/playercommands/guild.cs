@@ -2391,17 +2391,27 @@ namespace DOL.GS.Commands
 							break;
 						}
 					#endregion Emblem
-						#region Autoremove
+					#region Autoremove
+					// --------------------------------------------------------------------------------
+					// AUTOREMOVE
+					// '/gc autoremove <playerName>'
+					// Removes the player (offline or online) from the guild.
+					// '/gc autoremove account <playerName>'
+					// Removes all characters (offline or online) from the guild whose account is associated with the specified player name.
+					// --------------------------------------------------------------------------------
 					case "autoremove":
 						{
 							if (client.Player.Guild == null)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must be a member of a guild to use any guild commands.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
 								return;
 							}
+							
 							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Remove))
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You do not have sufficient privileges in your guild to use that command.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
 								return;
 							}
 
@@ -2412,6 +2422,7 @@ namespace DOL.GS.Commands
 								string accountId = "";
 
 								GameClient targetClient = WorldMgr.GetClientByPlayerName(args[3], false, true);
+								
 								if (targetClient != null)
 								{
 									OnCommand(client, new string[] { "gc", "remove", args[3] });
@@ -2423,12 +2434,14 @@ namespace DOL.GS.Commands
 
 									if (c == null)
 									{
-										client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.PlayerNotFound"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										// Message: No player was found with that name.
+										ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPlayerFound", null);
 										return;
 									}
 
 									accountId = c.AccountName;
 								}
+								
 								List<DOLCharacters> chars = new List<DOLCharacters>();
 								chars.AddRange(DOLDB<DOLCharacters>.SelectObjects(DB.Column("AccountName").IsEqualTo(accountId)));
 								//chars.AddRange((Character[])DOLDB<CharacterArchive>.SelectObjects("AccountID = '" + accountId + "'"));
@@ -2438,12 +2451,14 @@ namespace DOL.GS.Commands
 									ply.GuildID = "";
 									ply.GuildRank = 0;
 								}
+								
 								GameServer.Database.SaveObject(chars);
 								break;
 							}
 							else if (args.Length == 3)
 							{
 								GameClient targetClient = WorldMgr.GetClientByPlayerName(args[2], false, true);
+								
 								if (targetClient != null)
 								{
 									OnCommand(client, new string[] { "gc", "remove", args[2] });
@@ -2454,12 +2469,14 @@ namespace DOL.GS.Commands
 									var c = DOLDB<DOLCharacters>.SelectObject(DB.Column("Name").IsEqualTo(args[2]));
 									if (c == null)
 									{
-										client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.PlayerNotFound"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										// Message: No player was found with that name.
+										ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPlayerFound", null);
 										return;
 									}
 									if (c.GuildID != client.Player.GuildID)
 									{
-										client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotInYourGuild"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										// Message: That player is not a member of your guild.
+										ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotInYourGuild", null);
 										return;
 									}
 									else
@@ -2473,13 +2490,17 @@ namespace DOL.GS.Commands
 							}
 							else
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildAutoRemoveAcc"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildAutoRemove"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+								// Message: '/gc autoremove account <playerName>' - Removes all characters (offline or online) from the guild whose account is associated with the specified player name.
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.Help.GuildAutoRemoveAcc", null);
+								
+								// Message: '/gc autoremove <playerName>' - Removes the player (offline or online) from the guild.
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.Help.GuildAutoRemove", null);
 							}
+							
 							client.Player.Guild.UpdateGuildWindow();
 						}
 						break;
-						#endregion
+					#endregion Autoremove
 						#region MOTD
 						// --------------------------------------------------------------------------------
 						// MOTD
