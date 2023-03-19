@@ -2501,29 +2501,38 @@ namespace DOL.GS.Commands
 						}
 						break;
 					#endregion Autoremove
-						#region MOTD
-						// --------------------------------------------------------------------------------
-						// MOTD
-						// --------------------------------------------------------------------------------
+					#region Guild Message of the Day (MOTD)
+					// --------------------------------------------------------------------------------
+					// MOTD
+					// '/gc motd <text>'
+					// Sets the guild's message of the day (MOTD) for all members, which displays when they log in or use the '/gc info' command.
+					// --------------------------------------------------------------------------------
 					case "motd":
+					{
+						if (client.Player.Guild == null)
 						{
-							if (client.Player.Guild == null)
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							message = String.Join(" ", args, 2, args.Length - 2);
-							client.Player.Guild.Motd = message;
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.MotdSet"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-							client.Player.Guild.UpdateGuildWindow();
+							// Message: You must be a member of a guild to use any guild commands.
+							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
+							return;
 						}
+							
+						if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
+						{
+							// Message: You do not have sufficient privileges in your guild to use that command.
+							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
+							return;
+						}
+							
+						message = String.Join(" ", args, 2, args.Length - 2);
+						client.Player.Guild.Motd = message;
+							
+						// Message: You have set the Message of the Day (MOTD) for the guild. Use '/gc info' to view it.
+						ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.MotdSet", null);
+							
+						client.Player.Guild.UpdateGuildWindow();
+					}
 						break;
-						#endregion
+					#endregion Guild Message of the Day (MOTD)
 						#region AMOTD
 						// --------------------------------------------------------------------------------
 						// AMOTD
