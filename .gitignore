@@ -44,3 +44,5 @@ mono_crash.*
 /usbwebserver - Shortcut.lnk
 /heidisql - Shortcut.lnk
 /.editorconfig
+global.json
+DOLServer/config/serverconfig.example.xml
