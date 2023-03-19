@@ -1519,27 +1519,43 @@ namespace DOL.GS.Commands
 						break;
 					}
 					#endregion Webpage
-						#region Email
+					#region Email
+					// --------------------------------------------------------------------------------
+					// EMAIL
+					// '/gc email <emailAddress>'
+					// Sets a contact email address guild members can use to contact the guild if needed.
+					// Format the value as 'address@email.com'. This value is displayed on the Herald,
+					// as well as when guild members use the '/gc info' command.
+					// --------------------------------------------------------------------------------
 					case "email":
+					{
+						// Obviously need to be a member of a guild to use this command
+						if (client.Player.Guild == null)
 						{
-							if (client.Player.Guild == null)
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							client.Player.Guild.UpdateGuildWindow();
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							message = String.Join(" ", args, 2, args.Length - 2);
-							client.Player.Guild.Email = message;
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.EmailSet", client.Player.Guild.Email), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-							client.Player.Guild.UpdateGuildWindow();
-							break;
+							// Message: You must be a member of a guild to use any guild commands.
+							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
+							return;
 						}
-						#endregion
+							
+						client.Player.Guild.UpdateGuildWindow();
+							
+						// You need to be Guildmaster to use this command
+						if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
+						{
+							// Message: You do not have sufficient privileges in your guild to use that command.
+							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
+						}
+							
+						message = String.Join(" ", args, 2, args.Length - 2);
+						client.Player.Guild.Email = message;
+							
+						// Message: You have set the guild email to {0}.
+						ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.EmailSet", client.Player.Guild.Email);
+							
+						client.Player.Guild.UpdateGuildWindow();
+						break;
+					}
+					#endregion Email
 						#region List
 						// --------------------------------------------------------------------------------
 						// LIST
