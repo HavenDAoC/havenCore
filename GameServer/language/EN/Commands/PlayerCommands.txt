@@ -329,213 +329,260 @@ PLCommands.FreeLevel.NoFreeLevel:	                You don't have an available fr
 PLCommands.FreeLevel.Removed:		                Your free level has been removed. The timer for your next free level has been reset.
 
 ## /gc (Guild)
-Scripts.Player.Guild.Help.GuildACancel:			'/gc acancel' to cancel an alliance invitation	
-Scripts.Player.Guild.Help.GuildAAccept:			'/gc aaccept' to accept an alliance invitation	
-Scripts.Player.Guild.Help.GuildAccept:			'/gc accept ' to accept invite to guild	
-Scripts.Player.Guild.Help.GuildADecline:		'/gc adecline' to decline an alliance invitation	
-Scripts.Player.Guild.Help.GuildAInvite:			'/gc ainvite' to invite another guild to join your alliance	
-Scripts.Player.Guild.Help.GuildALeave:			'/gc aleave' to remove your guild from an alliance
-Scripts.Player.Guild.Help.GuildAlli:			'/gc alliance' to show information on the alliance	
-Scripts.Player.Guild.Help.GuildAMotd:			'/gc amotd <text>' to set the message of the day of the alliance's guild	
-Scripts.Player.Guild.Help.GuildARemove:			'/gc aremove' to removes your entire guild from an alliance
-Scripts.Player.Guild.Help.GuildALeader:			'/gc aleader' to promote another guild to alliance leader
-Scripts.Player.Guild.Help.GuildARemoveAlli:		'/gc aremove alliance [#]' to Remove the specified guild (listed by number) from the alliance	
-Scripts.Player.Guild.Help.GuildAutoRemove:		'/gc autoremove <playername>' 	
-Scripts.Player.Guild.Help.GuildAutoRemoveAcc:		'/gc autoremove account <playername>'	
-Scripts.Player.Guild.Help.GuildBannerSummon:		'/gc summon' summons the guild banner if you have one	
-Scripts.Player.Guild.Help.GuildBuff:			'/gc buff <crafting, rps, xp>' sets the guild buff 	
-Scripts.Player.Guild.Help.GuildBuyBanner:		'/gc buybanner' - Spend points to buy a guild banner.	
-Scripts.Player.Guild.Help.GuildCancel:			'/gc cancel <option> [value]' to cancel all command done before	
-Scripts.Player.Guild.Help.GuildClaim:			'/gc claim' to claim a keep	
-Scripts.Player.Guild.Help.GuildDecline:			'/gc decline' to decline the enter in guild	
-Scripts.Player.Guild.Help.GuildDemote:			'/gc demote [name] <rank#>' to set the rank from 0 to 10 of the player to an inferior rank	
-Scripts.Player.Guild.Help.GuildDeposit:			'/gc deposit <amount>' puts money into the guild bank account.
-Scripts.Player.Guild.Help.GuildDues:			'/gc dues <amount>' to set your guild dues %. 0-25% <0 is off>
-Scripts.Player.Guild.Help.GuildEdit:			'/gc edit' to show list of all option in guild edit	
-Scripts.Player.Guild.Help.GuildEditACHear:		'/gc edit <ranknum> achear <y/n>' edits this rank to be able to hear Alliance chat	
-Scripts.Player.Guild.Help.GuildEditACSpeak:		'/gc edit <ranknum> acspeak <y/n>' edits this rank to be able to speak in Alliance chat	
-Scripts.Player.Guild.Help.GuildEditAlli:		'/gc edit <ranknum> alli <y/n>'  to allow a rank to enter/leave alliances (create a diplomatic officer)	
-Scripts.Player.Guild.Help.GuildEditClaim:		'/gc edit <ranknum> claim <y/n>'  to allow a rank to enter/leave alliances (create a diplomatic officer)	
-Scripts.Player.Guild.Help.GuildEditDues:		'/gc edit <ranknum> dues <y/n>'  to be able to change guild dues	
-Scripts.Player.Guild.Help.GuildEditEmblem:		'/gc edit <ranknum> emblem <y/n>' used the edit the rank of members who are allowed to wear the guild emblem on their cloak or shield.	
-Scripts.Player.Guild.Help.GuildEditGCHear:		'/gc edit <ranknum> gchear <y/n>' edits this rank to be able to hear guild chat	
-Scripts.Player.Guild.Help.GuildEditGCSpeak:		'/gc edit <ranknum> gcspeak <y/n>' edits this rank to be able to speak in guild chat	
-Scripts.Player.Guild.Help.GuildEditInvite:		'/gc edit <ranknum> invite <y/n>' edits this rank with the ability to invite members into the guild	
-Scripts.Player.Guild.Help.GuildEditOCHear:		'/gc edit <ranknum> ochear <y/n>' edits this rank to be able to hear Officer chat	
-Scripts.Player.Guild.Help.GuildEditOCSpeak:		'/gc edit <ranknum> ocspeak <y/n>' edits this rank to be able to speak in Officer chat	
-Scripts.Player.Guild.Help.GuildEditPromote:		'/gc edit <ranknum> promote <y/n>' edits this rank with the ability to promote/demote lower in rank	
-Scripts.Player.Guild.Help.GuildEditRankLevel:		'/gc edit <ranknum> ranklevel <level>'  used to set the rank hierarchy	
-Scripts.Player.Guild.Help.GuildEditRelease:		'/gc edit <ranknum> release <y/n>'  to set release the keep you have claim before	
-Scripts.Player.Guild.Help.GuildEditRemove:		'/gc edit <ranknum> remove <y/n>' edits this rank with the ability to remove those below him in rank	
-Scripts.Player.Guild.Help.GuildEditTitle:		'/gc edit <ranknum> title <text>' sets the title for a specific rank <#> for this guild	
-Scripts.Player.Guild.Help.GuildEditUpgrade:		'/gc edit <ranknum> upgrade <y/n>'  to allow a rank to enter/leave alliances (create a diplomatic officer)	
-Scripts.Player.Guild.Help.GuildEditView:		'/gc edit <ranknum> view <y/n>'  edits this rank with the ability to display the /gc info screen	
-Scripts.Player.Guild.Help.GuildEditWithdraw:		'/gc edit <ranknum> withdraw <y/n>'  to be able to withdraw from guild bank	
-Scripts.Player.Guild.Help.GuildEmail:			'/gc email <contact@guildpage.com>' is an additional line set by the leader that can be displayed in a /gc info command, as well as on the Herald.	
-Scripts.Player.Guild.Help.GuildEmblem:			'/gc emblem' to set emblem	
-Scripts.Player.Guild.Help.GuildForm:			'/gc form <Name>' to create a new guilde with all player of group	
-Scripts.Player.Guild.Help.GuildGMAddPlayer:		'/gc addplayer <player> to <guild>' to add player to guild	
-Scripts.Player.Guild.Help.GuildGMCommands:		Game Master commands:	
-Scripts.Player.Guild.Help.GuildGMCreate:		'/gc create <Name>' Create a new guild with targeted player as leader	
-Scripts.Player.Guild.Help.GuildGMPurge:			'/gc purge <Name>' Purge a guild completely	
-Scripts.Player.Guild.Help.GuildGMRemovePlayer:		'/gc removeplayer <player> from <guild>' to remove player from a guild	
-Scripts.Player.Guild.Help.GuildGMRename:		'/gc rename <OldName> to <NewName' Rename guild from OldName to NewName	
-Scripts.Player.Guild.Help.GuildInfo:			'/gc info' to show information on the guild	
-Scripts.Player.Guild.Help.GuildInvite:			'/gc invite [name]' to invite targeted player to join the guild	
-Scripts.Player.Guild.Help.GuildLeader:			'/gc leader [name]' to set leader successor	
-Scripts.Player.Guild.Help.GuildList:			'/gc list' to show all guild in your realm	
-Scripts.Player.Guild.Help.GuildMotd:			'/gc motd <text>' to set the message of the day of the guild	
-Scripts.Player.Guild.Help.GuildNoteSelf:		'/gc noteself <note>' to set a note about your character for the guild	
-Scripts.Player.Guild.Help.GuildOMotd:			'/gc omotd <text>' to set the message of the day of the officier's guild	
-Scripts.Player.Guild.Help.GuildPromote:			'/gc promote [name] <rank#>' to promote player to a superior rank	
-Scripts.Player.Guild.Help.GuildQuit:			'/gc quit' to leave the guild	
-Scripts.Player.Guild.Help.GuildRanks:			'/gc ranks' to show rank information for the guild	
-Scripts.Player.Guild.Help.GuildRemAccount:		'/gc removeaccount <accountname>' to remove every character of the account from the guild	
-Scripts.Player.Guild.Help.GuildRemove:			'/gc remove <playername>' to remove the player from the guild	
-Scripts.Player.Guild.Help.GuildUsage:			Usage:	
-Scripts.Player.Guild.Help.GuildWebpage:			'/gc webpage <the.guildpage.com>' is an additional line set by the leader that can be display in a /gc info command, as well as on the Herald.	
-Scripts.Player.Guild.Help.GuildWho:			'/gc who' to show all player in your guild	
-Scripts.Player.Guild.Help.GuildWithdraw:	'/gc withdraw <amount>' gets money from the guild bank account.
-Scripts.Player.Guild.AccountRemoved:			{0} has removed {1} from the guild.	
-Scripts.Player.Guild.ActiveBuff:			Your guild already has an active buff. You must wait for it to expire first.
-Scripts.Player.Guild.XPBuffActive:              Your guild already has an experience bonus.
-Scripts.Player.Guild.RPBuffActive:              Your guild already has a realmpoints bonus.
-Scripts.Player.Guild.BPBuffActive:              Your guild already has a bountypoints bonus.
-Scripts.Player.Guild.CraftBuffActive:           Your guild already has a crafting bonus.
-Scripts.Player.Guild.AllianceAlreadyOther:		That guild already has an alliance.	
-Scripts.Player.Guild.AllianceAnsCancel:			The alliance offer has been cancelled.	
-Scripts.Player.Guild.AllianceDeclined:			You decline the alliance offer.	
-Scripts.Player.Guild.AllianceDeclinedOther:		The alliance offer has been declined	
-Scripts.Player.Guild.AllianceDisabled:			Alliances are disabled on this server.	
-Scripts.Player.Guild.AllianceIndexNotVal:		The alliance index is not a valid number.	
-Scripts.Player.Guild.AllianceInfo:			Alliance info for {0}:
-Scripts.Player.Guild.AllianceInvite:			You have invited a guild to join your alliance.	
-Scripts.Player.Guild.AllianceInvited:			You have been invited to join the alliance of {0}.	
-Scripts.Player.Guild.AllianceLeader:			Alliance leader {0}	
-Scripts.Player.Guild.AllianceMax:			You are unable to invite that guild to your alliance, as your alliance already has the max number of guilds.	
-Scripts.Player.Guild.AllianceMember:			{0} - {1}	
-Scripts.Player.Guild.AllianceMembers:			Alliance members:	
-Scripts.Player.Guild.AllianceMemNotSel:			You must select a player from the same alliance.	
-Scripts.Player.Guild.AllianceNoGMSelected:		You must select a GM of guild you want to invite.	
-Scripts.Player.Guild.AllianceNoLeader:			No alliance leader
-Scripts.Player.Guild.AllianceNotLeader:			You have to be the leader guild of the alliance , before you can remove a guild from the alliance.	
-Scripts.Player.Guild.AllianceNotMember:			You must be in an alliance to do that.	
-Scripts.Player.Guild.AlreadyInGuild:			{0} is already a member of a guild.	
-Scripts.Player.Guild.AlreadyInGuild:			They are already a member of a guild.	
-Scripts.Player.Guild.AMotdSet:				You have set the alliance motd for the guild.	
-Scripts.Player.Guild.BannerAlready:			Your guild already has a banner.	
-Scripts.Player.Guild.BannerBought:			You have purchased a guild banner for {0} bounty points.	
-Scripts.Player.Guild.BannerGroupSummoned:		Someone in your group has already summoned the guild banner.	
-Scripts.Player.Guild.BannerGuildSummoned:		Someone in your guild has already summoned the guild banner.	
-Scripts.Player.Guild.BannerNoGroup:			You need to be in a Group to summon a Banner.	
-Scripts.Player.Guild.BannerNone:			Your guild does not own a guild banner.	
-Scripts.Player.Guild.BannerNotAfford:			You need 50,000 bounty points to purchase a guild banner!	
-Scripts.Player.Guild.BannerSummoned:			You have summoned your guild banner.	
-Scripts.Player.Guild.BannerUnsummoned:			You have unsummoned your guild banner.	
-Scripts.Player.Guild.BannerNotRvR:			You need to be in an RvR zone to summon a guild banner!
-Scripts.Player.Guild.BuffActivated:			[Guild Buff] {0} has spent 1000 Guild Merit Points and activated a Guild Buff!	
-Scripts.Player.Guild.BuffBountyPoints:			Your guild will now gain 5% bonus to bounty points for 24 hours!	
-Scripts.Player.Guild.BuffBPActivated:			[Guild Buff] Your guild will now get a bonus to bounty points for 24 hours!	
-Scripts.Player.Guild.BuffMPActivated:			[Guild Buff] Your guild will now get a bonus to merit points for 24 hours!	
-Scripts.Player.Guild.BuffRealmPoints:			Your guild will now gain 5% bonus to realm points for 24 hours!	
-Scripts.Player.Guild.ClaimNotNear:			You must be near a keep to claim it.	
-Scripts.Player.Guild.ConfirmLeave:			Do you really want to leave {0}?	
-Scripts.Player.Guild.DemotedHigherThanPlayer:		You can only demote to ranks below your own.	
-Scripts.Player.Guild.DemotedOther:			{0} has set {1}'s guild rank to Rank {2} ({3}).	
-Scripts.Player.Guild.DemotedSelf:			You have set {0}'s guild rank to Rank {1} ({2}).	
-Scripts.Player.Guild.DepositAmount:			You deposit {0} into your guilds bank account.	
-Scripts.Player.Guild.DepositFull:			The guild bank seems to be full.	
-Scripts.Player.Guild.DepositInvalid:		That is an invalid deposit amount.
-Scripts.Player.Guild.DepositTooMuch:		You don't have enough money to do that!
-Scripts.Player.Guild.DuesOff:				Guild dues are currently turned off.	
-Scripts.Player.Guild.DuesOn:				Guild dues are currently set at {0} percent.	
-Scripts.Player.Guild.EmailSet:				You have set the guild email to {0}.	
-Scripts.Player.Guild.EmblemAlready:			Your guild already has an emblem but you may change it for a hefty fee of 100 gold. You must select the EmblemNPC again for this procedure to happen.	
-Scripts.Player.Guild.EmblemNeedGold:			You must have 200 gold to re emblem your guild.	
-Scripts.Player.Guild.EmblemNeedNPC:			You must be near a valid emblemeer.	
-Scripts.Player.Guild.EmblemNPCNotSelected:		You must be near a valid emblemeer.	
-Scripts.Player.Guild.EmblemRedo:			Would you like to re-emblem your guild for 100 gold?	
-Scripts.Player.Guild.FormNoGroup:			You must be in a group to form a guild.	
-Scripts.Player.Guild.FormNoMembers:			You need {0} members in your group to form a guild.	
-Scripts.Player.Guild.GuildCreated:			The guild {0} has been formed. {1} is the leader.	
-Scripts.Player.Guild.GuildExists:			That guild cannot be created because it already exists.	
-Scripts.Player.Guild.GuildForceLeave:			You have been removed from {1} by {0}.
-Scripts.Player.Guild.GuildLeave:			You have left your guild.	
-Scripts.Player.Guild.GuildLevelReq:			Your guild is not high enough level for this command.	
-Scripts.Player.Guild.GuildNotExist:			That guild does not exist.
-Scripts.Player.Guild.InCombat:				You can't unsummon your Banner while you're in Combat!	
-Scripts.Player.Guild.InfoAMotd:				AllianceMessage: {0}	
-Scripts.Player.Guild.InfoCEmail:			Contact Email: {0}	
-Scripts.Player.Guild.InfoGDuesBank:			Dues: {0} Guild Bank: {1} copper pieces	
-Scripts.Player.Guild.InfoGuild:				Guild Info for {0}:	
-Scripts.Player.Guild.InfoGuildLevel:			Guild Level: {0}	
-Scripts.Player.Guild.InfoMotd:				Message:  {0}	
-Scripts.Player.Guild.InfoOMotd:				OfficerMessage: {0}	
-Scripts.Player.Guild.InfoRPBPMP:			Realm Points: {0} Bounty Points: {1} Merit Points: {2}	
-Scripts.Player.Guild.InfoWebpage:			Webpage: {0}	
-Scripts.Player.Guild.InvalidLetters:			Some of the characters entered are invalid.	
-Scripts.Player.Guild.InvalidRank:			That is not a valid rank.	
-Scripts.Player.Guild.InviteDead:			You cannot invite a dead player to your guild.	
-Scripts.Player.Guild.InviteNoSelected:			You must select a player.	
-Scripts.Player.Guild.InviteNoSelf:			You can't invite your self.	
-Scripts.Player.Guild.InviteNotThis:			You cannot invite this member.	
-Scripts.Player.Guild.InviteRecieved:			{0} has invited you to join their guild.	
-Scripts.Player.Guild.InviteSent:			You have invited {0} to join your guild.	
-Scripts.Player.Guild.Keep:				Your Guild has currently Claimed {0}.	
-Scripts.Player.Guild.LevelUp:				[Guild] Your guild has advanced to level {0}!	
-Scripts.Player.Guild.LoginsOff:				You will no longer be notified of guild members logging in, type /gc logins to start receiving notifications.	
-Scripts.Player.Guild.LoginsOn:				You will once again be notified of guild members logging in, type /gc logins to stop receiving notifications.	
-Scripts.Player.Guild.MadeLeader:			You are now the leader of {0}.	
-Scripts.Player.Guild.MadeLeaderOther:			{0} has been made the leader of {1}.	
-Scripts.Player.Guild.MemberLogin:			{0} has logged into the game.	
-Scripts.Player.Guild.MemberLogoff:			{0} has logged out of the game.	
-Scripts.Player.Guild.MemberRemoved:			{1} was removed from the guild.
-Scripts.Player.Guild.MeritPointReq:			Your guild does not have the required merit points.	
-Scripts.Player.Guild.MotdSet:				You have set the motd for the guild.	
-Scripts.Player.Guild.NoKeep:				You must have a keep before using that command.	
-Scripts.Player.Guild.NoPlayerSelected:			You must select a player.	
-Scripts.Player.Guild.NoPlayersInAcc:			There are no players from this account in your guild.	
-Scripts.Player.Guild.NoPrivilages:			You do not have high enough privilege in the guild to use that command.	
-Scripts.Player.Guild.NoteSet:				You set your guild note to: {0}	
-Scripts.Player.Guild.NotInYourGuild:			That player is not in your guild.	
-Scripts.Player.Guild.NotMember:				You must be in a guild before you can use any guild commands.	
-Scripts.Player.Guild.OMotdSet:				You have set the officer motd for the guild.	
-Scripts.Player.Guild.PlayerNotFound:			That player could not be found in the game.	
-Scripts.Player.Guild.PromotedOther:			{0} has set {1}'s guild rank to Rank {2} ({3}).	
-Scripts.Player.Guild.PromotedSelf:			You have set {0}'s guild rank to Rank {1} ({2}).	
-Scripts.Player.Guild.PromoteHigherThanPlayer:		You can only promote to ranks below your own.	
-Scripts.Player.Guild.PromoteHaveToUseDemote:	You can't demote the Guild Rank of this players with promote commands. Use /demote <ranklevel> players.
-Scripts.Player.Guild.Purged:				{0} has been purged.	
-Scripts.Player.Guild.RankACHearSet:			You have {0} the ACHear of the rank {1}.	
-Scripts.Player.Guild.RankACSpeakSet:			You have {0} the ACSpeak of the rank {1}.	
-Scripts.Player.Guild.RankAlliSet:			You have {0} the Alliance of the rank {1}.	
-Scripts.Player.Guild.RankBuffSet:			You have {0} the Buff of the rank {1}.	
-Scripts.Player.Guild.RankClaimSet:			You have {0} the Claim of the rank {1}.	
-Scripts.Player.Guild.RankDuesSet:			You have {0} the Dues of the rank {1}.	
-Scripts.Player.Guild.RankEmblemSet:			You have {0} the emblem of the rank {1}.	
-Scripts.Player.Guild.RankGCHearSet:			You have {0} the GCHear of the rank {1}.	
-Scripts.Player.Guild.RankGCSpeakSet:			You have {0} the GCSpeak of the rank {1}.	
-Scripts.Player.Guild.RankInviteSet:			You have {0} the Invite of the rank {1}.	
-Scripts.Player.Guild.RankLevelSet:			You have set the level of the rank to {0}.	
-Scripts.Player.Guild.RankOCHearSet:			You have {0} the OCHear of the rank {1}.	
-Scripts.Player.Guild.RankOCSpeakSet:			You have {0} the OCSpeak of the rank {1}.	
-Scripts.Player.Guild.RankPromoteSet:			You have {0} the Promote of the rank {1}.	
-Scripts.Player.Guild.RankReleaseSet:			You have {0} the Release of the rank {1}.	
-Scripts.Player.Guild.RankRemoveSet:				You have {0} the Remove of the rank {1}.	
-Scripts.Player.Guild.RankTitleSet:				You have set the title of the rank to {0}.	
-Scripts.Player.Guild.RankUpgradeSet:			You have {0} the Upgrade of the rank {1}.	
-Scripts.Player.Guild.RankViewSet:				You have {0} the View of the rank {1}.	
-Scripts.Player.Guild.RankWithdrawSet:			You have {0} the Withdraw of the rank {1}.	
-Scripts.Player.Guild.ThirdArgNotNum:			The third argument must be a number.	
-Scripts.Player.Guild.UnableToCreate:			The guild {0} was unable to be created.	
-Scripts.Player.Guild.UnableToCreateLead:		The guild {0} was unable to be created {1} as leader.	
-Scripts.Player.Guild.UnknownCommand:			{0} is not a valid command:	
-Scripts.Player.Guild.UpgradeNoLevel:			You must specify a level to target for upgrade.	
-Scripts.Player.Guild.UpgradeScndArg:			The second argument must be a number.	
-Scripts.Player.Guild.WebpageSet:				You have set the guild webpage to {0}.	
+Scripts.Player.Guild.Help.GuildGMCommands:		            <----- '/gc' Commands (plvl 2+) ----->
+Scripts.Player.Guild.Help.GuildGMCreate:		            '/gc create <guildName>' - Creates a new guild with the targeted player as its leader.
+Scripts.Player.Guild.Help.GuildGMAddPlayer:		            '/gc addplayer <playerName> to <guildName>' - Adds a player automatically to the specified guild without an invitation.
+Scripts.Player.Guild.Help.GuildGMPurge:			            '/gc purge <guildName>' - Disbands and deletes a guild completely.
+Scripts.Player.Guild.Help.GuildGMRemovePlayer:		        '/gc removeplayer <player> from <guildName>' - Removes the identified player immediately from the guild.
+Scripts.Player.Guild.Help.GuildGMRename:		            '/gc rename <oldName> to <newName>' - Chances a guild's existing name to the specified new name. Use double quotes for multi-word guild names.
+Scripts.Player.Guild.Help.GuildUsage:			            <----- '/gc' Command Usage ----->
+Scripts.Player.Guild.Help.GuildACancel:			            '/gc acancel' - Cancels an alliance invitation that you've sent to another guild. This can only be done before they've accepted the invitation.	
+Scripts.Player.Guild.Help.GuildAAccept:			            '/gc aaccept' - Accepts an alliance invitation sent to your guild.	
+Scripts.Player.Guild.Help.GuildAccept:			            '/gc accept ' - Accepts an invite to join a guild. You must not currently be in a guild and remain out of combat to accept.	
+Scripts.Player.Guild.Help.GuildADecline:		            '/gc adecline' - Declines an active invitation to join an alliance.	
+Scripts.Player.Guild.Help.GuildAInvite:			            '/gc ainvite' - Sends an invitation to a guild to join your alliance. This cannot be done if the guild is already in an alliance.	
+Scripts.Player.Guild.Help.GuildALeave:			            '/gc aleave' - Removes your guild from a current alliance.
+Scripts.Player.Guild.Help.GuildAlli:			            '/gc alliance' - Shows information regarding your guild's current alliance association.	
+Scripts.Player.Guild.Help.GuildAMotd:			            '/gc amotd <text>' - Sets the message of the day (MOTD) for your alliance.	
+Scripts.Player.Guild.Help.GuildALeader:			            '/gc aleader' - Promotes another guild to alliance leader. Only one alliance leader may exist at a time.
+Scripts.Player.Guild.Help.GuildARemove:			            '/gc aremove <guildName>' - Removes an entire guild from your alliance, identified by name.
+Scripts.Player.Guild.Help.GuildARemoveAlli:		            '/gc aremove alliance <guild#>' - Removes a guild from your alliance, identified by number.	
+Scripts.Player.Guild.Help.GuildBuff:			            '/gc buff < bps | crafting | rps | xp >' - Activates a guild-wide buff for the desired 5% bonus type. Each activation lasts 24 hours and costs 1000 Merit Points.
+Scripts.Player.Guild.Help.GuildClaim:			            '/gc claim' - Claims an available keep for your guild. This must be done on an unclaimed keep and within a set distance of the keep.
+Scripts.Player.Guild.Help.GuildDecline:			            '/gc decline' - Declines an active invitation to join a guild.
+Scripts.Player.Guild.Help.GuildPromote:			            '/gc promote <playerName> <rank#>' - Promotes the player to the identified guild rank. The new rank must be higher than their current rank.
+Scripts.Player.Guild.Help.GuildDemote:			            '/gc demote <playerName> <rank#>' - Demotes the player to the identified guild rank. The new rank must be lower than their current rank.
+Scripts.Player.Guild.Help.GuildDeposit:			            '/gc deposit <amount>' - Deposits money into your guild's bank account. Enter the desired amount as copper. For example, 100 = 1s, 10000 = 1g, 10000000 = 1p.
+Scripts.Player.Guild.Help.GuildWithdraw:	                '/gc withdraw <amount>' - Takes money from the guild's bank account and places it in your character's possession. Enter the desired amount as copper. For example, 100 = 1s, 10000 = 1g, 10000000 = 1p.
+Scripts.Player.Guild.Help.GuildDues:			            '/gc dues <amount>' - Sets the guild's dues by percentage. Set the value to '0' to disable.
+Scripts.Player.Guild.Help.GuildEdit:			            '/gc edit' - Lists all available guild parameters that may be altered.
+Scripts.Player.Guild.Help.GuildEditRankLevel:		        '/gc edit <rank#> ranklevel <level>' - Sets the rank's level to establish guild hierarchy separate from the rank number.
+Scripts.Player.Guild.Help.GuildEditTitle:		            '/gc edit <rank#> title <text>' - Sets the title associated with a specific rank in the guild.
+Scripts.Player.Guild.Help.GuildEditACHear:		            '/gc edit <rank#> achear < y | n >' - Enables/disables the guild rank's ability to see the Alliance channel.
+Scripts.Player.Guild.Help.GuildEditACSpeak:		            '/gc edit <rank#> acspeak < y | n >' - Enables/disables the guild rank's ability to speak in the Alliance channel.
+Scripts.Player.Guild.Help.GuildEditAlli:		            '/gc edit <rank#> alli < y | n >' - Enables/disables the guild rank's ability to enter/leave alliances. It is recommended that you limit this to select guild members you trust as diplomatic officers.
+Scripts.Player.Guild.Help.GuildEditClaim:		            '/gc edit <rank#> claim < y | n >' - Enables/disables the guild rank's ability to claim keeps on behalf of the guild.
+Scripts.Player.Guild.Help.GuildEditDues:		            '/gc edit <rank#> dues < y | n >' - Enables/disables the guild rank's ability to set and change guild dues.
+Scripts.Player.Guild.Help.GuildEditEmblem:		            '/gc edit <rank#> emblem < y | n >' - Enables/disables the guild rank's ability to wear the guild emblem on their cloak and/or shield.
+Scripts.Player.Guild.Help.GuildEditGCHear:		            '/gc edit <rank#> gchear < y | n >' - Enables/disables the guild rank's ability to see the Guild channel.
+Scripts.Player.Guild.Help.GuildEditGCSpeak:		            '/gc edit <rank#> gcspeak < y | n >' - Enables/disables the guild rank's ability to speak in the Guild channel.
+Scripts.Player.Guild.Help.GuildEditInvite:		            '/gc edit <rank#> invite < y | n >' - Enables/disables the guild rank's ability to invite new players into the guild.
+Scripts.Player.Guild.Help.GuildEditOCHear:		            '/gc edit <rank#> ochear < y | n >' - Enables/disables the guild rank's ability to see the Officer channel.
+Scripts.Player.Guild.Help.GuildEditOCSpeak:		            '/gc edit <rank#> ocspeak < y | n >' - Enables/disables the guild rank's ability to speak in the Officer channel.
+Scripts.Player.Guild.Help.GuildEditPromote:		            '/gc edit <rank#> promote < y | n >' - Enables/disables the guild rank's ability to promote/demote player's ranks in the guild.
+Scripts.Player.Guild.Help.GuildEditRelease:		            '/gc edit <rank#> release < y | n >'  - Enables/disables the guild rank's ability to stop the guild's claim on a keep.
+Scripts.Player.Guild.Help.GuildEditRemove:		            '/gc edit <rank#> remove < y | n >' - Enables/disables the guild rank's ability to remove guild members of lower ranks.
+Scripts.Player.Guild.Help.GuildEditUpgrade:		            '/gc edit <rank#> upgrade < y | n >' - Enables/disables the guild rank's ability to upgrade keeps claimed by the guild.
+Scripts.Player.Guild.Help.GuildEditView:		            '/gc edit <rank#> view < y | n >' - Enables/disables the guild rank's ability to view guild information using the '/gc info' command.
+Scripts.Player.Guild.Help.GuildEditWithdraw:		        '/gc edit <rank#> withdraw < y | n >' - Enables/disables the guild rank's ability to withdraw money from the guild's bank account.
+Scripts.Player.Guild.Help.GuildMotd:			            '/gc motd <text>' - Sets the guild's message of the day (MOTD) for all members, which displays when they log in or use the '/gc info' command.
+Scripts.Player.Guild.Help.GuildOMotd:			            '/gc omotd <text>' - Sets the message of the day (MOTD) for all guild officers, which will display each time they log in or use the '/gc info' command.
+Scripts.Player.Guild.Help.GuildWebpage:			            '/gc webpage <webURL>' - Displays a website address, typically one associated with a guild website. This is shown on the Herald, as well as to members that use the '/gc info' command.
+Scripts.Player.Guild.Help.GuildEmail:			            '/gc email <emailAddress>' - Sets a contact email address guild members can use to contact the guild if needed. Format the value as 'address@email.com'. This value is displayed on the Herald, as well as when guild members use the '/gc info' command.
+Scripts.Player.Guild.Help.GuildEmblem:			            '/gc emblem' - Sets the emblem for a guild to display on members' cloaks and shields. You must be standing next to a Guild Emblemeer NPC to use this command.
+Scripts.Player.Guild.Help.GuildForm:			            '/gc form <guildName>' - Creates a new guild with the specified name and the group leader as the guild leader. You must have a full group of 8 members and be standing near a Guild Registrar NPC.
+Scripts.Player.Guild.Help.GuildInfo:			            '/gc info' - Displays all information regarding your guild, such as realm points, bounty points, guild level, web page, and more.
+Scripts.Player.Guild.Help.GuildInvite:			            '/gc invite <playerName>' - Invites the specified player to join your guild. They must be out of combat and accept the invitation to join. 'playerName' is optional--you may instead target the desired player and use the command '/gc invite'.
+Scripts.Player.Guild.Help.GuildLeader:			            '/gc leader <playerName>' - Sets a new leader for your guild. Only one player may be leader at a time.
+Scripts.Player.Guild.Help.GuildList:			            '/gc list' - Displays a list of all guilds in your realm with members online.
+Scripts.Player.Guild.Help.GuildWho:			                '/gc who' - Lists all members in your guild that are online presently.
+Scripts.Player.Guild.Help.GuildNoteSelf:		            '/gc noteself <text>' - Sets a note about your character that the guild may reference from the Social window.
+Scripts.Player.Guild.Help.GuildQuit:			            '/gc <quit|leave>' - Leaves the current guild you're associated with. You will be presented with a prompt afterward to confirm your choice.
+Scripts.Player.Guild.Help.GuildRanks:			            '/gc ranks' - Displays all rank settings and information for the guild.
+Scripts.Player.Guild.Help.GuildRemAccount:		            '/gc removeaccount <accountName>' - Removes all characters associated with a specific account from the guild.
+Scripts.Player.Guild.Help.GuildRemove:			            '/gc remove <playerName>' - Removes a specific player character from the guild.
+Scripts.Player.Guild.Help.GuildAutoRemove:		            '/gc autoremove <playerName>' - Removes the player (offline or online) from the guild.
+Scripts.Player.Guild.Help.GuildAutoRemoveAcc:	            '/gc autoremove account <playerName>' - Removes all characters (offline or online) from the guild whose account is associated with the specified player name.
+Scripts.Player.Guild.Help.GuildBannerSummon:	'/gc summon' summons the guild banner if you have one 	
+Scripts.Player.Guild.Help.GuildBuyBanner:		'/gc buybanner' - Spend points to buy a guild banner.
+Scripts.Player.Guild.Help.GuildCancel:			'/gc cancel <option> <value>' to cancel all command done before
+Scripts.Player.Guild.AccountRemoved:			{0} has removed {1} from the guild.
+Scripts.Player.Guild.ActiveBuff:			                Your guild already has an active buff. You must wait for it to expire first.
+Scripts.Player.Guild.GuildBuffActive:                       Your guild already has a{0} buff active.
+Scripts.Player.Guild.XPBuffActive:                          Your guild already has an experience buff active.
+Scripts.Player.Guild.RPBuffActive:                          Your guild already has a realm point buff active.
+Scripts.Player.Guild.BPBuffActive:                          Your guild already has a bounty point buff active.
+Scripts.Player.Guild.CraftBuffActive:                       Your guild already has a crafting buff active.
+Scripts.Player.Guild.AllianceAlreadyOther:		            That guild already has an alliance.
+Scripts.Player.Guild.AllianceAnsCancel:			The alliance offer has been cancelled.
+Scripts.Player.Guild.AllianceDeclined:			You decline the alliance offer.
+Scripts.Player.Guild.AllianceDeclinedOther:		The alliance offer has been declined.
+Scripts.Player.Guild.AllianceDisabled:			            Alliances are disabled on this server.
+Scripts.Player.Guild.AllianceIndexNotVal:		The alliance index is not a valid number.
+Scripts.Player.Guild.AllianceInfo:			                Alliance info for {0}:
+Scripts.Player.Guild.AllianceInvite:			            You have invited {0} to join your alliance. Use '/gc acancel' to cancel the invitation.
+Scripts.Player.Guild.AllianceInvited:			            Your guild has been invited to enter an alliance with {0}. Use '/gc aaccept' to accept the invitation, or '/gc adecline' to decline.
+Scripts.Player.Guild.AllianceLeader:			            Alliance leader: {0}
+Scripts.Player.Guild.AllianceMax:			                You cannot invite that guild to your alliance, as your alliance has already reached the maximum allowable number of guilds.
+Scripts.Player.Guild.AllianceMember:			            {0} - {1}
+Scripts.Player.Guild.AllianceMembers:			            Alliance members:
+Scripts.Player.Guild.AllianceMemNotSel:			You must select a player from the same alliance.
+Scripts.Player.Guild.AllianceNoGMSelected:		            You must target or specify the Guildmaster for the guild you want to invite.
+Scripts.Player.Guild.AllianceNoLeader:			            No alliance leader
+Scripts.Player.Guild.NotInSameAlliance:                     You must be a member of the same alliance to use this command.
+Scripts.Player.Guild.AllianceNotLeader:			            You must be the leader of the alliance to use this command.
+Scripts.Player.Guild.NewLeaderAlliance:                     You have made {0} the new leader of the alliance!
+Scripts.Player.Guild.AllianceNotMember:			You must be in an alliance to do that!
+Scripts.Player.Guild.AlreadyInGuild:			{0} is already a member of a guild.
+Scripts.Player.Guild.AlreadyInYourGuild:        {0} is already a member of you guild.
+Scripts.Player.Guild.AlreadyInGuild:			They are already a member of a guild.
+Scripts.Player.Guild.AMotdSet:				        You have set the Alliance Message of the Day (MODT) for the guild.
+Scripts.Player.Guild.BannerAlready:			    Your guild already has a banner.
+Scripts.Player.Guild.BannerBought:			    You have purchased a guild banner for {0} bounty points.
+Scripts.Player.Guild.BannerGroupSummoned:		Someone in your group has already summoned the guild banner.
+Scripts.Player.Guild.BannerGuildSummoned:		Someone in your guild has already summoned the guild banner.
+Scripts.Player.Guild.BannerNoGroup:			    You need to be in a group to summon a banner.
+Scripts.Player.Guild.BannerNone:			    Your guild does not own a guild banner.
+Scripts.Player.Guild.BannerNotAfford:			You need 50,000 bounty points to purchase a guild banner!
+Scripts.Player.Guild.BannerSummoned:			You have summoned your guild banner.
+Scripts.Player.Guild.BannerUnsummoned:			You have unsummoned your guild banner.
+Scripts.Player.Guild.BannerNotRvR:			    You need to be in an RvR zone to summon a guild banner!
+Scripts.Player.Guild.BuffActivated:			    [Guild Buff] {0} has spent 1000 Guild Merit Points and activated a Guild Buff!
+Scripts.Player.Guild.BuffBountyPoints:			Your guild will now gain 5% bonus to bounty points for 24 hours!
+Scripts.Player.Guild.BuffBPActivated:			[Guild Buff] Your guild will now get a bonus to bounty points for 24 hours!
+Scripts.Player.Guild.BuffMPActivated:			[Guild Buff] Your guild will now get a bonus to merit points for 24 hours!
+Scripts.Player.Guild.BuffRealmPoints:			Your guild will now gain 5% bonus to realm points for 24 hours!
+Scripts.Player.Guild.ClaimNotNear:			    You must be near a keep to claim it.
+Scripts.Player.Guild.ConfirmLeave:			    Do you really want to leave {0}?
+Scripts.Player.Guild.DemotedHigherThanPlayer:	        You can only demote to ranks below your own.
+Scripts.Player.Guild.DemotedOther:			            {0} has demoted {1} to {2}.
+Scripts.Player.Guild.DemotedSelf:			            You have demoted {0}'s guild rank to Rank {1} ({2}).
+Scripts.Player.Guild.GuildDemotedYou:                   {0} has demoted you to {2}.
+Scripts.Player.Guild.DepositAmount:			    You deposit {0} into your guild's bank account.
+Scripts.Player.Guild.DepositFull:			    The guild bank seems to be full.
+Scripts.Player.Guild.DepositInvalid:		    That is an invalid deposit amount.
+Scripts.Player.Guild.DepositTooMuch:		    You don't have enough money to do that!
+Scripts.Player.Guild.DuesOff:				    Guild dues are currently turned off.
+Scripts.Player.Guild.DuesOn:				    Guild dues are currently set at {0} percent.
+Scripts.Player.Guild.EmailSet:				    You have set the guild email to {0}.
+Scripts.Player.Guild.EmblemAlready:			                Your guild already has an emblem but you may change it for a hefty fee of 100 gold. You must select the Emblemeer NPC again for this procedure to happen.
+Scripts.Player.Guild.EmblemNeedGold:			You must have 100 gold to re-emblem your guild.
+Scripts.Player.Guild.EmblemNeedNPC:			    You must be near a valid emblemeer.
+Scripts.Player.Guild.EmblemNPCNotSelected:		            You must be near a valid emblemeer.
+Scripts.Player.Guild.EmblemRedo:			                Would you like to re-emblem your guild for 100 gold?
+Scripts.Player.Guild.FormNoGroup:			    You must be in a group to form a guild.
+Scripts.Player.Guild.FormNoMembers:			    You need {0} members in your group to form a guild.
+Scripts.Player.Guild.GuildCreated:			                {0} is formed. {1} is the Guildmaster and must now adjust the settings for all members.
+Scripts.Player.Guild.GuildExists:			                A guild already exists with that name!
+Scripts.Player.Guild.GuildForceLeave:			            You have been removed from {1} by {0}.
+Scripts.Player.Guild.GuildLeave:			                You have left your guild.
+Scripts.Player.Guild.GuildLevelReq:			    Your guild is not high enough level for this command.
+Scripts.Player.Guild.GuildNotExist:			    No guild exists with that name.
+Scripts.Player.Guild.InCombat:				    You can't unsummon your banner while you're in combat!
+Scripts.Player.Guild.InfoGuild:				                Guild Info for {0}:
+Scripts.Player.Guild.InfoRPBPMP:			                Realm Points: {0} | Bounty Points: {1} | Merit Points: {2}
+Scripts.Player.Guild.InfoGuildLevel:			            Guild Level: {0}
+Scripts.Player.Guild.InfoGDuesBank:			                Dues: {0} | Guild Bank: {1} platinum, {2} gold, {3} silver, {4} copper
+Scripts.Player.Guild.InfoGBonusType:                        Guild Bonus: {0}
+Scripts.Player.Guild.InfoGBannerStatus:                     Guild Banner Status: {0}
+Scripts.Player.Guild.InfoGBannerLostEnemy:                  Guild Banner Status: Your banner has been lost to the enemy
+Scripts.Player.Guild.InfoGBannerAvailable:                  Guild Banner Status: Banner available for purchase
+Scripts.Player.Guild.InfoWebpage:			                Website: {0}
+Scripts.Player.Guild.InfoCEmail:			                Contact Email: {0}
+Scripts.Player.Guild.InfoMotd:				                Guild Message: {0}
+Scripts.Player.Guild.InfoOMotd:				                Officer Message: {0}
+Scripts.Player.Guild.InfoAMotd:				                Alliance Message: {0}
+Scripts.Player.Guild.Keep:				                    Keep Claimed: Your guild has currently claimed {0}.
+Scripts.Player.Guild.GuildHouse:                            Guild House #: {0}
+Scripts.Player.Guild.InvalidLetters:			            Some of the characters entered for the guild name are not allowed.
+Scripts.Player.Guild.InvalidRank:			    That is not a valid rank.
+Scripts.Player.Guild.InviteDead:			    You cannot invite a dead player to your guild.
+Scripts.Player.Guild.InviteNoSelected:			You must select or specify an active player in your realm.
+Scripts.Player.Guild.InviteNoSelf:			    You can't invite yourself.
+Scripts.Player.Guild.InviteNotThis:			    You cannot invite this character.
+Scripts.Player.Guild.InviteReceived:			{0} has invited you to join their guild.
+Scripts.Player.Guild.InviteSent:			    You have invited {0} to join your guild.
+Scripts.Player.Guild.LevelUp:				    [Guild] Your guild has advanced to level {0}!
+Scripts.Player.Guild.LoginsOff:				    You will no longer be notified of guild members logging in. Type '/gc logins' to start receiving notifications.
+Scripts.Player.Guild.LoginsOn:				    You will be notified of guild members logging in. Type '/gc logins' to stop receiving notifications.
+Scripts.Player.Guild.MadeLeader:			                You are now the Guildmaster of {0}.
+Scripts.Player.Guild.MadeLeaderOther:			            {0} has been made the Guildmaster of {1}.
+Scripts.Player.Guild.MadeNewLeader:                         You have made {0} the new Guildmaster of {1}.
+Scripts.Player.Guild.MemberLogin:			    {0} has logged into the game.
+Scripts.Player.Guild.MemberLogoff:			    {0} has logged out of the game.
+Scripts.Player.Guild.MemberRemoved:			    {0} was removed from the guild.
+Scripts.Player.Guild.YouHaveRemovedPlayer:                  You have removed {0} from the guild.
+Scripts.Player.Guild.MeritPointReq:			    Your guild does not have the sufficient merit points to activate this buff.
+Scripts.Player.Guild.MotdSet:				                You have set the Message of the Day (MOTD) for the guild. Use '/gc info' to view it.
+Scripts.Player.Guild.NoKeep:				    You must have a keep before using that command.
+Scripts.Player.Guild.NoPlayerSelected:			            You must target a player or provide a player name.
+Scripts.Player.Guild.NoPlayersInAcc:			There are no players associated with this account in your guild.
+Scripts.Player.Guild.NoPrivileges:			                You do not have sufficient privileges in your guild to use that command.
+Scripts.Player.Guild.NoAllianceSet:                         Your guild must be in an alliance to use this command.
+Scripts.Player.Guild.NoteSet:				    You set your guild note to: {0}
+Scripts.Player.Guild.NotInYourGuild:			            That player is not a member of your guild.
+Scripts.Player.Guild.NotMember:				                You must be a member of a guild to use any guild commands.
+Scripts.Player.Guild.OMotdSet:				                You have set the guild officer Message of the Day (OMOTD) for the guild. Use '/gc info' to view it.
+Scripts.Player.Guild.PlayerNotFound:			To create a guild, you must first select a player to make its leader.
+Scripts.Player.Guild.NoPlayerFound:                         No player was found with that name.
+Scripts.Player.Guild.Help.CannotPromoteSelf:                You cannot promote yourself!
+Scripts.Player.Guild.Help.CannotDemoteSelf:                 You cannot demote yourself!
+Scripts.Player.Guild.PromotedOther:			                {0} has promoted {1} to {2}.
+Scripts.Player.Guild.GuildPromotedYou:                      {0} has promoted you to {1}.
+Scripts.Player.Guild.PromotedSelf:			                You have set {0}'s guild rank to Rank {1} ({2}).
+Scripts.Player.Guild.PromoteHigherThanPlayer:	            You can only promote to ranks below your own.
+Scripts.Player.Guild.PromoteHaveToUseDemote:	            You can't demote the guild rank of this players with promote commands. Use '/gc demote <playerName> <rank#>'.
+Scripts.Player.Guild.Purged:				    {0} has been deleted from the database and all guild members disbanded.
+Scripts.Player.Guild.RankACHearSet:			    You have {0} the ACHear of the rank {1}.
+Scripts.Player.Guild.RankACSpeakSet:			You have {0} the ACSpeak of the rank {1}.
+Scripts.Player.Guild.RankAlliSet:			    You have {0} the Alliance of the rank {1}.
+Scripts.Player.Guild.RankBuffSet:			    You have {0} the Buff of the rank {1}.
+Scripts.Player.Guild.RankClaimSet:			    You have {0} the Claim of the rank {1}.
+Scripts.Player.Guild.RankDuesSet:			    You have {0} the Dues of the rank {1}.
+Scripts.Player.Guild.RankEmblemSet:			    You have {0} the emblem of the rank {1}.
+Scripts.Player.Guild.RankGCHearSet:			    You have {0} the GCHear of the rank {1}.
+Scripts.Player.Guild.RankGCSpeakSet:			You have {0} the GCSpeak of the rank {1}.
+Scripts.Player.Guild.RankInviteSet:			    You have {0} the Invite of the rank {1}.
+Scripts.Player.Guild.RankLevelSet:			    You have set the level of the rank to {0}.
+Scripts.Player.Guild.RankOCHearSet:			    You have {0} the OCHear of the rank {1}.
+Scripts.Player.Guild.RankOCSpeakSet:			You have {0} the OCSpeak of the rank {1}.
+Scripts.Player.Guild.RankPromoteSet:			You have {0} the Promote of the rank {1}.
+Scripts.Player.Guild.RankReleaseSet:			You have {0} the Release of the rank {1}.
+Scripts.Player.Guild.RankRemoveSet:				You have {0} the Remove of the rank {1}.
+Scripts.Player.Guild.RankTitleSet:				You have set the title of the rank to {0}.
+Scripts.Player.Guild.RankUpgradeSet:			You have {0} the Upgrade of the rank {1}.
+Scripts.Player.Guild.RankViewSet:				You have {0} the View of the rank {1}.
+Scripts.Player.Guild.RankWithdrawSet:			You have {0} the Withdraw of the rank {1}.
+Scripts.Player.Guild.ThirdArgNotNum:			The third argument must be a number.
+Scripts.Player.Guild.UnableToCreate:			The guild {0} could not be created.
+Scripts.Player.Guild.UnableToCreateLead:		The guild {0} was unable to be created with {1} as its leader.
+Scripts.Player.Guild.UnknownCommand:			{0} is not a valid command:
+Scripts.Player.Guild.UpgradeNoLevel:			You must specify a level to target for upgrade.
+Scripts.Player.Guild.UpgradeScndArg:			The second argument must be a number.
+Scripts.Player.Guild.WebpageSet:				You have set the guild webpage to {0}.
 Scripts.Player.Guild.Withdrawamount:			You withdraw {0} from the guild bank.
-Scripts.Player.Guild.WithdrawInvalid:			That is an invalid amount to withdraw.	
+Scripts.Player.Guild.WithdrawInvalid:			That is an invalid amount to withdraw.
 Scripts.Player.Guild.WithdrawTooMuch:			You cannot withdraw that much money from the guild bank.
+Scripts.Player.Guild.ErrorForming:                          There was an issue processing the guild formation request. Please try again.
+Scripts.Player.Guild.AgreesToForm:                          {0} has agreed to form the guild!
+Scripts.Player.Guild.DeclinesToForm:                        {0} has declined to form the guild.
+Scripts.Player.Guild.GuildNameRenamed:                      Your guild's name has been changed to '{0}'.
+Scripts.Player.Guild.YouChangedGuildName:                   You have changed the guild's name to '{0}'.
+Scripts.Player.Guild.AddedToGuild:                          You have added {0} to the guild {1}.
+Scripts.Player.Guild.YouHaveBeenAdded:                      Eclipse staff have added you to the guild {0}.
+Scripts.Player.Guild.RemovedFromGuild:                      You have removed {0} from the guild {1}.
+Scripts.Player.Guild.YouHaveBeenRemoved:                    Eclipse staff have removed you from the guild {0}.
+Scripts.Player.Guild.BuffTypeNotAvail:                      This buff type is not available.
+Scripts.Player.Guild.GuildBuffTypesAvail:                   Available guild buffs:
+Scripts.Player.Guild.GuildBuffPercents:                     {0}: {1}%
+Scripts.Player.Guild.BuffActivatedBy:                       {0} has activated the {1} guild bonus.
+Scripts.Player.Guild.RanksRankName:                         Rank: {0} | Name: {1}
+Scripts.Player.Guild.RankAlliancePriv:                      Alliance Channel Hear: {0} | Alliance Channel Speak: {1}
+Scripts.Player.Guild.RankOfficerPriv:                       Officer Channel Hear: {0} | Officer Channel Speak: {1}
+Scripts.Player.Guild.RankGuildPriv:                         Guild Channel Hear: {0} | Guild Channel Speak: {1}
+Scripts.Player.Guild.RankEmbPromPriv:                       Wear Emblems: {0} | Promote Members: {1}
+Scripts.Player.Guild.RankRemoveViewPriv:                    Remove Members: {0} | View Ranks: {1}
+Scripts.Player.Guild.RankDuesWithPriv:                      Set Dues: {0} | Withdraw from Guild Bank: {1}
+Scripts.Player.Guild.NearARegistrar:                        You must be near a guild registrar to use this command!
+Scripts.Player.Guild.OnlyGroupLeader:                       Only the group leader can create a guild!
+Scripts.Player.Guild.MemberSameRealm:                       All group members must be of the same realm in order to create a guild.
+Scripts.Player.Guild.GuildNameTooLong:                      The guild name entered is too long.
+Scripts.Player.Guild.GuildCostForm:                         It costs {0} gold pieces to create a guild!
+Scripts.Player.Guild.LeftTheGuild:                          {0} has left the guild.
+Scripts.Player.Guild.ErrorFound:                            Error encountered while executing command. Player not found.
+Scripts.Player.Guild.SetRankCorrect:                        Set a guild rank between 0-9.
+Scripts.Player.Guild.InvalidPlayer:                         You cannot form an alliance with that target.
+Scripts.Player.Guild.PlayerNotInGuild:                      That player is not a member of a guild.
 
 ## /language
 Scripts.Players.Language.Current:			Your language is currently set to: {0}.
