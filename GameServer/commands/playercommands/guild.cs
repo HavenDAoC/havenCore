@@ -2573,29 +2573,38 @@ namespace DOL.GS.Commands
 					}
 						break;
 					#endregion Alliance Message of the Day (AMOTD)
-						#region OMOTD
-						// --------------------------------------------------------------------------------
-						// OMOTD
-						// --------------------------------------------------------------------------------
+					#region Guild Officer Message of the Day (OMOTD)
+					// --------------------------------------------------------------------------------
+					// OMOTD
+					// '/gc omotd <text>'
+					// Sets the message of the day (MOTD) for all guild officers, which will display each time they log in or use the '/gc info' command.
+					// --------------------------------------------------------------------------------
 					case "omotd":
+					{
+						if (client.Player.Guild == null)
 						{
-							if (client.Player.Guild == null)
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							message = String.Join(" ", args, 2, args.Length - 2);
-							client.Player.Guild.Omotd = message;
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.OMotdSet"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-							client.Player.Guild.UpdateGuildWindow();
+							// Message: You must be a member of a guild to use any guild commands.
+							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
+							return;
 						}
+							
+						if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
+						{
+							// Message: You do not have sufficient privileges in your guild to use that command.
+							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
+							return;
+						}
+							
+						message = String.Join(" ", args, 2, args.Length - 2);
+						client.Player.Guild.Omotd = message;
+							
+						// Message: You have set the guild officer Message of the Day (OMOTD) for the guild. Use '/gc info' to view it.
+						ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.OMotdSet", null);
+							
+						client.Player.Guild.UpdateGuildWindow();
+					}
 						break;
-						#endregion
+					#endregion Guild Officer Message of the Day (OMOTD)
 						#region Alliance
 						// --------------------------------------------------------------------------------
 						// ALLIANCE
