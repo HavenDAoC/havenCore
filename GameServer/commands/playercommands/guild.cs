@@ -2811,37 +2811,56 @@ namespace DOL.GS.Commands
 							client.Player.Guild.UpdateGuildWindow();
 							return;
 						}
-					#endregion
-						#region Alliance Invite Cancel
-						// --------------------------------------------------------------------------------
-						// ACANCEL
-						// --------------------------------------------------------------------------------
+					#endregion Alliance Invite Accept
+					#region Alliance Invite Cancel
+					// --------------------------------------------------------------------------------
+					// ACANCEL
+					// '/gc acancel'
+					// Cancels an alliance invitation that you've sent to another guild. This can only
+					// be done before they've accepted the invitation.
+					// --------------------------------------------------------------------------------
 					case "acancel":
 						{
+							// Check to make sure the player is part of a guild
 							if (client.Player.Guild == null)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must be a member of a guild to use any guild commands.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
 								return;
 							}
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Alli))
+							
+							// Check to make sure the player has sufficient permission
+							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You do not have sufficient privileges in your guild to use that command.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
 								return;
 							}
+							
 							GamePlayer obj = client.Player.TargetObject as GamePlayer;
+							
+							// Player is not selected or specified
 							if (obj == null)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPlayerSelected"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must target a player or provide a player name.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPlayerSelected", null);
 								return;
 							}
+							
 							GamePlayer inviter = client.Player.TempProperties.getProperty<object>("allianceinvite", null) as GamePlayer;
+							
+							// Get rid of the invite prop
 							if (inviter == client.Player)
 								obj.TempProperties.removeProperty("allianceinvite");
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceAnsCancel"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-							obj.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceAnsCancel"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+							
+							// Message: You have canceled the alliance offer.
+							ChatUtil.SendTypeMessage((int)eMsg.Alliance, client, "Scripts.Player.Guild.AllianceAnsCancel", null);
+							
+							// Message: The alliance offer has been canceled.
+							ChatUtil.SendTypeMessage((int)eMsg.Alliance, client, "Scripts.Player.Guild.AllianceOfferCancel", null);
 							return;
 						}
-						#endregion
+					#endregion Alliance Invite Cancel
 						#region Alliance Invite Decline
 						// --------------------------------------------------------------------------------
 						// ADECLINE
