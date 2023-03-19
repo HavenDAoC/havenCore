@@ -1601,107 +1601,129 @@ namespace DOL.GS.Commands
 						client.Player.Guild.UpdateGuildWindow();
 						break;
 					#endregion Edit
-						#region Form
-						// --------------------------------------------------------------------------------
-						// FORM
-						// --------------------------------------------------------------------------------
+					#region Form
+					// --------------------------------------------------------------------------------
+					// FORM
+					// '/gc form <guildName>'
+					// Creates a new guild with the specified name and the group leader as the guild leader. You must have a full group of 8 members and be standing near a Guild Registrar NPC.
+					// --------------------------------------------------------------------------------
 					case "form":
 						{
 							Group group = client.Player.Group;
+							
+							// Check to make sure the command is long enough
 							if (args.Length < 3)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildForm"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: '/gc form <guildName>' - Creates a new guild with the specified name and the group leader as the guild leader. You must have a full group of 8 members and be standing near a Guild Registrar NPC.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.Help.GuildForm", null);
 								return;
 							}
-							#region Near Registrar
+							
+							// Check for a nearby registrar
 							if (!IsNearRegistrar(client.Player))
 							{
-								client.Out.SendMessage("You must be near a guild registrar to use this command!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must be near a guild registrar to use this command!
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NearARegistrar", null);
 								return;
 							}
-							#endregion
-							#region No group Check
+							
+							// Check for the group
 							if (group == null)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.FormNoGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must be in a group to form a guild.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.FormNoGroup", null);
 								return;
 							}
-							#endregion
-							#region Groupleader Check
-							if (group != null && client.Player != client.Player.Group.Leader)
+							
+							// Make sure the person performing the command is guild leader
+							if (client.Player != client.Player.Group.Leader)
 							{
-								client.Out.SendMessage("Only the group leader can create a guild", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: Only the group leader can create a guild!
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.OnlyGroupLeader", null);
 								return;
 							}
-							#endregion
-							#region Enough members to form Check
+							
+							// Make sure there's sufficient members in the group to form a guild
 							if (group.MemberCount < Properties.GUILD_NUM)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.FormNoMembers" + Properties.GUILD_NUM), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You need {0} members in your group to form a guild.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.FormNoMember", Properties.GUILD_NUM);
 								return;
 							}
-							#endregion
-							#region Player already in guild check and Cross Realm Check
-
+							
 							foreach (GamePlayer ply in group.GetPlayersInTheGroup())
 							{
+								// Make sure no one is already a member of a guild
 								if (ply.Guild != null)
 								{
-									client.Player.Group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AlreadyInGuildName", ply.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									// Message: {0} is already a member of a guild.
+									ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.AlreadyInGuild", ply.Name);
 									return;
 								}
+								
+								// Check to make sure there's no cross-realm nonsense happening
 								if (ply.Realm != client.Player.Realm && ServerProperties.Properties.ALLOW_CROSS_REALM_GUILDS == false)
 								{
-									client.Out.SendMessage("All group members must be of the same realm in order to create a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									// Message: All group members must be of the same realm in order to create a guild.
+									ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.MemberSameRealm", null);
 									return;
 								}
 							}
-							#endregion
-							#region Guild Length Naming Checks
-							//Check length of guild name.
+							
+							// Parse the guild name from the command
 							string guildname = String.Join(" ", args, 2, args.Length - 2);
+							
+							// Check length of the guild name
 							if (guildname.Length > 30)
 							{
-								client.Out.SendMessage("Sorry, your guild name is too long.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: The guild name entered is too long.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.GuildNameTooLong", null);
 								return;
 							}
-							#endregion
-							#region Valid Characters Check
+							
+							// Make sure there's no invalid characters entered in the guild name
 							if (!IsValidGuildName(guildname))
 							{
-								// Mannen doesn't know the live server message, so someone needs to enter it . ;-)
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.InvalidLetters"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: Some of the characters entered for the guild name are not allowed.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.InvalidLetters", null);
 								return;
 							}
-							#endregion
-							#region Guild Exist Checks
+							
+							// Check for guild name uniqueness
 							if (GuildMgr.DoesGuildExist(guildname))
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.GuildExists"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: A guild already exists with that name!
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.GuildExists", null);
 								return;
 							}
-							#endregion
-							#region Enoguh money to form Check
+							
+							// Make sure the player can afford to start the guild
 							if (client.Player.Group.Leader.GetCurrentMoney() < GuildFormCost)
 							{
-								client.Out.SendMessage("It cost 1 gold piece to create a guild", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: It costs {0} gold pieces to create a guild!
+								lock (group)
+								{
+									ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.GuildCostForm", GuildFormCost.ToString());
+								}
+
 								return;
 							}
-							#endregion
-
-
+							
 							client.Player.Group.Leader.TempProperties.setProperty("Guild_Name", guildname);
+							
+							// Add everyone to the guild if it forms successfully
 							if (GuildFormCheck(client.Player))
 							{
 								client.Player.Group.Leader.TempProperties.setProperty("Guild_Consider", true);
+								
 								foreach (GamePlayer p in group.GetPlayersInTheGroup().Where(p => p != @group.Leader))
 								{
-									p.Out.SendCustomDialog(string.Format("Do you wish to create the guild {0} with {1} as Guild Leader", guildname, client.Player.Name), new CustomDialogResponse(CreateGuild));
+									p.Out.SendCustomDialog(string.Format("Do you wish to create the guild {0} with {1} as Guild Leader?", guildname, client.Player.Name), new CustomDialogResponse(CreateGuild));
 								}
 							}
 						}
 						break;
-					#endregion
+					#endregion Form
 						#region Quit
 						// --------------------------------------------------------------------------------
 						// QUIT
