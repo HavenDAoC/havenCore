@@ -2533,35 +2533,46 @@ namespace DOL.GS.Commands
 					}
 						break;
 					#endregion Guild Message of the Day (MOTD)
-						#region AMOTD
-						// --------------------------------------------------------------------------------
-						// AMOTD
-						// --------------------------------------------------------------------------------
+					#region Alliance Message of the Day (AMOTD)
+					// --------------------------------------------------------------------------------
+					// AMOTD
+					// '/gc amotd <text>'
+					// Sets the message of the day (MOTD) for your alliance.	
+					// --------------------------------------------------------------------------------
 					case "amotd":
+					{
+						if (client.Player.Guild == null)
 						{
-							if (client.Player.Guild == null)
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							if (client.Player.Guild.AllianceId == string.Empty)
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							message = String.Join(" ", args, 2, args.Length - 2);
-							client.Player.Guild.alliance.Dballiance.Motd = message;
-							GameServer.Database.SaveObject(client.Player.Guild.alliance.Dballiance);
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AMotdSet"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-							client.Player.Guild.UpdateGuildWindow();
+							// Message: You must be a member of a guild to use any guild commands.
+							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
+							return;
 						}
+							
+						if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
+						{
+							// Message: You do not have sufficient privileges in your guild to use that command.
+							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
+							return;
+						}
+							
+						if (client.Player.Guild.AllianceId == string.Empty)
+						{
+							// Message: Your guild must be in an alliance to use this command.
+							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoAllianceSet", null);
+							return;
+						}
+							
+						message = String.Join(" ", args, 2, args.Length - 2);
+						client.Player.Guild.alliance.Dballiance.Motd = message;
+						GameServer.Database.SaveObject(client.Player.Guild.alliance.Dballiance);
+							
+						// Message: You have set the Alliance Message of the Day (MODT) for the guild.
+						ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.AMotdSet", null);
+							
+						client.Player.Guild.UpdateGuildWindow();
+					}
 						break;
-						#endregion
+					#endregion Alliance Message of the Day (AMOTD)
 						#region OMOTD
 						// --------------------------------------------------------------------------------
 						// OMOTD
