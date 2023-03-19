@@ -2341,43 +2341,56 @@ namespace DOL.GS.Commands
 						}
 						break;
 					#endregion Leader
-						#region Emblem
-						// --------------------------------------------------------------------------------
-						// EMBLEM
-						// --------------------------------------------------------------------------------
+					#region Emblem
+					// --------------------------------------------------------------------------------
+					// EMBLEM
+					// '/gc emblem'
+					// Sets the emblem for a guild to display on members' cloaks and shields. You must be standing next to a Guild Emblemeer NPC to use this command.
+					// --------------------------------------------------------------------------------
 					case "emblem":
 						{
 							if (client.Player.Guild == null)
 							{
+								// Message: You must be a member of a guild to use any guild commands.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
+							
 							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You do not have sufficient privileges in your guild to use that command.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
 								return;
 							}
+							
 							if (client.Player.Guild.Emblem != 0)
 							{
 								if (client.Player.TargetObject is EmblemNPC == false)
 								{
-									client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.EmblemAlready"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									// Message: Your guild already has an emblem but you may change it for a hefty fee of 100 gold. You must select the Emblemeer NPC again for this procedure to happen.
+									ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.EmblemAlready", null);
 									return;
 								}
+								
+								// Message: Would you like to re-emblem your guild for 100 gold?
 								client.Out.SendCustomDialog(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.EmblemRedo"), new CustomDialogResponse(EmblemChange));
 								return;
 							}
+							
 							if (client.Player.TargetObject is EmblemNPC == false)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.EmblemNPCNotSelected"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must be near a valid emblemeer.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.EmblemNPCNotSelected", null);
 								return;
 							}
+							
 							client.Out.SendEmblemDialogue();
 
 							client.Player.Guild.UpdateGuildWindow();
 							break;
 						}
-						#endregion
+					#endregion Emblem
 						#region Autoremove
 					case "autoremove":
 						{
