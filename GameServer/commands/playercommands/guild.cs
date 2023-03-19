@@ -1556,27 +1556,29 @@ namespace DOL.GS.Commands
 						break;
 					}
 					#endregion Email
-						#region List
-						// --------------------------------------------------------------------------------
-						// LIST
-						// --------------------------------------------------------------------------------
+					#region List
+					// --------------------------------------------------------------------------------
+					// LIST
+					// '/gc list'
+					// Displays a list of all guilds in your realm with members online.
+					// --------------------------------------------------------------------------------
 					case "list":
+					{
+						// Changing this to list online only, not sure if this is live like or not but list can be huge
+						// and spam client.  - Tolakram
+						List<Guild> guildList = GuildMgr.GetAllGuilds();
+						foreach (Guild guild in guildList)
 						{
-							// Changing this to list online only, not sure if this is live like or not but list can be huge
-							// and spam client.  - Tolakram
-							List<Guild> guildList = GuildMgr.GetAllGuilds();
-							foreach (Guild guild in guildList)
+							if (guild.MemberOnlineCount > 0)
 							{
-								if (guild.MemberOnlineCount > 0)
-								{
-									string mesg = guild.Name + "  " + guild.MemberOnlineCount + " members ";
-									client.Out.SendMessage(mesg, eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-								}
+								string mesg = guild.Name + " " + guild.MemberOnlineCount + " members ";
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, mesg, null);
 							}
-							client.Player.Guild.UpdateGuildWindow();
 						}
+						client.Player.Guild.UpdateGuildWindow();
+					}
 						break;
-						#endregion
+					#endregion List
 						#region Edit
 						// --------------------------------------------------------------------------------
 						// EDIT
