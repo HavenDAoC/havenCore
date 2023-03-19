@@ -1139,171 +1139,254 @@ namespace DOL.GS.Commands
 						}
 					*/
 					#endregion Summon (Disabled)
-						#region Buff
-						// --------------------------------------------------------------------------------
-						// GUILD BUFF
-						// --------------------------------------------------------------------------------
+					#region Buff
+					// --------------------------------------------------------------------------------
+					// BUFF
+					// '/gc buff < crafting | rps | bps | xp >'
+					// Activates a guild-wide buff for the desired 5% bonus type. Each activation lasts 24 hours and costs 1000 Merit Points.
+					// --------------------------------------------------------------------------------
 					case "buff":
 						{
+							// Player must be a member of an existing guild to view guild info
 							if (client.Player.Guild == null)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must be a member of a guild to use any guild commands.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
 								return;
 							}
 
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader) && !client.Player.Guild.HasRank(client.Player, Guild.eRank.Buff))
+							// Player must have sufficient rank privileges in the guild to view its information
+							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Buff))
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You do not have high sufficient privileges in your guild to use that command.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
 								return;
 							}
 
+							// Guild must have merit points available to purchase the buff
 							if (client.Player.Guild.MeritPoints < 1000)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.MeritPointReq"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: Your guild does not have the sufficient merit points to activate this buff.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.MeritPointReq", null);
 								return;
 							}
 
+							// Present the player with a dialog to activate the buff
 							if (client.Player.Guild.BonusType == Guild.eBonusType.None && args.Length > 2)
 							{
-								if (args[2] == "rps")
+								// Set some vars to make things centralized
+								var meritCost = "1000";
+								var buffType = " ";
+								var dialog = "Are you sure you want to activate a guild " + buffType + " buff for" + meritCost + " merit points?";
+
+								// Set the default prop type for buffs
+								var buffProp = Guild.eBonusType.None;
+
+								// Switch between buff types
+								switch (args[2])
 								{
-									if (Properties.GUILD_BUFF_RP > 0)
+									case "rps":
 									{
-										client.Player.TempProperties.setProperty(GUILD_BUFF_TYPE, Guild.eBonusType.RealmPoints);
-										client.Out.SendCustomDialog("Are you sure you want to activate a guild RP buff for 1000 merit points?", ConfirmBuffBuy);
-									}
-									else
-									{
-										client.Out.SendMessage("This buff type is not available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									}
-									return;
-								}
-								else if (args[2] == "bps")
-								{
-									if (Properties.GUILD_BUFF_BP > 0)
-									{
-										client.Player.TempProperties.setProperty(GUILD_BUFF_TYPE, Guild.eBonusType.BountyPoints);
-										client.Out.SendCustomDialog("Are you sure you want to activate a guild BP buff for 1000 merit points?", ConfirmBuffBuy);
-									}
-									else
-									{
-										client.Out.SendMessage("This buff type is not available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									}
-									return;
-								}
-								else if (args[2] == "crafting")
-								{
-									if (Properties.GUILD_BUFF_CRAFTING > 0)
-									{
-										client.Player.TempProperties.setProperty(GUILD_BUFF_TYPE, Guild.eBonusType.CraftingHaste);
-										client.Out.SendCustomDialog("Are you sure you want to activate a guild Crafting Haste buff for 1000 merit points?", ConfirmBuffBuy);
-									}
-									else
-									{
-										client.Out.SendMessage("This buff type is not available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									}
-									return;
-								}
-								else if (args[2] == "xp")
-								{
-									if (Properties.GUILD_BUFF_XP > 0)
-									{
-										client.Player.TempProperties.setProperty(GUILD_BUFF_TYPE, Guild.eBonusType.Experience);
-										client.Out.SendCustomDialog("Are you sure you want to activate a guild XP buff for 1000 merit points?", ConfirmBuffBuy);
-									}
-									else
-									{
-										client.Out.SendMessage("This buff type is not available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									}
-									return;
-								}
-								else if (args[2] == "artifact")
-								{
-									if (Properties.GUILD_BUFF_ARTIFACT_XP > 0)
-									{
-										client.Player.TempProperties.setProperty(GUILD_BUFF_TYPE, Guild.eBonusType.ArtifactXP);
-										client.Out.SendCustomDialog("Are you sure you want to activate a guild Artifact XP buff for 1000 merit points?", ConfirmBuffBuy);
-									}
-									else
-									{
-										client.Out.SendMessage("This buff type is not available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									}
-									return;
-								}
-								else if (args[2] == "mlxp")
-								{
-									if (Properties.GUILD_BUFF_MASTERLEVEL_XP > 0)
-									{
-										client.Out.SendMessage("This buff type has not been implemented.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										buffType = "Realm Point";
+										buffProp = Guild.eBonusType.RealmPoints;
+
+										// Only activate if the server property is set above 0
+										if (Properties.GUILD_BUFF_RP > 0)
+										{
+											client.Out.SendCustomDialog(dialog, ConfirmBuffBuy);
+											
+											// Apply the bonus to everyone online
+											// TODO: Apply it to offline members as well
+											foreach (GamePlayer guildMember in client.Player.Guild.GetListOfOnlineMembers())
+											{
+												// Message: {0} has activated the {1} guild bonus.
+												ChatUtil.SendTypeMessage((int)eMsg.Error, guildMember, "Scripts.Player.Guild.BuffActivatedBy", client.Player.Name, buffType);
+												guildMember.TempProperties.setProperty(GUILD_BUFF_TYPE, buffProp);
+												guildMember.Guild.UpdateGuildWindow();
+											}
+										}
+										else
+										{
+											// Message: This buff type is not available.
+											ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.BuffTypeNotAvail", null);
+										}
 										return;
-
-										//client.Player.TempProperties.setProperty(GUILD_BUFF_TYPE, Guild.eBonusType.MasterLevelXP);
-										//client.Out.SendCustomDialog("Are you sure you want to activate a guild Masterlevel XP buff for 1000 merit points?", ConfirmBuffBuy);
 									}
-									else
+										break;
+									case "bps":
 									{
-										client.Out.SendMessage("This buff type is not available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									}
+										buffType = "Bounty Point";
+										buffProp = Guild.eBonusType.BountyPoints;
 
-									return;
-								}
-								else
-								{
-									client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildBuff"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-									return;
+										// Only activate if the server property is set above 0
+										if (Properties.GUILD_BUFF_BP > 0)
+										{
+											client.Out.SendCustomDialog(dialog, ConfirmBuffBuy);
+											
+											// Apply the bonus to everyone online
+											// TODO: Apply it to offline members as well
+											foreach (GamePlayer guildMember in client.Player.Guild.GetListOfOnlineMembers())
+											{
+												// Message: {0} has activated the {1} guild bonus.
+												ChatUtil.SendTypeMessage((int)eMsg.Error, guildMember, "Scripts.Player.Guild.BuffActivatedBy", client.Player.Name, buffType);
+												guildMember.TempProperties.setProperty(GUILD_BUFF_TYPE, buffProp);
+												guildMember.Guild.UpdateGuildWindow();
+											}
+										}
+										else
+										{
+											// Message: This buff type is not available.
+											ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.BuffTypeNotAvail", null);
+										}
+									}
+										break;
+									case "xp":
+									{
+										buffType = "Experience";
+										buffProp = Guild.eBonusType.Experience;
+
+										// Only activate if the server property is set above 0
+										if (Properties.GUILD_BUFF_XP > 0)
+										{
+											client.Out.SendCustomDialog(dialog, ConfirmBuffBuy);
+											
+											// Apply the bonus to everyone online
+											// TODO: Apply it to offline members as well
+											foreach (GamePlayer guildMember in client.Player.Guild.GetListOfOnlineMembers())
+											{
+												// Message: {0} has activated the {1} guild bonus.
+												ChatUtil.SendTypeMessage((int)eMsg.Error, guildMember, "Scripts.Player.Guild.BuffActivatedBy", client.Player.Name, buffType);
+												guildMember.TempProperties.setProperty(GUILD_BUFF_TYPE, buffProp);
+												guildMember.Guild.UpdateGuildWindow();
+											}
+										}
+										else
+										{
+											// Message: This buff type is not available.
+											ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.BuffTypeNotAvail", null);
+										}
+									}
+										break;
+									case "crafting":
+									{
+										buffType = "Crafting";
+										buffProp = Guild.eBonusType.CraftingHaste;
+
+										// Only activate if the server property is set above 0
+										if (Properties.GUILD_BUFF_CRAFTING > 0)
+										{
+											client.Out.SendCustomDialog(dialog, ConfirmBuffBuy);
+											
+											// Apply the bonus to everyone online
+											// TODO: Apply it to offline members as well
+											foreach (GamePlayer guildMember in client.Player.Guild.GetListOfOnlineMembers())
+											{
+												// Message: {0} has activated the {1} guild bonus.
+												ChatUtil.SendTypeMessage((int)eMsg.Error, guildMember, "Scripts.Player.Guild.BuffActivatedBy", client.Player.Name, buffType);
+												guildMember.TempProperties.setProperty(GUILD_BUFF_TYPE, buffProp);
+												guildMember.Guild.UpdateGuildWindow();
+											}
+										}
+										else
+										{
+											// Message: This buff type is not available.
+											ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.BuffTypeNotAvail", null);
+										}
+									}
+										break;
+									case "":
+									{
+										// Message: '/gc buff < bps | crafting | rps | xp >' - Activates a guild-wide buff for the desired 5% bonus type. Each activation lasts 24 hours and costs 1000 Merit Points.
+										ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.Help.GuildBuff", null);
+									}
+										break;
 								}
 							}
 							else
 							{
 								if (client.Player.Guild.BonusType == Guild.eBonusType.None)
 								{
-									client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildBuff"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+									// Message: '/gc buff < bps | crafting | rps | xp >' - Activates a guild-wide buff for the desired 5% bonus type. Each activation lasts 24 hours and costs 1000 Merit Points.
+									ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.Help.GuildBuff", null);
 								}
 								else
 								{
+									var buffType = " ";
+
+									// If a buff is already active, then throw a message saying as much
 									switch (client.Player.Guild.BonusType)
 									{
 										case Guild.eBonusType.Experience:
-											client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.XPBuffActive"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+										{
+											buffType = "n experience";
+
+											// Message: Your guild already has a{0} buff active.
+											ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.GuildBuffActive", buffType);
+										}
 											break;
 										case Guild.eBonusType.RealmPoints:
-											client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.RPBuffActive"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+										{
+											buffType = " realm point";
+
+											// Message: Your guild already has a{0} buff active.
+											ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.GuildBuffActive", buffType);
+										}
 											break;
 										case Guild.eBonusType.BountyPoints:
-											client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.BPBuffActive"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+										{
+											buffType = " bounty point";
+
+											// Message: Your guild already has a{0} buff active.
+											ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.GuildBuffActive", buffType);
+										}
 											break;
 										case Guild.eBonusType.CraftingHaste:
-											client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.CraftBuffActive"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+										{
+											buffType = " crafting";
+
+											// Message: Your guild already has a{0} buff active.
+											ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.GuildBuffActive", buffType);
+										}
 											break;
 									}
 									//client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.ActiveBuff"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 								}
 							}
 
-							if(client.Player.Guild.BonusType == Guild.eBonusType.None)
-								client.Out.SendMessage("Available buffs:", eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+							// If no buff is active, show which buffs the player may activate
+							if (client.Player.Guild.BonusType == Guild.eBonusType.None)
+								// Message: Available guild buffs:
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.GuildBuffTypesAvail", null);
+
+							// Bounty point buff
+							if (ServerProperties.Properties.GUILD_BUFF_BP > 0 && client.Player.Guild.BonusType == Guild.eBonusType.None)
+								// Message: {0}: {1}%
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.GuildBuffPercents", Guild.BonusTypeToName(Guild.eBonusType.BountyPoints), ServerProperties.Properties.GUILD_BUFF_BP);
+
+							// Crafting buff
+							if (ServerProperties.Properties.GUILD_BUFF_CRAFTING > 0 && client.Player.Guild.BonusType == Guild.eBonusType.None)
+								// Message: {0}: {1}%
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.GuildBuffPercents", Guild.BonusTypeToName(Guild.eBonusType.CraftingHaste), ServerProperties.Properties.GUILD_BUFF_CRAFTING);
+
+							// Realm point buff
+							if (ServerProperties.Properties.GUILD_BUFF_RP > 0 && client.Player.Guild.BonusType == Guild.eBonusType.None)
+								// Message: {0}: {1}%
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.GuildBuffPercents", Guild.BonusTypeToName(Guild.eBonusType.RealmPoints), ServerProperties.Properties.GUILD_BUFF_RP);
+
+							// XP buff
+							if (ServerProperties.Properties.GUILD_BUFF_XP > 0 && client.Player.Guild.BonusType == Guild.eBonusType.None)
+								// Message: {0}: {1}%
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.GuildBuffPercents", Guild.BonusTypeToName(Guild.eBonusType.Experience), ServerProperties.Properties.GUILD_BUFF_XP);
 
 							//if (ServerProperties.Properties.GUILD_BUFF_ARTIFACT_XP > 0)
 							//	client.Out.SendMessage(string.Format("{0}: {1}%", Guild.BonusTypeToName(Guild.eBonusType.ArtifactXP), ServerProperties.Properties.GUILD_BUFF_ARTIFACT_XP), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 
-							if (ServerProperties.Properties.GUILD_BUFF_BP > 0 && client.Player.Guild.BonusType == Guild.eBonusType.None)
-								client.Out.SendMessage(string.Format("{0}: {1}%", Guild.BonusTypeToName(Guild.eBonusType.BountyPoints), ServerProperties.Properties.GUILD_BUFF_BP), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-
-							if (ServerProperties.Properties.GUILD_BUFF_CRAFTING > 0 && client.Player.Guild.BonusType == Guild.eBonusType.None)
-								client.Out.SendMessage(string.Format("{0}: {1}%", Guild.BonusTypeToName(Guild.eBonusType.CraftingHaste), ServerProperties.Properties.GUILD_BUFF_CRAFTING), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-
-							if (ServerProperties.Properties.GUILD_BUFF_XP > 0 && client.Player.Guild.BonusType == Guild.eBonusType.None)
-								client.Out.SendMessage(string.Format("{0}: {1}%", Guild.BonusTypeToName(Guild.eBonusType.Experience), ServerProperties.Properties.GUILD_BUFF_XP), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-
 							//if (ServerProperties.Properties.GUILD_BUFF_MASTERLEVEL_XP > 0)
 							//    client.Out.SendMessage(string.Format("{0}: {1}%", Guild.BonusTypeToName(Guild.eBonusType.MasterLevelXP), ServerProperties.Properties.GUILD_BUFF_MASTERLEVEL_XP), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 
-							if (ServerProperties.Properties.GUILD_BUFF_RP > 0 && client.Player.Guild.BonusType == Guild.eBonusType.None)
-								client.Out.SendMessage(string.Format("{0}: {1}%", Guild.BonusTypeToName(Guild.eBonusType.RealmPoints), ServerProperties.Properties.GUILD_BUFF_RP), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-
 							return;
 						}
-						#endregion
+					#endregion Buff
 						#region Unsummon
 					case "unsummon":
 						{
