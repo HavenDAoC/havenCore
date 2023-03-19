@@ -1434,50 +1434,57 @@ namespace DOL.GS.Commands
 						} 
 					*/
 					#endregion Unsummon (Disabled)
-						#region Ranks
+					#region Ranks
+					// --------------------------------------------------------------------------------
+					// RANKS
+					// '/gc ranks'
+					// Displays all rank settings and information for the guild.
+					// --------------------------------------------------------------------------------
 					case "ranks":
 						{
+							// Obviously need to be a member of a guild to use this command
 							if (client.Player.Guild == null)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must be a member of a guild to use any guild commands.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
 								return;
 							}
+							
 							client.Player.Guild.UpdateGuildWindow();
+							
+							// Make sure they've got sufficient privileges
 							if (!client.Player.GuildRank.GcHear)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You do not have sufficient privileges in your guild to use that command.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
 								return;
 							}
+							
 							List<DBRank> rankList = client.Player.Guild.Ranks.ToList();
+							
+							// List the following info for each rank
 							foreach (DBRank rank in rankList.OrderBy(rank => rank.RankLevel))
 							{
-
-								client.Out.SendMessage("RANK: " + rank.RankLevel.ToString() + " NAME: " + rank.Title,
-									eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage(
-									"AcHear: " + (rank.AcHear ? "y" : "n") + " AcSpeak: " + (rank.AcSpeak ? "y" : "n"),
-									eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage(
-									"OcHear: " + (rank.OcHear ? "y" : "n") + " OcSpeak: " + (rank.OcSpeak ? "y" : "n"),
-									eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage(
-									"GcHear: " + (rank.GcHear ? "y" : "n") + " GcSpeak: " + (rank.GcSpeak ? "y" : "n"),
-									eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage(
-									"Emblem: " + (rank.Emblem ? "y" : "n") + " Promote: " + (rank.Promote ? "y" : "n"),
-									eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage(
-									"Remove: " + (rank.Remove ? "y" : "n") + " View: " + (rank.View ? "y" : "n"),
-									eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage(
-									"Dues: " + (rank.Dues ? "y" : "n") + " Withdraw: " + (rank.Withdraw ? "y" : "n"),
-									eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: Rank: {0} | Name: {1}
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.RanksRankName", rank.RankLevel.ToString(), rank.Title);
+								// Message: Alliance Channel Hear: {0} | Alliance Channel Speak: {1}
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.RankAlliancePriv", (rank.AcHear ? "Yes" : "No"), (rank.AcSpeak ? "Yes" : "No"));
+								// Message: Officer Channel Hear: {0} | Officer Channel Speak: {1}
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.RankOfficerPriv", (rank.OcHear ? "Yes" : "No"), (rank.OcSpeak ? "Yes" : "No"));
+								// Message: Guild Channel Hear: {0} | Guild Channel Speak: {1}
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.RankGuildPriv", (rank.GcHear ? "Yes" : "No"), (rank.GcSpeak ? "Yes" : "No"));
+								// Message: Wear Emblems: {0} | Promote Members: {1}
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.RankEmbPromPriv", (rank.Emblem ? "Yes" : "No"), (rank.Promote ? "Yes" : "No"));
+								// Message: Remove Members: {0} | View Ranks: {1}
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.RankRemoveViewPriv", (rank.Remove ? "Yes" : "No"), (rank.View ? "Yes" : "No"));
+								// Message: Set Dues: {0} | Withdraw from Guild Bank: {1}
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.RankDuesWithPriv", (rank.Dues ? "Yes" : "No"), (rank.Withdraw ? "Yes" : "No"));
 							}
 
 							client.Player.Guild.UpdateGuildWindow();
 							break;
 						}
-						#endregion
+					#endregion Ranks
 						#region Webpage
 					case "webpage":
 						{
