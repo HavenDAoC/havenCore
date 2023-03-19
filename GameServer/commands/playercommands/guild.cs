@@ -2605,15 +2605,18 @@ namespace DOL.GS.Commands
 					}
 						break;
 					#endregion Guild Officer Message of the Day (OMOTD)
-						#region Alliance
-						// --------------------------------------------------------------------------------
-						// ALLIANCE
-						// --------------------------------------------------------------------------------
+					#region Alliance
+					// --------------------------------------------------------------------------------
+					// ALLIANCE
+					// '/gc alliance'
+					// Shows information regarding your guild's current alliance association.
+					// --------------------------------------------------------------------------------
 					case "alliance":
 						{
 							if (client.Player.Guild == null)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must be a member of a guild to use any guild commands.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
 								return;
 							}
 
@@ -2624,26 +2627,37 @@ namespace DOL.GS.Commands
 							}
 							else
 							{
-								DisplayMessage(client, "Your guild is not a member of an alliance!");
+								// Message: Your guild must be in an alliance to use this command.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoAllianceSet", null);
 								return;
 							}
 
-							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceInfo", alliance.Dballiance.AllianceName));
+							// Message: Alliance info for {0}:
+							ChatUtil.SendTypeMessage((int)eMsg.Alliance, client, "Scripts.Player.Guild.AllianceInfo", alliance.Dballiance.AllianceName);
+							
 							DBGuild leader = alliance.Dballiance.DBguildleader;
+							
 							if (leader != null)
-								DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceLeader", leader.GuildName));
+								// Message: Alliance leader: {0}
+								ChatUtil.SendTypeMessage((int)eMsg.Alliance, client, "Scripts.Player.Guild.AllianceLeader", leader.GuildName);
 							else
-								DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceNoLeader"));
+								// Message: No alliance leader
+								ChatUtil.SendTypeMessage((int)eMsg.Alliance, client, "Scripts.Player.Guild.AllianceNoLeader", null);
 
-							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceMembers"));
+							// Message: Alliance members:
+							ChatUtil.SendTypeMessage((int)eMsg.Alliance, client, "Scripts.Player.Guild.AllianceMembers", null);
+							
 							int i = 0;
+							
 							foreach (DBGuild guild in alliance.Dballiance.DBguilds)
 								if (guild != null)
-									DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceMember", i++, guild.GuildName));
+									// Message: {0} - {1}
+									ChatUtil.SendTypeMessage((int)eMsg.Alliance, client, "Scripts.Player.Guild.AllianceMember", i++, guild.GuildName);
+									
 							client.Player.Guild.UpdateGuildWindow();
-							return;
 						}
-						#endregion
+						break;
+					#endregion Alliance
 						#region Alliance Invite
 						// --------------------------------------------------------------------------------
 						// AINVITE
