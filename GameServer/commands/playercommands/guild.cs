@@ -726,63 +726,90 @@ namespace DOL.GS.Commands
 						}
 						break;
 					#endregion Remove
-						#region Remove account
-						// --------------------------------------------------------------------------------
-						// REMOVE ACCOUNT (Patch 1.84)
-						// --------------------------------------------------------------------------------
+					#region RemoveAccount
+					// --------------------------------------------------------------------------------
+					// REMOVE ACCOUNT (Patch 1.84)
+					// '/gc removeaccount <playerName>'
+					// Removes all characters associated with a specific account from the guild.
+					// --------------------------------------------------------------------------------
 					case "removeaccount":
 						{
+							// Player must be a member of an existing guild to remove players
 							if (client.Player.Guild == null)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must be a member of a guild to use any guild commands.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
 								return;
 							}
 
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Remove))
+							// Player must have sufficient rank privileges in the guild to remove members
+							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Invite))
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You do not have high sufficient privileges in your guild to use that command.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
 								return;
 							}
 
+							// Make sure they specify the player name
 							if (args.Length < 3)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildRemAccount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: '/gc removeaccount <playerName>' - Removes all characters associated with a specific account from the guild.
+								ChatUtil.SendTypeMessage((int)eMsg.CmdSyntax, client, "Scripts.Player.Guild.Help.GuildRemAccount", null);
 								return;
 							}
 
-							string playername = String.Join(" ", args, 2, args.Length - 2);
+							// Parse the player name
+							string playerName = String.Join(" ", args, 2, args.Length - 2);
+							
+							// Find all characters for that account, online or offline, in the guild
 							// Patch 1.84: look for offline players
-							var chs = DOLDB<DOLCharacters>.SelectObjects(DB.Column("AccountName").IsEqualTo(playername).And(DB.Column("GuildID").IsEqualTo(client.Player.GuildID)));
-							if (chs.Count > 0)
+							var chars = DOLDB<DOLCharacters>.SelectObjects(DB.Column("AccountName").IsEqualTo(playerName).And(DB.Column("GuildID").IsEqualTo(client.Player.GuildID)));
+							
+							// Stuff to do if we find any characters
+							if (chars.Count > 0)
 							{
-								GameClient myclient = WorldMgr.GetClientByAccountName(playername, false);
+								
+								GameClient myClient = WorldMgr.GetClientByAccountName(playerName, false);
 								string plys = "";
-								bool isOnline = (myclient != null);
-								foreach (DOLCharacters ch in chs)
+								bool isOnline = (myClient != null);
+								
+								// Actions to perform for each character found in the database
+								foreach (DOLCharacters ch in chars)
 								{
 									plys += (plys != "" ? "," : "") + ch.Name;
-									if (isOnline && ch.Name == myclient.Player.Name)
-										client.Player.Guild.RemovePlayer(client.Player.Name, myclient.Player);
+									
+									// Alert the player if they're online
+									if (isOnline && ch.Name == myClient.Player.Name)
+										client.Player.Guild.RemovePlayer(client.Player.Name, myClient.Player);
 									else
 									{
+										// Change the database values for all other characters
 										ch.GuildID = "";
 										ch.GuildRank = 9;
 										GameServer.Database.SaveObject(ch);
 									}
 								}
 
-								foreach (GamePlayer ply in client.Player.Guild.GetListOfOnlineMembers())
+								// Notify each player in the guild
+								foreach (GamePlayer plyon in client.Player.Guild.GetListOfOnlineMembers())
 								{
-									ply.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AccountRemoved", client.Player.Name, plys), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									// Don't send the message to the person removing since they're already going to get a message
+									if (plyon != client.Player)
+										// Message: {0} has removed {1} from the guild.
+										ChatUtil.SendTypeMessage((int)eMsg.Guild, plyon, "Scripts.Player.Guild.AccountRemoved", client.Player.Name, myClient.Player.Name);
+									else
+										// Message: You have removed {0} from the guild.
+										ChatUtil.SendTypeMessage((int)eMsg.Guild, plyon, "Scripts.Player.Guild.YouHaveRemovedPlayer", myClient.Player.Name);
 								}
 							}
 							else
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPlayersInAcc"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: There are no players associated with this account in your guild.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPlayersInAcc", null);
 
 							client.Player.Guild.UpdateGuildWindow();
 						}
 						break;
-						#endregion
+					#endregion RemoveAccount
 						#region Info
 						// --------------------------------------------------------------------------------
 						// INFO
