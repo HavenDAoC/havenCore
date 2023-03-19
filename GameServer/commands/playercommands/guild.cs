@@ -446,21 +446,27 @@ namespace DOL.GS.Commands
 						}
 						break;
 					#endregion AddPlayer (Admin/GM command)
-						#region RemovePlayer
-						// --------------------------------------------------------------------------------
-						// REMOVEPLAYER
-						// --------------------------------------------------------------------------------
+					#region RemovePlayer (Admin/GM command)
+					// --------------------------------------------------------------------------------
+					// REMOVEPLAYER (Admin/GM command)
+					// '/gc removeplayer <player> from <guildName>'
+					// Removes the identified player immediately from the guild.
+					// --------------------------------------------------------------------------------
 					case "removeplayer":
 						{
+							// Players cannot perform this command
 							if (client.Account.PrivLevel == (uint)ePrivLevel.Player)
 								return;
 
+							// Make sure the command is long enough
 							if (args.Length < 5)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildGMRemovePlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: '/gc removeplayer <player> from <guildName>' - Removes the identified player immediately from the guild.
+								ChatUtil.SendTypeMessage((int)eMsg.CmdSyntax, client, "Scripts.Player.Guild.Help.GuildGMRemovePlayer", null);
 								return;
 							}
 
+							// Parse the command
 							int i;
 							for (i = 2; i < args.Length; i++)
 							{
@@ -468,20 +474,32 @@ namespace DOL.GS.Commands
 									break;
 							}
 
-							string playername = String.Join(" ", args, 2, i - 2);
-							string guildname = String.Join(" ", args, i + 1, args.Length - i - 1);
+							// Parse the command some more
+							string playerName = String.Join(" ", args, 2, i - 2);
+							string guildName = String.Join(" ", args, i + 1, args.Length - i - 1);
 
-							if (!GuildMgr.DoesGuildExist(guildname))
+							// If the guild name doesn't exist, then throw an error
+							if (!GuildMgr.DoesGuildExist(guildName))
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildNotExist"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: No guild exists with that name.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.GuildNotExist", null);
 								return;
 							}
+							
+							// Get the player by client
+							var removedPlayer = WorldMgr.GetClientByPlayerName(playerName, true, false).Player;
 
-							GuildMgr.GetGuildByName(guildname).RemovePlayer("gamemaster", WorldMgr.GetClientByPlayerName(playername, true, false).Player);
+							// Remove the player from the guild & update accordingly
+							GuildMgr.GetGuildByName(guildName).RemovePlayer("Eclipse staff", removedPlayer);
 							client.Player.Guild.UpdateGuildWindow();
+
+							// Message: You have removed {0} from the guild {1}.
+							ChatUtil.SendTypeMessage((int)eMsg.Important, client, "Scripts.Player.Guild.RemovedFromGuild", removedPlayer.Name, GuildMgr.GetGuildByName(guildName).Name);
+							// Message: Eclipse staff have removed you from the guild {0}.
+							ChatUtil.SendTypeMessage((int)eMsg.Important, removedPlayer, "Scripts.Player.Guild.YouHaveBeenRemoved", GuildMgr.GetGuildByName(guildName).Name);
 						}
 						break;
-						#endregion
+					#endregion RemovePlayer (Admin/GM command)
 						#region Invite
 						/****************************************guild member command***********************************************/
 						// --------------------------------------------------------------------------------
