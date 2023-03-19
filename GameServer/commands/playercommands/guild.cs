@@ -2734,6 +2734,71 @@ namespace DOL.GS.Commands
 						}
 						break;
 					#endregion Alliance Invite
+					#region Alliance Leader
+					// --------------------------------------------------------------------------------
+					// ALEADER
+					// '/gc aleader'
+					// Promotes another guild to alliance leader. Only one alliance leader may exist at a time.
+					// --------------------------------------------------------------------------------
+					case "aleader":
+						{
+							if (client.Player.Guild == null)
+							{
+								// Message: You must be a member of a guild to use any guild commands.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
+								return;
+							}
+							
+							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Alli))
+							{
+								// Message: You do not have sufficient privileges in your guild to use that command.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
+								return;
+							}
+							
+							GamePlayer obj = client.Player.TargetObject as GamePlayer;
+							
+							if (obj == null)
+							{
+								// Message: You must target a player or provide a player name.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPlayerSelected", null);
+								return;
+							}
+							
+							if (obj.GuildRank.RankLevel != 0)
+							{
+								// Message: You must target or specify the Guildmaster for the guild you want to invite.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.AllianceNoGMSelected", null);
+								return;
+							}
+							
+							if (obj.Guild.alliance != client.Player.Guild.alliance)
+							{
+								// Message: You must be a member of the same alliance to use this command.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotInSameAlliance", null);
+								return;
+							}
+							
+							if (client.Player.Guild.alliance.Dballiance.LeaderGuildID != client.Player.Guild.GuildID)
+							{
+								// Message: You must be the leader of the alliance to use this command.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.AllianceNotLeader", null);
+								return;
+							}
+							
+							client.Player.Guild.alliance.Dballiance.AllianceName = obj.Guild.Name;
+							client.Player.Guild.alliance.Dballiance.LeaderGuildID = obj.Guild.GuildID;
+							GameServer.Database.SaveObject(client.Player.Guild.alliance.Dballiance);
+							
+							// Message: You have made {0} the new leader of the alliance!
+							ChatUtil.SendTypeMessage((int)eMsg.Alliance, client, "Scripts.Player.Guild.NewLeaderAlliance", null);
+							
+							// TODO: Alert all guilds in the alliance of the change
+
+							// client.Player.Guild.alliance.PromoteGuild(obj.Guild);
+						}
+						break;
+					#endregion Alliance Leader
 						#region Alliance Invite Accept
 						// --------------------------------------------------------------------------------
 						// AINVITE
