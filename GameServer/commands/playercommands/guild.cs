@@ -223,61 +223,77 @@ namespace DOL.GS.Commands
 
 				switch (args[1])
 				{
-						#region Create
-						// --------------------------------------------------------------------------------
-						// CREATE
-						// --------------------------------------------------------------------------------
+					#region Create (Admin/GM command)
+					// --------------------------------------------------------------------------------
+					// CREATE (Admin/GM command)
+					// '/gc create <guildName>'
+					// Manually creates a new guild with the targeted player as leader, overruling the standard group requirement to form.
+					// --------------------------------------------------------------------------------
 					case "create":
 						{
+							// Players cannot perform this command
 							if (client.Account.PrivLevel == (uint)ePrivLevel.Player)
 								return;
 
 							if (args.Length < 3)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildGMCreate"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: '/gc create <guildName>' - Creates a new guild with the targeted player as its leader.
+								ChatUtil.SendTypeMessage((int)eMsg.CmdSyntax, client, "Scripts.Player.Guild.Help.GuildGMCreate", null);
 								return;
 							}
 
-							GameLiving guildLeader = client.Player.TargetObject as GameLiving;
+							// Use targeted player as leader for the guild
+							GameLiving guildLeader = client.Player.TargetObject as GamePlayer;
 							string guildname = String.Join(" ", args, 2, args.Length - 2);
 							guildname = GameServer.Database.Escape(guildname);
+							
+							//Check to make sure a player is targeted
+							if (guildLeader == null)
+							{
+								// Message: To create a guild, you must first select a player to make its leader.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.PlayerNotFound", null);
+								return;
+							}
+							
+							// Check to make sure the guild name isn't already taken
 							if (!GuildMgr.DoesGuildExist(guildname))
 							{
-								if (guildLeader == null)
-								{
-									client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.PlayerNotFound"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-
+								// Check for invalid characters
 								if (!IsValidGuildName(guildname))
 								{
-									client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.InvalidLetters"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									// Message: Some of the characters entered for the guild name are invalid.
+									ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.InvalidLetters", null);
 									return;
+								}
+								
+								// Create the guild using the target's realm
+								Guild newGuild = GuildMgr.CreateGuild(guildLeader.Realm, guildname, client.Player);
+								
+								// If there's some problem with creating the guild, throw an error
+								if (newGuild == null)
+								{
+									// Message: The guild {0} could not be created.
+									ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.UnableToCreate", guildname);
 								}
 								else
 								{
-									Guild newGuild = GuildMgr.CreateGuild(client.Player.Realm, guildname, client.Player);
-									if (newGuild == null)
-									{
-										client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.UnableToCreate", newGuild.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									}
-									else
-									{
-										newGuild.AddPlayer((GamePlayer)guildLeader);
-										((GamePlayer)guildLeader).GuildRank = ((GamePlayer)guildLeader).Guild.GetRankByID(0);
-										client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.GuildCreated", guildname, ((GamePlayer)guildLeader).Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									}
-									return;
+									// Add the targeted player and give them an appropriate guild rank
+									newGuild.AddPlayer((GamePlayer)guildLeader);
+									((GamePlayer)guildLeader).GuildRank = ((GamePlayer)guildLeader).Guild.GetRankByID(0);
+									
+									// Message: {0} is formed. {1} is the Guildmaster and must now adjust the settings for all members.
+									ChatUtil.SendTypeMessage((int)eMsg.Important, client, "Scripts.Player.Guild.GuildCreated", guildname, ((GamePlayer)guildLeader).Name);
 								}
+								return;
 							}
-							else
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.GuildExists"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
+							
+							// Message: The guild cannot be created because one with that name already exists.
+							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.GuildExists", null);
+							
 							client.Player.Guild.UpdateGuildWindow();
 						}
 						break;
-						#endregion
+					#endregion Create (Admin/GM command)
 						#region Purge
 						// --------------------------------------------------------------------------------
 						// PURGE
