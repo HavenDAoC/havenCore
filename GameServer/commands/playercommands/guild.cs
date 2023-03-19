@@ -1579,23 +1579,28 @@ namespace DOL.GS.Commands
 					}
 						break;
 					#endregion List
-						#region Edit
-						// --------------------------------------------------------------------------------
-						// EDIT
-						// --------------------------------------------------------------------------------
+					#region Edit
+					// --------------------------------------------------------------------------------
+					// EDIT
+					// '/gc edit'
+					// Lists all available guild parameters that may be altered.
+					// --------------------------------------------------------------------------------
 					case "edit":
+					{
+						// Obviously need to be a member of a guild to use this command
+						if (client.Player.Guild == null)
 						{
-							if (client.Player.Guild == null)
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							client.Player.Guild.UpdateGuildWindow();
-							GCEditCommand(client, args);
+							// Message: You must be a member of a guild to use any guild commands.
+							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
+							return;
 						}
+							
+						client.Player.Guild.UpdateGuildWindow();
+						GCEditCommand(client, args);
+					}
 						client.Player.Guild.UpdateGuildWindow();
 						break;
-						#endregion
+					#endregion Edit
 						#region Form
 						// --------------------------------------------------------------------------------
 						// FORM
