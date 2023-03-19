@@ -2658,105 +2658,82 @@ namespace DOL.GS.Commands
 						}
 						break;
 					#endregion Alliance
-						#region Alliance Invite
-						// --------------------------------------------------------------------------------
-						// AINVITE
-						// --------------------------------------------------------------------------------
+					#region Alliance Invite
+					// --------------------------------------------------------------------------------
+					// AINVITE
+					// '/gc ainvite'
+					// Sends an invitation to a guild to join your alliance. This cannot be done if the guild is already in an alliance.
+					// --------------------------------------------------------------------------------
 					case "ainvite":
 						{
 							if (client.Player.Guild == null)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must be a member of a guild to use any guild commands.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
 								return;
 							}
+							
 							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Alli))
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You do not have sufficient privileges in your guild to use that command.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
 								return;
 							}
+							
 							GamePlayer obj = client.Player.TargetObject as GamePlayer;
+							
 							if (obj == null)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPlayerSelected"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must target a player or provide a player name.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPlayerSelected", null);
 								return;
 							}
+							
 							if (obj.GuildRank.RankLevel != 0)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceNoGMSelected"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must target or specify the Guildmaster for the guild you want to invite.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.AllianceNoGMSelected", null);
 								return;
 							}
+							
 							if (obj.Guild.alliance != null)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceAlreadyOther"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: That guild already has an alliance.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.AllianceAlreadyOther", null);
 								return;
 							}
+							
 							if (ServerProperties.Properties.ALLIANCE_MAX == 0)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceDisabled"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: Alliances are disabled on this server.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.AllianceDisabled", null);
 								return;
 							}
+							
 							if (ServerProperties.Properties.ALLIANCE_MAX != -1)
 							{
 								if (client.Player.Guild.alliance != null)
 								{
 									if (client.Player.Guild.alliance.Guilds.Count + 1 > ServerProperties.Properties.ALLIANCE_MAX)
 									{
-										client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceMax"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										// Message: You cannot invite that guild to your alliance, as your alliance has already reached the maximum allowable number of guilds.
+										ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.AllianceMax", null);
 										return;
 									}
 								}
 							}
+							
 							obj.TempProperties.setProperty("allianceinvite", client.Player); //finish that
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceInvite"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-							obj.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceInvited", client.Player.Guild.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+							
+							// Message: You have invited {0} to join your alliance. Use '/gc acancel' to cancel the invitation.
+							ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.AllianceInvite", obj.Guild.Name);
+							// Message: Your guild has been invited to enter an alliance with {0}. Use '/gc aaccept' to accept the invitation, or '/gc adecline' to decline.
+							ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.AllianceInvited", client.Player.Guild.Name);
+							
 							client.Player.Guild.UpdateGuildWindow();
-							return;
 						}
-						case "aleader":
-						{
-							if (client.Player.Guild == null)
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Alli))
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							GamePlayer obj = client.Player.TargetObject as GamePlayer;
-							if (obj == null)
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPlayerSelected"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							if (obj.GuildRank.RankLevel != 0)
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceNoGMSelected"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							if (obj.Guild.alliance != client.Player.Guild.alliance)
-							{
-								client.Out.SendMessage("You're not in the same alliance", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							if (client.Player.Guild.alliance.Dballiance.LeaderGuildID != client.Player.Guild.GuildID)
-							{
-								client.Out.SendMessage("You're not the leader of the alliance", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							
-							client.Player.Guild.alliance.Dballiance.AllianceName = obj.Guild.Name;
-							client.Player.Guild.alliance.Dballiance.LeaderGuildID = obj.Guild.GuildID;
-							GameServer.Database.SaveObject(client.Player.Guild.alliance.Dballiance);
-							client.Player.Guild.alliance.SendMessageToAllianceMembers(obj.Guild.Name + " is the new leader of the alliance", PacketHandler.eChatType.CT_Alliance, PacketHandler.eChatLoc.CL_SystemWindow);
-							
-							// client.Player.Guild.alliance.PromoteGuild(obj.Guild);
-
-							break;
-						}
-						
-						#endregion
+						break;
+					#endregion Alliance Invite
 						#region Alliance Invite Accept
 						// --------------------------------------------------------------------------------
 						// AINVITE
