@@ -500,69 +500,113 @@ namespace DOL.GS.Commands
 						}
 						break;
 					#endregion RemovePlayer (Admin/GM command)
-						#region Invite
-						/****************************************guild member command***********************************************/
-						// --------------------------------------------------------------------------------
-						// INVITE
-						// --------------------------------------------------------------------------------
+					#region Invite
+					// --------------------------------------------------------------------------------
+					// INVITE
+					// '/gc invite <playerName>'
+					// Invites the targeted or specified player to join your guild.
+					// --------------------------------------------------------------------------------
 					case "invite":
 						{
+							// Player must be a member of an existing guild to invite players
 							if (client.Player.Guild == null)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must be a member of a guild to use any guild commands.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
 								return;
 							}
 
+							// Inviting player must have sufficient rank privileges in the guild to invite new members
 							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Invite))
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You do not have high sufficient privileges in your guild to use that command.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
 								return;
 							}
 
-							GamePlayer obj = client.Player.TargetObject as GamePlayer;
+							// If possible, players can invite by only targeting the desired character
+							GamePlayer guildInvitee = client.Player.TargetObject as GamePlayer;
+							
+							// If the player specifies a character by name as part of the command, use that instead
 							if (args.Length > 2)
 							{
-								GameClient temp = WorldMgr.GetClientByPlayerName(args[2], true, true);
-								if (temp != null)
-									obj = temp.Player;
+								// Grab the player's name from the command
+								var playerName = args[2];
+								
+								// Get the player's client (whole name specified and the player must be online)
+								GameClient playerClient = WorldMgr.GetClientByPlayerName(playerName, true, true);
+								
+								// Now grab the active player
+								if (playerClient != null)
+									guildInvitee = playerClient.Player;
 							}
-							if (obj == null)
+							
+							// If the player doesn't exist, isn't online, or is a member of another realm (ignore realm requirement if inviter is an Admin/GM)
+							if (guildInvitee == null || (guildInvitee.Realm != client.Player.Realm && client.Account.PrivLevel == (int)ePrivLevel.Player))
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.InviteNoSelected"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must select or specify an active player in your realm.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.InviteNoSelected", null);
 								return;
 							}
-							if (obj == client.Player)
+							
+							// Make sure inviter isn't trying to invite self
+							if (guildInvitee == client.Player)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.InviteNoSelf"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You can't invite yourself.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.InviteNoSelf", null);
 								return;
 							}
 
-							if (obj.Guild != null)
+							// If the invitee is already a member of a guild
+							if (guildInvitee.Guild != null)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AlreadyInGuild"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// If they're in your guild, mention that
+								if (guildInvitee.Guild == client.Player.Guild)
+								{
+									// Message: {0} is already a member of you guild.
+									ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.AlreadyInYourGuild", guildInvitee.Name);
+									return;
+								}
+
+								// Message: {0} is already a member of a guild.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.AlreadyInGuild", guildInvitee.Name);
 								return;
 							}
-							if (!obj.IsAlive)
+							
+							// Make sure the invitee is not dead
+							if (!guildInvitee.IsAlive)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.InviteDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You cannot invite a dead player to your guild.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.InviteDead", null);
 								return;
 							}
-							if (!GameServer.ServerRules.IsAllowedToGroup(client.Player, obj, true))
+							
+							// Make sure the invitee is an entity that can be grouped with according to server rules
+							if (!GameServer.ServerRules.IsAllowedToGroup(client.Player, guildInvitee, true))
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.InviteNotThis"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You cannot invite this character.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.InviteNotThis", null);
 								return;
 							}
-							if (!GameServer.ServerRules.IsAllowedToJoinGuild(obj, client.Player.Guild))
+							
+							// Make sure they can join a guild according to server rules
+							if (!GameServer.ServerRules.IsAllowedToJoinGuild(guildInvitee, client.Player.Guild))
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.InviteNotThis"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You cannot invite this character.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.InviteNotThis", null);
 								return;
 							}
-							obj.Out.SendGuildInviteCommand(client.Player, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.InviteRecieved", client.Player.Name, client.Player.Guild.Name));
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.InviteSent", obj.Name, client.Player.Guild.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+							
+							// Finally send out the guild invite
+							// Message: {0} has invited you to join their guild.
+							guildInvitee.Out.SendGuildInviteCommand(client.Player, LanguageMgr.GetTranslation(guildInvitee.Client.Account.Language, "Scripts.Player.Guild.InviteReceived", client.Player.Name));
+							
+							// Message: You have invited {0} to join your guild.
+							ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.InviteSent", guildInvitee.Name);
 							client.Player.Guild.UpdateGuildWindow();
 						}
 						break;
-						#endregion
+					#endregion Invite
 						#region Remove
 						// --------------------------------------------------------------------------------
 						// REMOVE
