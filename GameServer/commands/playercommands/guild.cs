@@ -2175,15 +2175,18 @@ namespace DOL.GS.Commands
 						}
 						break;
 					#endregion Demote
-						#region Who
-						// --------------------------------------------------------------------------------
-						// WHO
-						// --------------------------------------------------------------------------------
+					#region Who
+					// --------------------------------------------------------------------------------
+					// WHO
+					// '/gc who'
+					// Lists all members in your guild that are online presently.
+					// --------------------------------------------------------------------------------
 					case "who":
 						{
 							if (client.Player.Guild == null)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must be a member of a guild to use any guild commands.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
 								return;
 							}
 
@@ -2204,7 +2207,7 @@ namespace DOL.GS.Commands
 								}
 								return;
 							}
-							#endregion
+							#endregion Social Window
 
 							#region Alliance Who
 							else if (args.Length == 3)
@@ -2221,8 +2224,9 @@ namespace DOL.GS.Commands
 												{
 													ind++;
 													string zoneName = (ply.CurrentZone == null ? "(null)" : ply.CurrentZone.Description);
-													string mesg = ind + ") " + ply.Name + " <guild=" + guild.Name + "> the Level " + ply.Level + " " + ply.CharacterClass.Name + " in " + zoneName;
-													client.Out.SendMessage(mesg, eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+													string mesg = ind + ") " + ply.Name + " <" + guild.Name + "> the Level " + ply.Level + " " + ply.CharacterClass.Name + " in " + zoneName;
+													
+													ChatUtil.SendTypeMessage((int)eMsg.Guild, client, mesg, null);
 												}
 											}
 										}
@@ -2234,7 +2238,7 @@ namespace DOL.GS.Commands
 									int.TryParse(args[2], out startInd);
 								}
 							}
-							#endregion
+							#endregion Alliance Who
 
 							#region Who
 							IList<GamePlayer> onlineGuildMembers = client.Player.Guild.GetListOfOnlineMembers();
@@ -2255,17 +2259,20 @@ namespace DOL.GS.Commands
 									if (ServerProperties.Properties.ALLOW_CHANGE_LANGUAGE)
 										mesg += " <" + ply.Client.Account.Language + ">";
 									if (ind >= startInd)
-										client.Out.SendMessage(mesg, eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+										ChatUtil.SendTypeMessage((int)eMsg.Guild, client, mesg, null);
 								}
 							}
 							if (ind > WhoCommandHandler.MAX_LIST_SIZE && ind < onlineGuildMembers.Count)
-								client.Out.SendMessage(string.Format(WhoCommandHandler.MESSAGE_LIST_TRUNCATED, onlineGuildMembers.Count), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-							else client.Out.SendMessage("total member online:        " + ind.ToString(), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+								// Message: 
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, string.Format(WhoCommandHandler.MESSAGE_LIST_TRUNCATED, onlineGuildMembers.Count), null);
+							else
+								// Message: 
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Total members online: " + ind.ToString());
 
 							break;
-							#endregion
+							#endregion Who
 						}
-						#endregion
+					#endregion Who
 						#region Leader
 						// --------------------------------------------------------------------------------
 						// LEADER
