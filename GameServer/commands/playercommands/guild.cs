@@ -1724,22 +1724,45 @@ namespace DOL.GS.Commands
 						}
 						break;
 					#endregion Form
-						#region Quit
-						// --------------------------------------------------------------------------------
-						// QUIT
-						// --------------------------------------------------------------------------------
-					case "quit":
+					#region Quit/Leave
+					// --------------------------------------------------------------------------------
+					// QUIT
+					// '/gc <quit|leave>'
+					// Leaves the current guild you're associated with. You will be presented with a prompt afterward to confirm your choice.
+					// --------------------------------------------------------------------------------
+					case "leave" or "quit":
+					{
+						// You can't leave a guild if you're not a member of one
+						if (client.Player.Guild == null)
 						{
-							if (client.Player.Guild == null)
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							client.Out.SendGuildLeaveCommand(client.Player, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.ConfirmLeave", client.Player.Guild.Name));
-							client.Player.Guild.UpdateGuildWindow();
+							// Message: You must be a member of a guild to use any guild commands.
+							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
+							return;
 						}
+							
+						// Message: Do you really want to leave {0}?
+						client.Out.SendGuildLeaveCommand(client.Player, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.ConfirmLeave", client.Player.Guild.Name));
+							
+						// Notify everyone in the guild online
+						foreach (GamePlayer guildMember in client.Player.Guild.GetListOfOnlineMembers())
+						{
+							// Display departure message if sufficient privileges
+							if (guildMember.Guild.HasRank(guildMember, Guild.eRank.GcHear) && guildMember != client.Player)
+							{
+								// Message: {0} has left the guild.
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, guildMember, "Scripts.Player.Guild.LeftTheGuild", client.Player.Name);
+							}
+								
+							guildMember.Guild.UpdateGuildWindow();
+						}
+							
+						// Message: You have left your guild.
+						ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.GuildLeave", null);
+							
+						client.Player.Guild.UpdateGuildWindow();
+					}
 						break;
-						#endregion
+					#endregion Quit/Leave
 						#region Promote
 						// --------------------------------------------------------------------------------
 						// PROMOTE
