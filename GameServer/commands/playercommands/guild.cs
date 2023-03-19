@@ -392,21 +392,27 @@ namespace DOL.GS.Commands
 						}
 						break;
 					#endregion Rename (Admin/GM command)
-						#region AddPlayer
-						// --------------------------------------------------------------------------------
-						// ADDPLAYER
-						// --------------------------------------------------------------------------------
+					#region AddPlayer (Admin/GM command)
+					// --------------------------------------------------------------------------------
+					// ADDPLAYER (Admin/GM command)
+					// '/gc addplayer <playerName> to <guildName>'
+					// Forces a player to become a member of the guild, without prompting for acceptance.
+					// --------------------------------------------------------------------------------
 					case "addplayer":
 						{
+							// Players cannot perform this command
 							if (client.Account.PrivLevel == (uint)ePrivLevel.Player)
 								return;
 
+							// Make sure the command is long enough
 							if (args.Length < 5)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildGMAddPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: '/gc addplayer <playerName> to <guildName>' - Adds a player automatically to the specified guild without an invitation.
+								ChatUtil.SendTypeMessage((int)eMsg.CmdSyntax, client, "Scripts.Player.Guild.Help.GuildGMAddPlayer", null);
 								return;
 							}
 
+							// Parse the command
 							int i;
 							for (i = 2; i < args.Length; i++)
 							{
@@ -414,14 +420,32 @@ namespace DOL.GS.Commands
 									break;
 							}
 
-							string playername = String.Join(" ", args, 2, i - 2);
-							string guildname = String.Join(" ", args, i + 1, args.Length - i - 1);
+							// Parse the command some more
+							string playerName = String.Join(" ", args, 2, i - 2);
+							string guildName = String.Join(" ", args, i + 1, args.Length - i - 1);
+							
+							// If the guild name doesn't exist, then throw an error
+							if (!GuildMgr.DoesGuildExist(guildName))
+							{
+								// Message: No guild exists with that name.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.GuildNotExist", null);
+								return;
+							}
+							
+							// Get the player by client
+							var addedPlayer = WorldMgr.GetClientByPlayerName(playerName, true, false).Player;
 
-							GuildMgr.GetGuildByName(guildname).AddPlayer(WorldMgr.GetClientByPlayerName(playername, true, false).Player);
+							// Add the player to the guild & update accordingly
+							GuildMgr.GetGuildByName(guildName).AddPlayer(addedPlayer);
 							client.Player.Guild.UpdateGuildWindow();
+							
+							// Message: You have added {0} to the guild {1}.
+							ChatUtil.SendTypeMessage((int)eMsg.Important, client, "Scripts.Player.Guild.AddedToGuild", addedPlayer.Name, GuildMgr.GetGuildByName(guildName).Name);
+							// Message: Eclipse staff have added you to the guild {0}.
+							ChatUtil.SendTypeMessage((int)eMsg.Important, addedPlayer, "Scripts.Player.Guild.YouHaveBeenAdded", GuildMgr.GetGuildByName(guildName).Name);
 						}
 						break;
-						#endregion
+					#endregion AddPlayer (Admin/GM command)
 						#region RemovePlayer
 						// --------------------------------------------------------------------------------
 						// REMOVEPLAYER
