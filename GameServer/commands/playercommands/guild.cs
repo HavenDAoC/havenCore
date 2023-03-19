@@ -2273,51 +2273,74 @@ namespace DOL.GS.Commands
 							#endregion Who
 						}
 					#endregion Who
-						#region Leader
-						// --------------------------------------------------------------------------------
-						// LEADER
-						// --------------------------------------------------------------------------------
+					#region Leader
+					// --------------------------------------------------------------------------------
+					// LEADER
+					// '/gc leader <playerName>'
+					// Sets a new leader for your guild. Only one player may be leader at a time.
+					// --------------------------------------------------------------------------------
 					case "leader":
 						{
 							if (client.Player.Guild == null)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must be a member of a guild to use any guild commands.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
 								return;
 							}
+							
 							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You do not have sufficient privileges in your guild to use that command.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
 								return;
 							}
+							
 							GamePlayer newLeader = client.Player.TargetObject as GamePlayer;
+							
 							if (args.Length > 2)
 							{
 								GameClient temp = WorldMgr.GetClientByPlayerName(args[2], true, false);
+								
 								if (temp != null && GameServer.ServerRules.IsAllowedToGroup(client.Player, temp.Player, true))
 									newLeader = temp.Player;
 							}
+							
 							if (newLeader == null)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPlayerSelected"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must target a player or provide a player name.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPlayerSelected", null);
 								return;
 							}
+							
 							if (newLeader.Guild != client.Player.Guild)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotInYourGuild"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: That player is not a member of your guild.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotInYourGuild", null);
 								return;
 							}
 
 							newLeader.GuildRank = newLeader.Guild.GetRankByID(0);
 							newLeader.SaveIntoDatabase();
-							newLeader.Out.SendMessage(LanguageMgr.GetTranslation(newLeader.Client, "Scripts.Player.Guild.MadeLeader", newLeader.Guild.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+							
+							// Message: You are now the Guildmaster of {0}.
+							ChatUtil.SendTypeMessage((int)eMsg.Guild, newLeader, "Scripts.Player.Guild.MadeLeader", newLeader.Guild.Name);
+							
+							// Message: You have made {0} the new Guildmaster of {1}.
+							ChatUtil.SendTypeMessage((int)eMsg.Guild, newLeader, "Scripts.Player.Guild.MadeNewLeader", newLeader.Name, newLeader.Guild.Name);
+							
 							foreach (GamePlayer ply in client.Player.Guild.GetListOfOnlineMembers())
 							{
-								ply.Out.SendMessage(LanguageMgr.GetTranslation(ply.Client, "Scripts.Player.Guild.MadeLeaderOther", newLeader.Name, newLeader.Guild.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+								if (ply != newLeader && ply != client.Player)
+									// Message: {0} has been made the Guildmaster of {1}.
+									ChatUtil.SendTypeMessage((int)eMsg.Guild, ply, "Scripts.Player.Guild.MadeLeaderOther", newLeader.Name, newLeader.Guild.Name);
+								
+								ply.Guild.UpdateGuildWindow();
 							}
+							
 							client.Player.Guild.UpdateGuildWindow();
 						}
 						break;
-						#endregion
+					#endregion Leader
 						#region Emblem
 						// --------------------------------------------------------------------------------
 						// EMBLEM
