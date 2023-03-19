@@ -53,49 +53,54 @@ namespace DOL.GS.Commands
 {
 	// See the comments above 'using' about SendMessage translation IDs
 	[CmdAttribute(
-		// Enter '/account' to list all commands of this type
+		// Enter '/account' to list all associated subcommands
 		"&account",
-		// Message: <----- '/account' Commands (plvl 3) ----->
-		"AdminCommands.Header.Syntax.Account",
+		// Message: '/account' - Creates new, manages existing, and controls character assignment for Atlas DAoC accounts.
+		"AdminCommands.Account.CmdList.Description",
+		// Message: <----- '/{0}' Command {1}----->
+		"AllCommands.Header.General.Commands",
+		// Required minimum privilege level to use the command
 		ePrivLevel.Admin,
-		// Message: "Creates new, manages existing, and controls character assignment for Atlas DAoC accounts. We recommend using the Atlas Web Admin tool (https://admin.atlasfreeshard.com/) where possible to perform many of these same functions. Otherwise, use the following syntax:"
+		// Message: Creates new, manages existing, and controls character assignment for HavenDAoC accounts. We recommend editing the database directly where possible to perform many of these same functions. Otherwise, use the following syntax:
 		"AdminCommands.Account.Description",
 		// Syntax: /account command
 		"AdminCommands.Account.Syntax.Comm",
-		// Message: "Provides additional information regarding the '/account' command type."
+		// Message: Provides additional information regarding the '/account' command type.
 		"AdminCommands.Account.Usage.Comm",
 		// Syntax: /account accountname <characterName>
 		"AdminCommands.Account.Syntax.AccountName",
-		// Message: "Identifies the account associated with the character. This may be used on offline characters."
+		// Message: Identifies the account associated with the character. This may be used on offline characters.
 		"AdminCommands.Account.Usage.AccountName",
 		// Syntax: /account changepassword <accountName> <newPassword>
 		"AdminCommands.Account.Syntax.ChangePassword",
-		// Message: "Changes the password associated with an existing account. If a player requests a password reset, verify ownership of the account."
+		// Message: Changes the password associated with an existing account. If a player requests a password reset, verify ownership of the account.
 		"AdminCommands.Account.Usage.ChangePassword",
 		// Syntax: /account create <accountName> <password>
 		"AdminCommands.Account.Syntax.Create",
-		// Message: "Creates a new account with the specified login credentials."
+		// Message: Creates a new account with the specified login credentials.
         "AdminCommands.Account.Usage.Create",
 		// Syntax: /account delete <accountName>
 		"AdminCommands.Account.Syntax.Delete",
-		// Message: "Deletes the specified account, along with any associated characters."
+		// Message: Deletes the specified account, along with any associated characters.
 		"AdminCommands.Account.Usage.Delete",
 		// Syntax: /account deletecharacter <characterName>
 		"AdminCommands.Account.Syntax.DeleteChar",
-		// Message: "Deletes the matching character from its associated account."
+		// Message: Deletes the matching character from its associated account.
 		"AdminCommands.Account.Usage.DeleteChar",
 		// Syntax: /account movecharacter <characterName> <destAccount>
 		"AdminCommands.Account.Syntax.MoveChar",
-		// Message: "Moves the specified character to the first available slot of the same realm on the destination account."
+		// Message: Moves the specified character to the first available slot of the same realm on the destination account.
 		"AdminCommands.Account.Usage.MoveChar",
 		// Syntax: /account status <accountName> <status>
 		"AdminCommands.Account.Syntax.Status",
-		// Message: "Sets an account's status (between '0' and '255'), which is used to define custom behaviors."
+		// Message: Sets an account's status (between '0' and '255'), which is used to define custom behaviors.
 		"AdminCommands.Account.Usage.Status",
 		// Syntax: /account unban <accountName>
 		"AdminCommands.Account.Syntax.Unban",
-		// Message: "Removes an account's ban state, if one is active. This command cannot remove IP-only bans ('/ban ip')."
-		"AdminCommands.Account.Usage.Unban")]
+		// Message: Removes an account's ban state, if one is active. This command cannot remove IP-only bans ('/ban ip').
+		"AdminCommands.Account.Usage.Unban"
+	)]
+	
 	public class AccountCommand : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -193,8 +198,8 @@ namespace DOL.GS.Commands
 						{
 							// Syntax: "<----- '/account' Commands (plvl 3) ----->"
 							ChatUtil.SendSyntaxMessage(client, "AdminCommands.Header.Syntax.Account", null);
-							// Message: "If you are unable to access the Atlas Web Admin tool (https://admin.atlasfreeshard.com) to perform this action, use the following syntax:"
-							ChatUtil.SendCommMessage(client, "AdminCommands.Command.SyntaxCRUD", null);
+							// Message: It is recommended that you perform actions associated with this command directly from the database. Otherwise, use the following syntax:
+							ChatUtil.SendCommMessage(client, "AllCommands.Text.General.SyntaxDB", null);
 							// Message: "/account changepassword <accountName> <newPassword>"
 							ChatUtil.SendSyntaxMessage(client, "AdminCommands.Account.Syntax.ChangePassword", null);
 							// Message: "Changes the password associated with an existing account. If a player requests a password reset, verify ownership of the account."
@@ -249,8 +254,8 @@ namespace DOL.GS.Commands
 						{
 							// Message: "<----- '/account' Commands (plvl 3) ----->"
 							ChatUtil.SendSyntaxMessage(client, "AdminCommands.Header.Syntax.Account", null);
-							// Message: "If you are unable to access the Atlas Web Admin tool (https://admin.atlasfreeshard.com) to perform this action, use the following syntax:"
-							ChatUtil.SendCommMessage(client, "AdminCommands.Command.SyntaxCRUD", null);
+							// Message: It is recommended that you perform actions associated with this command directly from the database. Otherwise, use the following syntax:
+							ChatUtil.SendCommMessage(client, "AllCommands.Text.General.SyntaxDB", null);
 							// Message: "/account delete <accountName>"
 							ChatUtil.SendSyntaxMessage(client, "AdminCommands.Account.Syntax.Delete", null);
 							// Message: "Deletes the specified account, along with any associated characters."
@@ -294,8 +299,8 @@ namespace DOL.GS.Commands
                         {
 	                        // Message: "<----- '/account' Commands (plvl 3) ----->"
 	                        ChatUtil.SendSyntaxMessage(client, "AdminCommands.Header.Syntax.Account", null);
-	                        // Message: "If you are unable to access the Atlas Web Admin tool (https://admin.atlasfreeshard.com) to perform this action, use the following syntax:"
-	                        ChatUtil.SendCommMessage(client, "AdminCommands.Command.SyntaxCRUD", null);
+	                        // Message: It is recommended that you perform actions associated with this command directly from the database. Otherwise, use the following syntax:
+	                        ChatUtil.SendCommMessage(client, "AllCommands.Text.General.SyntaxDB", null);
 	                        // Message: "/account deletecharacter <characterName>"
 	                        ChatUtil.SendSyntaxMessage(client, "AdminCommands.Account.Syntax.DeleteChar", null);
 	                        // Message: "Deletes the matching character from its associated account."
@@ -387,7 +392,7 @@ namespace DOL.GS.Commands
                             default:
                             {
 	                            // If the character does not belong to any of these realms (i.e., somehow got assigned Neutral (0))
-	                            // Message: "{0} is currently assigned a realm ID of {1}. That is not an accepted value and the character move failed! Use the Atlas Web Admin tool or the '/player realm' command on the desired character to resolve this issue."
+	                            // Message: {0} is currently assigned a realm ID of {1}. That is not an accepted value and the character move failed! Edit the database directly or use the '/player realm' command on the desired character to resolve this issue.
 	                            ChatUtil.SendErrorMessage(client, "AdminCommands.Account.Err.CharNotFromValidRealm", cha.Name, cha.Realm);
                                 return;
 	                        }
@@ -514,8 +519,8 @@ namespace DOL.GS.Commands
 						{
 							// Message: "<----- '/account' Commands (plvl 3) ----->"
 							ChatUtil.SendSyntaxMessage(client, "AdminCommands.Header.Syntax.Account", null);
-							// Message: "If you are unable to access the Atlas Web Admin tool (https://admin.atlasfreeshard.com) to perform this action, use the following syntax:"
-							ChatUtil.SendCommMessage(client, "AdminCommands.Command.SyntaxCRUD", null);
+							// Message: It is recommended that you perform actions associated with this command directly from the database. Otherwise, use the following syntax:
+							ChatUtil.SendCommMessage(client, "AllCommands.Text.General.SyntaxDB", null);
 							// Message: "/account unban <accountName>"
 							ChatUtil.SendSyntaxMessage(client, "AdminCommands.Account.Syntax.Unban", null);
 							// Message: "Removes an account's ban state, if one is active. This command cannot remove IP-only bans ('/ban ip')."
@@ -571,8 +576,8 @@ namespace DOL.GS.Commands
 	                        // Lists the command's full syntax
 	                        // Message: "<----- '/account' Commands (plvl 3) ----->"
 	                        ChatUtil.SendSyntaxMessage(client, "AdminCommands.Header.Syntax.Account", null);
-	                        // Message: "If you are unable to access the Atlas Web Admin tool (https://admin.atlasfreeshard.com) to perform this action, use the following syntax:"
-	                        ChatUtil.SendCommMessage(client, "AdminCommands.Command.SyntaxCRUD", null);
+	                        // Message: It is recommended that you perform actions associated with this command directly from the database. Otherwise, use the following syntax:
+	                        ChatUtil.SendCommMessage(client, "AllCommands.Text.General.SyntaxDB", null);
 	                        // Message: "/account accountname <characterName>"
 	                        ChatUtil.SendSyntaxMessage(client, "AdminCommands.Account.Syntax.AccountName", null);
 	                        // Message: "Identifies the account associated with the character. This may be used on offline characters."
