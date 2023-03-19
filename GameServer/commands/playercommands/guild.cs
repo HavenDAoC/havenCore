@@ -1980,40 +1980,46 @@ namespace DOL.GS.Commands
 						}
 						break;
 					#endregion Promote
-						#region Demote
-						// --------------------------------------------------------------------------------
-						// DEMOTE
-						// --------------------------------------------------------------------------------
-						case "demote":
+					#region Demote
+					// --------------------------------------------------------------------------------
+					// DEMOTE
+					// '/gc demote <playerName> <rank#>'
+					// Demotes the player to the identified guild rank. The new rank must be lower than their current rank.
+					// --------------------------------------------------------------------------------
+					case "demote":
 						{
+							// Obviously need to be a member of a guild to use this command
 							if (client.Player.Guild == null)
 							{
-								client.Out.SendMessage(
-									LanguageMgr.GetTranslation(client.Account.Language,
-										"Scripts.Player.Guild.NotMember"), eChatType.CT_System,
-									eChatLoc.CL_SystemWindow);
+								// Message: You must be a member of a guild to use any guild commands.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
 								return;
 							}
 
+							// Player must have sufficient rank privileges in the guild to view its information
 							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Demote))
 							{
-								client.Out.SendMessage(
-									LanguageMgr.GetTranslation(client.Account.Language,
-										"Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System,
-									eChatLoc.CL_SystemWindow);
+								// Message: You do not have high sufficient privileges in your guild to use that command.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
 								return;
 							}
 
+							// Check to make sure command is long enough
 							if (args.Length < 3)
 							{
-								client.Out.SendMessage(
-									LanguageMgr.GetTranslation(client.Account.Language,
-										"Scripts.Player.Guild.Help.GuildDemote"), eChatType.CT_System,
-									eChatLoc.CL_SystemWindow);
+								// Message: '/gc demote <playerName> <rank#>' - Demotes the player to the identified guild rank. The new rank must be lower than their current rank.
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.Help.GuildDemote", null);
 								return;
 							}
-
-
+							
+							// You can't demote yourself
+							if (client.Player.Name == args[2] && client.Account.PrivLevel == 1)
+							{
+								// Message: You cannot demote yourself!
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.Help.CannotDemoteSelf", null);
+								return;
+							}
+							
 							object obj = null;
 							string playername = string.Empty;
 							bool useDB = false;
@@ -2041,23 +2047,30 @@ namespace DOL.GS.Commands
 									obj = myclient.Player;
 								}
 							}
+
+							if (obj == client.Player)
+							{
+								// Message: You cannot demote yourself!
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.Help.CannotDemoteSelf", null);
+								return;
+							}
+							
 							if (obj == null)
 							{
 								if (useDB)
 								{
-									client.Out.SendMessage("No player with that name can be found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									// Message: No player was found with that name.
+									ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPlayerFound", null);
 								}
 								else if (playername == string.Empty)
 								{
-									client.Out.SendMessage(
-									LanguageMgr.GetTranslation(client.Account.Language,
-										"Scripts.Player.Guild.NoPlayerSelected"), eChatType.CT_System,
-									eChatLoc.CL_SystemWindow);
+									// Message: You must target a player or provide a player name.
+									ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPlayerSelected", null);
 								}
 								else
 								{
-									client.Out.SendMessage("You need to target a player or provide a player name!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildDemote"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									// Message: '/gc demote <playerName> <rank#>' - Demotes the player to the identified guild rank. The new rank must be lower than their current rank.
+									ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.Help.GuildDemote", null);
 								}
 								return;
 							}
@@ -2067,6 +2080,7 @@ namespace DOL.GS.Commands
 							string plyName = "";
 							GamePlayer ply = obj as GamePlayer;
 							DOLCharacters ch = obj as DOLCharacters;
+							
 							if (obj is GamePlayer)
 							{
 								plyName = ply.Name;
@@ -2083,22 +2097,19 @@ namespace DOL.GS.Commands
 
 							if (guildId != client.Player.GuildID)
 							{
-								client.Out.SendMessage(
-									LanguageMgr.GetTranslation(client.Account.Language,
-										"Scripts.Player.Guild.NotInYourGuild"), eChatType.CT_System,
-									eChatLoc.CL_SystemWindow);
+								// Message: That player is not a member of your guild.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotInYourGuild", null);
 								return;
 							}
 
 							try
 							{
 								ushort newrank = Convert.ToUInt16(args[3]);
+								
 								if (newrank < guildRank || newrank > 10)
 								{
-									client.Out.SendMessage(
-										LanguageMgr.GetTranslation(client.Account.Language,
-											"Scripts.Player.Guild.DemotedHigherThanPlayer"), eChatType.CT_System,
-										eChatLoc.CL_SystemWindow);
+									// Message: You can only demote to ranks below your own.
+									ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.DemotedHigherThanPlayer", null);
 									return;
 								}
 
@@ -2107,44 +2118,63 @@ namespace DOL.GS.Commands
 									ply.GuildRank = client.Player.Guild.GetRankByID(newrank);
 									ply.SaveIntoDatabase();
 									guildRank = ply.GuildRank.RankLevel;
-									client.Out.SendMessage(
-										LanguageMgr.GetTranslation(client.Account.Language,
-											"Scripts.Player.Guild.DemotedSelf", plyName, newrank.ToString(),
-											guildRank.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-									client.Player.Guild.SendMessageToGuildMembers(
-										LanguageMgr.GetTranslation(client.Account.Language,
-											"Scripts.Player.Guild.DemotedOther", client.Player.Name, plyName,
-											newrank.ToString(), guildRank.ToString()), eChatType.CT_Important,
-										eChatLoc.CL_SystemWindow);
+									
+									// Message: You have demoted {0}'s guild rank to Rank {1} ({2}).
+									ChatUtil.SendTypeMessage((int)eMsg.Important, client, "Scripts.Player.Guild.DemotedSelf", plyName, newrank.ToString(),
+										guildRank.ToString());
+									
+									// Notify everyone in the guild online
+									foreach (GamePlayer guildMember in client.Player.Guild.GetListOfOnlineMembers())
+									{
+										if (guildMember != obj && guildMember.Guild.HasRank(guildMember, Guild.eRank.GcHear) && guildMember != client.Player)
+										{
+											// Message: {0} has demoted {1} to {2}.
+											ChatUtil.SendTypeMessage((int)eMsg.Important, guildMember, "Scripts.Player.Guild.DemotedOther", client.Player.Name, plyName, ply.GuildRank.ToString());
+										}
+										else if (guildMember == obj)
+											// Message: {0} has demoted you to {1}.
+											ChatUtil.SendTypeMessage((int)eMsg.Important, guildMember, "Scripts.Player.Guild.GuildDemotedYou", client.Player.Name, plyName, ply.GuildRank.ToString());
+										
+										guildMember.Guild.UpdateGuildWindow();
+									}
 								}
 								else
 								{
 									ch.GuildRank = newrank;
 									GameServer.Database.SaveObject(ch);
 									guildRank = ch.GuildRank;
-									client.Out.SendMessage(
-										LanguageMgr.GetTranslation(client.Account.Language,
-											"Scripts.Player.Guild.DemotedSelf", plyName, newrank.ToString(),
-											guildRank.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-									client.Player.Guild.SendMessageToGuildMembers(
-										LanguageMgr.GetTranslation(client.Account.Language,
-											"Scripts.Player.Guild.DemotedOther", client.Player.Name, plyName,
-											newrank.ToString(), guildRank.ToString()), eChatType.CT_Important,
-										eChatLoc.CL_SystemWindow);
+									
+									// Message: You have demoted {0}'s guild rank to Rank {1} ({2}).
+									ChatUtil.SendTypeMessage((int)eMsg.Important, client, "Scripts.Player.Guild.DemotedSelf", plyName, newrank.ToString(),
+										guildRank.ToString());
+									
+									// Notify everyone in the guild online
+									foreach (GamePlayer guildMember in client.Player.Guild.GetListOfOnlineMembers())
+									{
+										if (guildMember != obj && guildMember.Guild.HasRank(guildMember, Guild.eRank.GcHear) && guildMember != client.Player)
+										{
+											// Message: {0} has demoted {1} to {2}.
+											ChatUtil.SendTypeMessage((int)eMsg.Important, guildMember, "Scripts.Player.Guild.DemotedOther", client.Player.Name, plyName, ply.GuildRank.ToString());
+										}
+										else if (guildMember == obj)
+											// Message: {0} has demoted you to {1}.
+											ChatUtil.SendTypeMessage((int)eMsg.Important, guildMember, "Scripts.Player.Guild.GuildDemotedYou", client.Player.Name, plyName, ply.GuildRank.ToString());
+										
+										guildMember.Guild.UpdateGuildWindow();
+									}
 								}
 							}
 							catch
 							{
-								client.Out.SendMessage(
-									LanguageMgr.GetTranslation(client.Account.Language,
-										"Scripts.Player.Guild.InvalidRank"), eChatType.CT_System,
-									eChatLoc.CL_SystemWindow);
+								// Message: Set a guild rank between 0-9.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.SetRankCorrect", null);
 							}
 
 							client.Player.Guild.UpdateGuildWindow();
-				}
+						
+						}
 						break;
-						#endregion
+					#endregion Demote
 						#region Who
 						// --------------------------------------------------------------------------------
 						// WHO
