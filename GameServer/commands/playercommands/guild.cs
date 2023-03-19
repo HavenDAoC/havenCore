@@ -329,20 +329,27 @@ namespace DOL.GS.Commands
 					}
 						break;
 					#endregion Purge (Admin/GM command)
-						#region Rename
-						// --------------------------------------------------------------------------------
-						// RENAME
-						// --------------------------------------------------------------------------------
+					#region Rename (Admin/GM command)
+					// --------------------------------------------------------------------------------
+					// RENAME (Admin/GM command)
+					// '/gc rename <oldName> to <newName>'
+					// Forces a manual rename of the guild to a new value.
+					// --------------------------------------------------------------------------------
 					case "rename":
 						{
+							// Players cannot perform this command
 							if (client.Account.PrivLevel == (uint)ePrivLevel.Player)
 								return;
 
+							// Must follow syntax of '/gc rename <oldName> to <newName>'
 							if (args.Length < 5)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildGMRename"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: '/gc rename <oldName> to <newName' - Chances a guild's existing name to the specified new name. Use double quotes for multi-word guild names.
+								ChatUtil.SendTypeMessage((int)eMsg.CmdSyntax, client, "Scripts.Player.Guild.Help.GuildGMRename", null);
 								return;
 							}
+							
+							// Parse the command
 							int i;
 							for (i = 2; i < args.Length; i++)
 							{
@@ -350,24 +357,41 @@ namespace DOL.GS.Commands
 									break;
 							}
 
-							string oldguildname = String.Join(" ", args, 2, i - 2);
-							string newguildname = String.Join(" ", args, i + 1, args.Length - i - 1);
-							if (!GuildMgr.DoesGuildExist(oldguildname))
+							// Parse the command some more
+							// Put guild names in " " if you need to specify longer names
+							string oldGuildName = String.Join(" ", args, 2, i - 2);
+							string newGuildName = String.Join(" ", args, i + 1, args.Length - i - 1);
+							
+							// If the guild name doesn't exist, then throw an error
+							if (!GuildMgr.DoesGuildExist(oldGuildName))
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildNotExist"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: No guild exists with that name.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.GuildNotExist", null);
 								return;
 							}
-							Guild myguild = GuildMgr.GetGuildByName(oldguildname);
-							myguild.Name = newguildname;
-							GuildMgr.AddGuild(myguild);
-							foreach (GamePlayer ply in myguild.GetListOfOnlineMembers())
+							
+							// Get the existing guild by name and add the new one
+							Guild myGuild = GuildMgr.GetGuildByName(oldGuildName);
+							myGuild.Name = newGuildName;
+							GuildMgr.AddGuild(myGuild);
+							
+							// Update the guild name and inform everyone that the change has happened.
+							foreach (GamePlayer ply in myGuild.GetListOfOnlineMembers())
 							{
-								ply.GuildName = newguildname;
+								ply.GuildName = newGuildName;
+								// Message: Your guild's name has been changed to '{0}'.
+								ChatUtil.SendTypeMessage((int)eMsg.Important, ply, "Scripts.Player.Guild.GuildNameRenamed", newGuildName);
 							}
+							
+							// Delete the old guild & update accordingly
+							GuildMgr.DeleteGuild(oldGuildName);
 							client.Player.Guild.UpdateGuildWindow();
+							
+							// Message: You have changed the guild's name to '{0}'.
+							ChatUtil.SendTypeMessage((int)eMsg.Important, client, "Scripts.Player.Guild.YouChangedGuildName", GuildMgr.GetGuildByName(newGuildName).Name);
 						}
 						break;
-						#endregion
+					#endregion Rename (Admin/GM command)
 						#region AddPlayer
 						// --------------------------------------------------------------------------------
 						// ADDPLAYER
