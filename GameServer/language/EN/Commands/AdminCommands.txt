@@ -1,6 +1,6 @@
 ﻿# Admin (plvl 3) Commands
 AdminCommands.Command.SyntaxDesc:                           Use the following syntax for this command:
-AdminCommands.Command.SyntaxCRUD:                           If you are unable to access the Atlas Web Admin tool (https://admin.atlasfreeshard.com) to perform this action, use the following syntax:
+AdminCommands.Command.SyntaxDB:                             If you are unable to perform database queries to accomplish this action, use the following syntax:
 
 # Admin Command Headers/Dividers
 AdminCommands.Header.Syntax.Account:                    <----- '/account' Commands (plvl 3) ----->
