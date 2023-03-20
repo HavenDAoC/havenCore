@@ -61,7 +61,7 @@ namespace DOL.GS.Commands
 		"AdminCommands.Account.Description",
 		// Syntax: /account command
 		"AdminCommands.Account.Syntax.Comm",
-		// Message: Provides additional information regarding the '/account' command type.
+		// Message: Provides syntax information regarding all '/account' subcommands in a dialog.
 		"AdminCommands.Account.Usage.Comm",
 		// Syntax: /account accountname <characterName>
 		"AdminCommands.Account.Syntax.AccountName",
@@ -597,25 +597,67 @@ namespace DOL.GS.Commands
 				// --------------------------------------------------------------------------------
 				// COMMAND
 				// '/account command'
-				// Provides information about the '/account' command type.
+				// Provides syntax information regarding all '/account' subcommands in a dialog.
 				// --------------------------------------------------------------------------------
 				case "command":
 				{
 					ChatUtil.SendWindowMessage((int)eWindow.Text, client, "Using the '/account' Command", 
-						" ", 
-						" ", 
-						// Message: 
-						"", 
-						" ", 
-						" ", 
+						" ",
+						" ",
+						// Message: Creates new, manages existing, and controls character assignment for HavenDAoC accounts. We recommend editing the database directly where possible to perform many of these same functions. Otherwise, use the following syntax:
+						"AdminCommands.Account.Description",
+						" ",
+						// Message: /account accountname <characterName>
+						"AdminCommands.Account.Syntax.AccountName",
+						// Message: Identifies the account associated with the character. This may be used on offline characters.
+						"AdminCommands.Account.Usage.AccountName",
+						" ",
+						// Message: /account create <accountName> <password>
+						"AdminCommands.Account.Syntax.Create",
+						// Message: Creates a new account with the specified login credentials.
+						"AdminCommands.Account.Usage.Create",
+						" ",
+						// Message: /account changepassword <accountName> <newPassword>
+						"AdminCommands.Account.Syntax.ChangePassword",
+						// Message: Changes the password associated with an existing account. If a player requests a password reset, verify ownership of the account.
+						"AdminCommands.Account.Usage.ChangePassword",
+						" ",
+						// Message: /account delete <accountName>
+						"AdminCommands.Account.Syntax.Delete",
+						// Message: Deletes the specified account, along with any associated characters.
+						"AdminCommands.Account.Usage.Delete",
+						" ",
+						// Message: /account deletecharacter <characterName>
+						"AdminCommands.Account.Syntax.DeleteChar",
+						// Message: Deletes the matching character from its associated account.
+						"AdminCommands.Account.Usage.DeleteChar",
+						" ",
+						// Message: /account movecharacter <characterName> <destAccount>
+						"AdminCommands.Account.Syntax.MoveChar",
+						// Message: Moves the specified character to the first available slot of the same realm on the destination account.
+						"AdminCommands.Account.Usage.MoveChar",
+						" ",
+						// Message: /account status <accountName> <status>
+						"AdminCommands.Account.Syntax.Status",
+						// Message: Sets an account's status (between '0' and '256'), which is used to define custom behaviors.
+						"AdminCommands.Account.Usage.Status",
+						" ",
+						// Message: /account unban <accountName>
+						"AdminCommands.Account.Syntax.Unban",
+						// Message: Removes an account's ban state, if one is active. This command cannot remove IP-only bans ('/ban ip').
+						"AdminCommands.Account.Usage.Unban",
+						" ",
+						" ",
 						// Message: ----- Additional Info -----
-						"Dialog.Header.Content.MoreInfo", 
-						" ", 
+						"Dialog.Header.Content.MoreInfo",
+						" ",
 						// Message: For more information regarding the '/account' slash command, the Slash Commands Library on the HavenDAoC Developer Wiki.
-						"AdminCommands.Account.Comm.Desc1", 
-						" ", 
+						"AdminCommands.Account.Comm.Desc1",
+						" ",
 						// Message: https://dev.havendaoc.com/docs/category/command-account
-						"Hyperlinks.CommLibrary.Main");
+						"Hyperlinks.Haven.CommLibrary.Account",
+						" ",
+						" ");
 					return;
 				}
 				#endregion Command

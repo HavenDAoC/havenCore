@@ -8,6 +8,7 @@ Dialog.Header.Content.Shutdown:                 ----- Implications of a Shutdown
 Dialog.Header.Content.Attention:                 ----- ATTENTION -----
 
 ## URLs
-Hyperlinks.Atlas.WebAdminTool:                      https://admin.atlasfreeshard.com
-Hyperlinks.CommLibrary.Main:                        https://www.atlasfreeshard.com/threads/gm-commands-library.408/
-Hyperlinks.CommLibrary.Plvl:                        https://www.atlasfreeshard.com/threads/gm-commands-library.408/post-4379
+Hyperlinks.Atlas.WebAdminTool:                      https://dev.havendaoc.com
+Hyperlinks.CommLibrary.Main:                        https://dev.havendaoc.com/docs/category/slash-command-library
+Hyperlinks.Haven.CommLibrary.Account:               https://dev.havendaoc.com/docs/category/command-account
+Hyperlinks.CommLibrary.Plvl:                        https://dev.havendaoc.com/docs/category/command-plvl

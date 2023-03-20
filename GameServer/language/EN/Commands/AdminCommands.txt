@@ -15,14 +15,14 @@ AdminCommands.Header.Syntax.Shutdown:                   <----- '/shutdown' Comma
 
 # '/account' Commands
 AdminCommands.Account.Description:					    Creates new, manages existing, and controls character assignment for HavenDAoC accounts. We recommend editing the database directly where possible to perform many of these same functions. Otherwise, use the following syntax:
-AdminCommands.Account.Comm.Desc1:                       For more information regarding the '/account' command type, see page 1 of the GM Commands Library on the Atlas Developers forum.
+AdminCommands.Account.Comm.Desc1:                       For more information regarding the '/account' slash command, the Slash Commands Library on the HavenDAoC Developer Wiki.
 AdminCommands.Account.Comm.Desc2:                       It is recommended that Atlas staff utilize the Web Admin tool to perform account management activities where possible, such as resetting passwords and deleting characters or accounts.
 AdminCommands.Account.Syntax.AccountName:               /account accountname <characterName>
 AdminCommands.Account.Usage.AccountName:			    Identifies the account associated with the character. This may be used on offline characters.
 AdminCommands.Account.Syntax.ChangePassword:            /account changepassword <accountName> <newPassword>
 AdminCommands.Account.Usage.ChangePassword:			    Changes the password associated with an existing account. If a player requests a password reset, verify ownership of the account.
 AdminCommands.Account.Syntax.Comm:                      /account command
-AdminCommands.Account.Usage.Comm:			            Provides additional information regarding the '/account' command type.
+AdminCommands.Account.Usage.Comm:			            Provides syntax information regarding all '/account' subcommands in a dialog.
 AdminCommands.Account.Syntax.Create:                    /account create <accountName> <password>
 AdminCommands.Account.Usage.Create:					    Creates a new account with the specified login credentials.
 AdminCommands.Account.Syntax.Delete:                    /account delete <accountName>
