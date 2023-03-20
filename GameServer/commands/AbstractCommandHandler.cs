@@ -154,21 +154,24 @@ namespace DOL.GS.Commands
 		/// <param name="usageID">The translation ID associated with the subcommand's description (e.g., "AdminCommands.Account.Usage.Comm")</param>
 		/// <returns>Messages about a command's syntax and usage</returns>
 		/// <example>DisplayHeadSyntax(client, "plvl", "remove", 3, false, "AdminCommands.Account.Syntax.Comm", "AdminCommands.Account.Usage.Comm");</example>
-		public void DisplayHeadSyntax(GameClient client, string command, string subcommand, string subcommand2, int plvl, bool database, string syntaxID, string usageID)
+		public void DisplayHeadCmd(GameClient client, string command, string subcommand, string subcommand2, int plvl, bool database, string syntaxID, string usageID)
 		{
 			if (client == null || !client.IsPlaying)
 				return;
 			
+			// Variables to display in the header string to depict the subcommand being described
 			var plvlReq = "(plvl " + plvl + ") "; // Attach plvl to header
 			var subVar = " " + subcommand; // Displays for {1} on subcommand message
 			var subVar2 = " " + subcommand2; // Displays for {1} on subcommand message
 			
-			// Don't show plvl requirements to Players (plvl shouldn't exist to them)
+			// Don't show plvl requirements to Players (plvl concept shouldn't exist to them)
 			if (plvl == 1 && client.Account.PrivLevel == 1)
 				plvlReq = "";
 
+			// Use this header if a subcommand value is specified
 			if (subcommand != "")
 			{
+				// Use this string if a second value is presented
 				if (subcommand2 != "")
 					// Message: <----- '/{0}{1}{2}' Subcommand {3}----->
 					ChatUtil.SendTypeMessage((int)eMsg.CmdHeader, client, "AllCommands.Header.General.2Subcommand", command, subVar, subVar2, plvlReq);
@@ -177,16 +180,17 @@ namespace DOL.GS.Commands
 					ChatUtil.SendTypeMessage((int)eMsg.CmdHeader, client, "AllCommands.Header.General.Subcommand", command, subVar, plvlReq);
 			}
 			
+			// If no subcommand value is specified, treat this as a regular slash command
 			if (subcommand == "")
 				// Message: <----- '/{0}' Command {2}----->
 				ChatUtil.SendTypeMessage((int)eMsg.CmdHeader, client, "AllCommands.Header.General.Commands", command, plvlReq);
 			
-			if (database == false || client.Account.PrivLevel == 1)
+			// Decided whether to suggest users edit the database directly to perform this function
+			if (!database || client.Account.PrivLevel == 1)
 				// Message: Use the following syntax for this command:
 				ChatUtil.SendTypeMessage((int)eMsg.Command, client, "AllCommands.Text.General.UseSyntax", null);
-				
-			if (database && client.Account.PrivLevel > 1)
-				// Message: It is recommended that you perform actions associated with this command with the Atlas Admin (https://admin.atlasfreeshard.com). Otherwise, use the following syntax:
+			else if (database && client.Account.PrivLevel > 1)
+				// Message:  It is recommended that you perform actions associated with this command directly from the database. Otherwise, use the following syntax:
 				ChatUtil.SendTypeMessage((int)eMsg.Command, client, "AllCommands.Text.General.SyntaxDB", null);
 			
 			// Example: /account command
@@ -196,14 +200,14 @@ namespace DOL.GS.Commands
 		}
 		
 		/// <summary>
-		/// Displays messages that describe the syntax and behaviors of a subcommand, without the header strings
+		/// Displays messages that describe the syntax and behaviors of a subcommand, without the header strings.
 		/// </summary>
 		/// <param name="client">The recipient of the messages (e.g., client)</param>
 		/// <param name="syntaxID">The translation ID associated with the subcommand's syntax (e.g., "AdminCommands.Account.Syntax.Comm")</param>
 		/// <param name="usageID">The translation ID associated with the subcommand's description (e.g., "AdminCommands.Account.Usage.Comm")</param>
 		/// <returns>Messages about a subcommand's syntax</returns>
 		/// <example>DisplaySubSyntax(client, "AdminCommands.Account.Syntax.Comm", "AdminCommands.Account.Usage.Comm");</example>
-		public void DisplaySubSyntax(GameClient client, string syntaxID, string usageID)
+		public void DisplaySubCmd(GameClient client, string syntaxID, string usageID)
 		{
 			if (client == null || !client.IsPlaying)
 				return;
@@ -214,16 +218,22 @@ namespace DOL.GS.Commands
 			ChatUtil.SendTypeMessage((int)eMsg.CmdUsage, client, usageID, null);
 		}
 		
-		public void DisplayHeaderSyntax(GameClient client, string headerID)
+		/// <summary>
+		/// Displays only the header message for a command or subcommand.
+		/// </summary>
+		/// <param name="client">The recipient of the messages (e.g., client)</param>
+		/// <param name="headerID">The translation ID associated with the header string (e.g., "AllCommands.Header.Basic.Commands")</param>
+		/// <param name="args">The args to structure the string to depict the full command syntax and plvl (e.g., "account", "accountname", "3")</param>
+		public void DisplayCmdHeader(GameClient client, string headerID, params object[] args)
 		{
 			if (client == null || !client.IsPlaying)
 				return;
 			
-			// Example: /account command
-			ChatUtil.SendTypeMessage((int)eMsg.CmdHeader, client, headerID, null);
+			// Example:  <----- '/{0}' Command {2}----->
+			ChatUtil.SendTypeMessage((int)eMsg.CmdHeader, client, headerID, args);
 		}
 		
-		public void DisplaySyntaxSyntax(GameClient client, string syntaxID)
+		public void DisplayCmdSyntax(GameClient client, string syntaxID)
 		{
 			if (client == null || !client.IsPlaying)
 				return;
@@ -232,7 +242,7 @@ namespace DOL.GS.Commands
 			ChatUtil.SendTypeMessage((int)eMsg.CmdSyntax, client, syntaxID, null);
 		}
 		
-		public void DisplayUsageSyntax(GameClient client, string usageID)
+		public void DisplayCmdUsage(GameClient client, string usageID)
 		{
 			if (client == null || !client.IsPlaying)
 				return;

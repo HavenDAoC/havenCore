@@ -42,10 +42,6 @@
 *  into the comment above the affected message return(s). This is
 *  done for ease of reference. */
 
-
-using DOL.GS.PacketHandler;
-using DOL.Language;
-
 namespace DOL.GS
 {
 	/// <summary>
@@ -786,6 +782,60 @@ namespace DOL.GS
                     break;
             }
         }
+        
+        /// <summary>
+		/// Used to send translated messages contained in a text window
+		/// </summary>
+		/// <param name="type">Determines the type of UI element to send to the target. Current options include: "text", "timer".</param>
+		/// <param name="target">The player triggering/receiving the message (i.e., typically "client").</param>
+		/// <param name="title">The string to appear along the top border of the text window.</param>
+		/// <param name="args">Additional translation IDs or strings to include in the body ot the text window.</param>
+		/// <note>To include empty spaces between paragraphs, input a space between apostrophes (e.g., " ").</note>
+		public static void SendWindowMessage(int type, GameClient target, string title, params object[] args)
+		{
+			switch (type)
+			{
+				case (int)eWindow.Text:
+					var info = new List<string>();
+					foreach (string translation in args)
+						info.Add(LanguageMgr.GetTranslation(target.Account.Language, translation));
+			
+					target.Out.SendCustomTextWindow(title, info);
+					break;
+				case (int)eWindow.Timer:
+					var timerTitle = LanguageMgr.GetTranslation(target.Account.Language, title);
+					var seconds = Convert.ToInt32(args);
+					target.Out.SendTimerWindow(timerTitle, seconds);
+					break;
+			}
+		}
+
+		/// <summary>
+		/// Used to send translated messages contained in a text window
+		/// </summary>
+		/// <param name="type">Determines the type of UI element to send to the target. Current options include: "text", "timer".</param>
+		/// /// <param name="target">The player triggering/receiving the message (i.e., typically "client").</param>
+		/// /// <param name="title">The string to appear along the top border of the text window.</param>
+		/// <param name="args">Additional translation IDs or strings to include in the body ot the text window.</param>
+		/// <note>To include empty spaces between paragraphs, input a space between apostrophies (e.g., " ").</note>
+		public static void SendWindowMessage(string type, GamePlayer target, string title, params string[] args)
+		{
+			switch (type)
+			{
+				case "text":
+					var info = new List<string>();
+					foreach (var translation in args)
+						info.Add(LanguageMgr.GetTranslation(target.Client.Account.Language, translation));
+			
+					target.Client.Out.SendCustomTextWindow(title, info);
+					break;
+				case "timer":
+					var timerTitle = LanguageMgr.GetTranslation(target.Client.Account.Language, title);
+					var seconds = Convert.ToInt16(args);
+					target.Client.Out.SendTimerWindow(timerTitle, seconds);
+					break;
+			}
+		}
 		
 		public static void SendSystemMessage(GamePlayer target, string message)
 		{
