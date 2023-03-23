@@ -33,6 +33,7 @@ using System.Timers;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
+using Timer = System.Timers.Timer;
 
 namespace DOL.GS.GameEvents
 {

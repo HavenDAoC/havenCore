@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using System.Timers;
 
 using log4net;
+using Timer = System.Timers.Timer;
 
 namespace DOL.GS.Scheduler
 {
