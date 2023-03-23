@@ -433,6 +433,7 @@ namespace DOL.GS.ServerRules
 			base.ResetKeep(lord, killer);
 			lord.Component.Keep.Reset((eRealm)killer.Realm);
 			
+			/* Disabled non-classic/SI functionality
 			if (ConquestService.ConquestManager.ActiveObjective != null && ConquestService.ConquestManager.ActiveObjective.Keep == lord.Component.Keep)
 			{
 				ConquestService.ConquestManager.ConquestCapture(ConquestService.ConquestManager.ActiveObjective.Keep);
@@ -442,6 +443,7 @@ namespace DOL.GS.ServerRules
 			{
 				ConquestService.ConquestManager.ConquestSubCapture(lord.Component.Keep);
 			}
+			*/
 		}
 	}
 }

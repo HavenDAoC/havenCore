@@ -1,6 +1,6 @@
 ﻿using DOL.GS.Commands;
 
-
+/* Disabled non-classic/SI functionality
 namespace DOL.GS.Scripts
 {
     [CmdAttribute(
@@ -18,3 +18,4 @@ namespace DOL.GS.Scripts
         }
     }
 }
+*/

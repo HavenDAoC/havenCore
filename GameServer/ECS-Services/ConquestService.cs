@@ -1,5 +1,6 @@
 using ECS.Debug;
 
+/* Disabled non-classic/SI functionality
 namespace DOL.GS
 {
     public class ConquestService
@@ -66,3 +67,4 @@ namespace DOL.GS
         }
     }
 }
+*/

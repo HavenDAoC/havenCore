@@ -359,12 +359,14 @@ namespace DOL.GS.Spells
                     MessageToCaster("Your heal criticals for an extra " + criticalvalue + " hit points!", eChatType.CT_Spell);
             }
             
+            /* Disabled non-classic/SI functionality
             //check for conquest activity
             if (target is GamePlayer tp)
             {
                 if(ConquestService.ConquestManager.IsPlayerInConquestArea(tp))
                     ConquestService.ConquestManager.AddContributor(tp);
             }
+            */
 
             var attackers = target.attackComponent.Attackers;
 

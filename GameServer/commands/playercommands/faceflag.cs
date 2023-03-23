@@ -69,6 +69,7 @@ namespace DOL.GS.Commands
 				return;
 			}
 
+			/* Disabled non-classic/SI functionality
 			var flag = ConquestService.ConquestManager.ActiveObjective.GetObjective(flagnum);
 			Console.WriteLine($"flag {flag.FlagObject} | player region {client.Player.CurrentRegionID} | flag region {flag.FlagObject.CurrentRegionID}");
 
@@ -87,6 +88,7 @@ namespace DOL.GS.Commands
 			ushort direction = client.Player.GetHeading(flag.FlagObject);
 			client.Player.Heading = direction;
 			client.Out.SendPlayerJump(true);
+			*/
 		}
 	}
 }
