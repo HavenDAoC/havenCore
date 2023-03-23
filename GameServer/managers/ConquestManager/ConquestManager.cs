@@ -9,6 +9,7 @@ using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using Microsoft.AspNetCore.Components.Server;
 
+/* Disabled non-classic/SI functionality
 namespace DOL.GS;
 
 public class ConquestManager
@@ -699,10 +700,11 @@ public class ConquestManager
         temp.Add("Killing players within the area of any conquest target will contribute towards the objective. Every 5 minutes, the global contribution will be tallied and updated.\n");
         temp.Add("The conquest target will change if any of the objectives are captured, or if the conquest time expires. " +
                  "If any of the objectives are captured, the attacking realm is immediately awarded an RP bonus based off of the total accumulated contribution.");
-        */
+        
 
         temp.Add("");
 
         return temp;
     }
 }
+*/

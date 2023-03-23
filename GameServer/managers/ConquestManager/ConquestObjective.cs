@@ -6,6 +6,7 @@ using DOL.GS;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 
+/* Disabled non-classic/SI functionality
 namespace DOL.GS;
 
 public class ConquestObjective
@@ -329,3 +330,4 @@ public class ConquestObjective
         ObjectiveFour.ResetContributors();
     }
 }
+*/

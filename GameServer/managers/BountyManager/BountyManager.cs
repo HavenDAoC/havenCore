@@ -7,6 +7,7 @@ using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
 
+/* Disabled non-classic/SI functionality
 namespace DOL.GS;
 
 public class BountyManager
@@ -468,3 +469,4 @@ public class BountyManager
         return temp;
     }
 }
+*/

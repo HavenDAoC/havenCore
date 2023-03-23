@@ -71,8 +71,8 @@ namespace DOL.GS
             WeeklyQuestService.Tick();
             // currentServiceTick = "ConquestService";
             // ConquestService.Tick();
-            currentServiceTick = "BountyService";
-            BountyService.Tick(GameLoopTime);
+            // currentServiceTick = "BountyService";
+            // BountyService.Tick(GameLoopTime);
             // currentServiceTick = "PredatorService";
             // PredatorService.Tick(GameLoopTime);
             currentServiceTick = "ReaperService";
