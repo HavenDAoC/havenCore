@@ -2,6 +2,7 @@ using System.Linq;
 using DOL.GS.PacketHandler;
 using ECS.Debug;
 
+/* Disabled non-classic/SI functionality
 namespace DOL.GS;
 
 public class PredatorService
@@ -81,3 +82,4 @@ public class PredatorService
         Diagnostics.StopPerfCounter(SERVICE_NAME);
     }
 }
+*/

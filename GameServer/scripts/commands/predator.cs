@@ -4,7 +4,7 @@ using DOL.GS.Commands;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
 
-
+/* Disabled non-classic/SI functionality
 namespace DOL.GS.Scripts
 {
     [CmdAttribute(
@@ -120,3 +120,4 @@ namespace DOL.GS.Scripts
         }
     }
 }
+*/

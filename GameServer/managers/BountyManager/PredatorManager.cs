@@ -43,6 +43,8 @@ A -> B -> F -> G -> H -> D -> E -> A
 
 Ideally the loop and queue check/calculation would happen pretty frequently to keep queue times low. After every 30m we do a big reshuffle and refresh every target/completely reconstruct the loop to keep it fresh
  */
+
+/* Disabled non-classic/SI functionality
 public class PredatorManager
 {
     public static List<PredatorBounty> ActiveBounties;
@@ -337,7 +339,7 @@ public class PredatorManager
             }
         } while (moreTargets);
         
-    }*/
+    }
 
     private static void ConstructNewList()
     {
@@ -646,3 +648,4 @@ public class PredatorBounty
         Reward += contributionValue;
     }
 }
+*/

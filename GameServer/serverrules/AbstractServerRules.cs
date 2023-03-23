@@ -1892,6 +1892,7 @@ namespace DOL.GS.ServerRules
 				}
 				*/
 
+				/* Disabled non-classic/SI functionality
 				if (PredatorManager.PlayerIsActive(killedPlayer))
 				{
 					var reward = PredatorManager.CheckForPredatorEffort(killedPlayer, expGainPlayer);
@@ -1901,6 +1902,7 @@ namespace DOL.GS.ServerRules
 						killedPlayer.GainRealmPoints(reward);
 					}
 				}
+				*/
 
 				double damagePercent = (float)de.Value / totalDamage;
 

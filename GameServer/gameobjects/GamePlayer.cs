@@ -70,6 +70,8 @@ namespace DOL.GS
         public double SpecLock { get; set; }
         
         public ECSGameTimer EnduRegenTimer { get { return m_enduRegenerationTimer; } }
+        
+        /* Disabled non-classic/SI functionality
         public ECSGameTimer PredatorTimeoutTimer
         {
             get
@@ -81,6 +83,8 @@ namespace DOL.GS
         }
         
         protected ECSGameTimer m_predatortimer;
+        */
+        
         private PlayerDeck _randomNumberDeck;
 
         #region Client/Character/VariousFlags
@@ -8670,10 +8674,12 @@ namespace DOL.GS
 
             IsSwimming = false;
             
+            /* Disabled non-classic/SI functionality
             if (PredatorManager.PlayerIsActive(this))
             {
                 PredatorManager.RemoveActivePlayer(this);
             }
+            */
 
             if (HCFlag)
             {
