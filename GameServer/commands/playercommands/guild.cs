@@ -2861,29 +2861,41 @@ namespace DOL.GS.Commands
 							return;
 						}
 					#endregion Alliance Invite Cancel
-						#region Alliance Invite Decline
-						// --------------------------------------------------------------------------------
-						// ADECLINE
-						// --------------------------------------------------------------------------------
+					#region Alliance Invite Decline
+					// --------------------------------------------------------------------------------
+					// ADECLINE
+					// '/gc adecline'
+					// Declines an active invitation to join an alliance.
+					// --------------------------------------------------------------------------------
 					case "adecline":
 						{
+							// Check to make sure the player is part of a guild
 							if (client.Player.Guild == null)
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You must be a member of a guild to use any guild commands.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
 								return;
 							}
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Alli))
+							
+							// Check to make sure the player has sufficient permission
+							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								// Message: You do not have sufficient privileges in your guild to use that command.
+								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
 								return;
 							}
+							
 							GamePlayer inviter = client.Player.TempProperties.getProperty<object>("allianceinvite", null) as GamePlayer;
 							client.Player.TempProperties.removeProperty("allianceinvite");
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceDeclined"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-							inviter.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceDeclinedOther"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+							
+							// Message: You decline the alliance offer.
+							ChatUtil.SendTypeMessage((int)eMsg.Alliance, client, "Scripts.Player.Guild.AllianceDeclined", null);
+							// Message: The alliance offer has been declined.
+							ChatUtil.SendTypeMessage((int)eMsg.Alliance, inviter, "Scripts.Player.Guild.AllianceDeclinedOther", null);
+							
 							return;
 						}
-						#endregion
+					#endregion Alliance Invite Decline
 						#region Alliance Remove
 						// --------------------------------------------------------------------------------
 						// AREMOVE

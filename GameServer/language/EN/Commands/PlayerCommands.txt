@@ -352,7 +352,7 @@ Scripts.Player.Guild.Help.GuildUsage:			            <----- '/gc' Command Usage -
 Scripts.Player.Guild.Help.GuildACancel:			            '/gc acancel' - Cancels an alliance invitation that you've sent to another guild. This can only be done before they've accepted the invitation.
 Scripts.Player.Guild.Help.GuildAAccept:			            '/gc aaccept' - Accepts an alliance invitation sent to your guild.	
 Scripts.Player.Guild.Help.GuildAccept:			            '/gc accept ' - Accepts an invite to join a guild. You must not currently be in a guild and remain out of combat to accept.	
-Scripts.Player.Guild.Help.GuildADecline:		            '/gc adecline' - Declines an active invitation to join an alliance.	
+Scripts.Player.Guild.Help.GuildADecline:		            '/gc adecline' - Declines an active invitation to join an alliance.
 Scripts.Player.Guild.Help.GuildAInvite:			            '/gc ainvite' - Sends an invitation to a guild to join your alliance. This cannot be done if the guild is already in an alliance.	
 Scripts.Player.Guild.Help.GuildALeave:			            '/gc aleave' - Removes your guild from a current alliance.
 Scripts.Player.Guild.Help.GuildAlli:			            '/gc alliance' - Shows information regarding your guild's current alliance association.	
@@ -419,8 +419,8 @@ Scripts.Player.Guild.CraftBuffActive:                       Your guild already h
 Scripts.Player.Guild.AllianceAlreadyOther:		            That guild already has an alliance.
 Scripts.Player.Guild.AllianceAnsCancel:			            You have canceled the alliance offer.
 Scripts.Player.Guild.AllianceOfferCancel:			        The alliance offer has been canceled.
-Scripts.Player.Guild.AllianceDeclined:			You decline the alliance offer.
-Scripts.Player.Guild.AllianceDeclinedOther:		The alliance offer has been declined.
+Scripts.Player.Guild.AllianceDeclined:			            You decline the alliance offer.
+Scripts.Player.Guild.AllianceDeclinedOther:		            The alliance offer has been declined.
 Scripts.Player.Guild.AllianceDisabled:			            Alliances are disabled on this server.
 Scripts.Player.Guild.AllianceIndexNotVal:		The alliance index is not a valid number.
 Scripts.Player.Guild.AllianceInfo:			                Alliance info for {0}:
