@@ -16,3 +16,41 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
+/*
+ * OpenDAoC - A branch of the Dawn of Light program
+ * 
+ * Additions have been made to the original Dawn of Light emulation
+ * program to improve overall performance, as well as recreate Dark
+ * Age of Camelot v1.65, circa 2003. As such, changes have been made
+ * to the overall DOL code base to not only address performance issues,
+ * but also to recreate specific behaviors and functionality specific
+ * to the Shrouded Isles, pre-ToA (Trials of Atlantis).
+ * 
+ * Extensive work has been performed since 2021, which makes this
+ * project a significant/unique branch from Dawn of Light. Like Dawn
+ * of Light, this program is free software and may be distributed openly
+ * in the hopes that more DAoC freeshards may come to exist with their
+ * own server settings and unique offerings.
+ *
+ * A special tribute goes out to Clait, Fenyn Ro, Knutters, Flame, 
+ * Glimmer, DrMed, Kelteen, and the many other passionate contributors of
+ * OpenDAoC, from which the many changes of this program branch came to exist.
+ * 
+ */
+ 
+/*
+ * HavenDAoC - An open source emulation of DAoC v1.65
+ * HavenDAoC is a branch of the OpenDAoC program and seeks to recreate
+ * the classic Dark Age of Camelot Shrouded Isles, with some quality of life 
+ * (QoL) improvements.
+ *
+ * Changes to the overall classic/SI experience will be kept to a minimum,
+ * and any non-classic functionality introduced via DoL or Atlas will be
+ * removed or commented out.
+ *
+ * Additional programs exist, which add to or contribute to this program's
+ * accessibility, including a Character Planner (HTML/JS-based), Herald, Wiki,
+ * and Launcher app.
+ *
+ */
