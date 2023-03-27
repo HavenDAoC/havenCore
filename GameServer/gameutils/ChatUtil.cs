@@ -233,6 +233,9 @@ namespace DOL.GS
                 case (int)eMsg.YouWereHit: // GameLiving hit you messages
                     target.Client.Out.SendMessage(translatedMsg, eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
                     break;
+                case (int)eMsg.DialogWarn: // Incorrect outputs or problems with command syntax
+	                target.Client.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, translatedMsg);
+	                break;
             }
         }
 
@@ -419,6 +422,9 @@ namespace DOL.GS
                 case (int)eMsg.YouWereHit: // GameLiving hit you messages
                     target.Out.SendMessage(translatedMsg, eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
                     break;
+                case (int)eMsg.DialogWarn: // Incorrect outputs or problems with command syntax
+	                target.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, translatedMsg);
+	                break;
             }
         }
 
@@ -601,6 +607,9 @@ namespace DOL.GS
                 case (int)eMsg.YouWereHit: // GameLiving hit you messages
                     target.Client.Out.SendMessage(message, eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
                     break;
+                case (int)eMsg.DialogWarn: // Incorrect outputs or problems with command syntax
+	                target.Client.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, message);
+	                break;
             }
         }
 
@@ -780,6 +789,9 @@ namespace DOL.GS
                 case (int)eMsg.YouWereHit: // GameLiving hit you messages
                     target.Out.SendMessage(message, eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
                     break;
+                case (int)eMsg.DialogWarn: // Incorrect outputs or problems with command syntax
+	                target.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, message);
+	                break;
             }
         }
         

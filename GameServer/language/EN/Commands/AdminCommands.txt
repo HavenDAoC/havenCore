@@ -7,7 +7,7 @@ AdminCommands.Header.Syntax.Account:                    <----- '/account' Comman
 AdminCommands.Header.Syntax.Benchmark:                  <----- '/benchmark' Commands (plvl 3) ----->
 AdminCommands.Header.Syntax.Code:                       <----- '/code' Commands (plvl 3) ----->
 AdminCommands.Header.Syntax.Freeze:                     <----- '/freeze' Commands (plvl 3) ----->
-AdminCommands.Header.Syntax.Plvl:                       <----- '/plvl' Commands (plvl 3) ----->
+AdminCommands.Header.Syntax.Plvl:                       ----- '/plvl' Commands (plvl 3) -----
 AdminCommands.Header.Syntax.Refresh:                    <----- '/refresh' Commands (plvl 3) ----->
 AdminCommands.Header.Syntax.Reload:                     <----- '/reload' Commands (plvl 3) ----->
 AdminCommands.Header.Syntax.Serverprop:                 <----- '/serverproperties' Command (plvl 3) ----->

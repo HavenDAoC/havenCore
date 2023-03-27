@@ -20,7 +20,7 @@ AllCommands.Command.Spam.SlowDown:                        Slow down, you're typi
 AllCommands.Command.Err.YouMustWaitToUse:                 You must wait {0} more seconds before you may use this command again!
 
 ## Notes
-AllCommands.Header.Note.Divider:                    --- NOTE: ---
+AllCommands.Header.Note.Divider:                    ----- NOTE -----
 AllCommands.Header.Note.Dashes:                     --------------
 
 ## /advice
