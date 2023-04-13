@@ -64,14 +64,20 @@ AdminCommands.Benchmark.Msg.SkillsIterations:           The skills benchmark too
 AdminCommands.Benchmark.Msg.SpellsIterations:           The spells benchmark took {0}ms to list {1} usable spells.
 
 # '/code' Commands
-
-# Old /code Command
-AdminCommands.Code.Description:						Executes custom code!
-AdminCommands.Code.Usage:							/code <codesnippet>
-AdminCommands.Code.ErrorCompiling:					Error Compiling Expression:
-AdminCommands.Code.CodeExecuted:					Code executed...
+AdminCommands.Code.CmdList.Description:                 '/code' - Manually executes a custom script in-game.
+AdminCommands.Code.Description:                         Manually executes a custom code.
+AdminCommands.Code.Syntax.Code:                         /code <className>
+AdminCommands.Code.Usage.Code:                          Triggers the system compiler for the specified script.
+AdminCommands.Code.Err.Compiling:                       Error(s) occurred while compiling the specified code:
+AdminCommands.Code.Msg.CodeExecuted:                    The specified code executed successfully!
 
 # '/freeze' Commands
+AdminCommands.Freeze.CmdList.Description:               '/freeze' - Triggers a brief pause in the region time for testing purposes.
+AdminCommands.Freeze.Description:                       Triggers a brief pause in the region time for testing purposes.
+AdminCommands.Freeze.Syntax.Freeze:                     /freeze <seconds>
+AdminCommands.Freeze.Usage.Freeze:                      Freezes the region time for the specified number of seconds.
+AdminCommands.Freeze.Msg.Freezing:                      The region time will now stop for {0} seconds. Please stand by...
+AdminCommands.Freeze.Err.Freeze:                        The command did not work as expected! Please make sure you entered a numeric value to indicate the number of seconds to freeze the region timer.
 
 # '/plvl' Commands
 AdminCommands.Plvl.Description:                         Alters an account's privilege level (plvl) and grants/revokes access to command types depending on the user's plvl. With these commands, accounts may be granted Admin, GM, and Player command access from in-game. These commands are intended for testing purposes and should not be used on non-staff accounts.
@@ -114,16 +120,71 @@ AdminCommands.Plvl.Err.NoPlvlPerm:                      You do not have the '/pl
 AdminCommands.Plvl.Note.PlvlSingle:                     To retain access to specific command types as a Player, enter '/plvl single' or '/plvl singleaccount' for details.
 
 # '/refresh' Commands
+AdminCommands.Refresh.CmdList.Description:              '/refresh' - Refreshes specific static data caches stored via scripts and other objects.
+AdminCommands.Refresh.Description:                      Refreshes specific static data caches stored using scripts and other objects.
+AdminCommands.Refresh.Syntax.RefreshModule:             /refresh <className>.<methodName>
+AdminCommands.Refresh.Usage.RefreshModule:              Refreshes a specific module's static cache.
+AdminCommands.Refresh.Syntax.RefreshList:               /refresh list
+AdminCommands.Refresh.Usage.RefreshList:                Returns a list of all available modules that with static caches that may be refreshed.
+AdminCommands.Refresh.Err.WrongModule:                  The module specified does not exist. Try '/refresh list' to see available modules.
+AdminCommands.Refresh.Msg.RefreshingModules:            [START] Refreshing the module static cache for: {0}
+AdminCommands.Refresh.Msg.ReturnedValue:                [RETURN] Module returned value: {0}
+AdminCommands.Refresh.Err.ErrorStaticCache:             [ERROR] An unexpected issue occurred: {0}, {1}
+AdminCommands.Refresh.Msg.StaticCacheFinished:          [DONE] Refreshed the static cache for: {0}
+AdminCommands.Refresh.Msg.AvailableModules:             <----- '/refresh' Modules ----->
 
 # '/reload' Commands
+AdminCommands.Reload.CmdList.Description:               '/reload' - Removes and then re-adds specific in-game elements. This is used to apply any recent database changes to the live server.
+AdminCommands.Reload.Description:                       Removes and then re-adds specific in-game elements. This is used to apply any recent database changes to the live server.
+AdminCommands.Reload.Syntax.Mob:                        /reload mob [all|model|name|realm]
+AdminCommands.Reload.Usage.Mob:                         Reloads all in-game objects in your current region with the 'GameNPC' type and the filter specified.
+AdminCommands.Reload.Syntax.AllMob:                        /reload mob all
+AdminCommands.Reload.Usage.AllMob:                         Reloads all in-game objects in your current region with the 'GameNPC' type.
+AdminCommands.Reload.Syntax.ModelMob:                   /reload mob model <modelID>
+AdminCommands.Reload.Usage.ModelMob:                    Reloads all in-game objects in your current region with the 'GameNPC' type and the model ID specified.
+AdminCommands.Reload.Syntax.NameMob:                    /reload mob name <mobName>
+AdminCommands.Reload.Usage.NameMob:                     Reloads all in-game objects in your current region with the 'GameNPC' type and matching the name specified.
+AdminCommands.Reload.Syntax.RealmMob:                   /reload mob realm <realm>
+AdminCommands.Reload.Usage.RealmMob:                    Reloads all in-game objects in your current region with the 'GameNPC' type and matching the realm specified.
+AdminCommands.Reload.Syntax.Object:                     /reload object all
+AdminCommands.Reload.Usage.Object:                      Reloads all in-game objects in your current region with the 'GameStaticItem' type.
+AdminCommands.Reload.Syntax.ModelObject:                /reload object model <modelID>
+AdminCommands.Reload.Usage.ModelObject:                 Reloads all in-game objects in your current region with the 'GameStaticItem' type and the model ID specified.
+AdminCommands.Reload.Syntax.NameObject:                 /reload object name <objName>
+AdminCommands.Reload.Usage.NameObject:                  Reloads all in-game objects in your current region with the 'GameStaticItem' type and matching the name specified.
+AdminCommands.Reload.Syntax.RealmObject:                /reload object realm <realm>
+AdminCommands.Reload.Usage.RealmObject:                 Reloads all in-game objects in your current region with the 'GameStaticItem' type and matching the realm specified.
+AdminCommands.Reload.Syntax.Specs:                      /reload specs
+AdminCommands.Reload.Usage.Specs:                       Reloads all database objects from the 'Specialization' table.
+AdminCommands.Reload.Syntax.Spells:                     /reload spells
+AdminCommands.Reload.Usage.Spells:                      Reloads all database objects from the 'Spell' table.
+AdminCommands.Reload.Syntax.Teleports:                  /reload teleports
+AdminCommands.Reload.Usage.Teleports:                   Reloads all database objects from the 'Teleport' table.
+AdminCommands.Reload.Syntax.NPCTemplates:               /reload npctemplates
+AdminCommands.Reload.Usage.NPCTemplates:                Reloads all database objects from the 'NpcTemplate' table.
+AdminCommands.Reload.Syntax.Realm:                      /reload realm
+AdminCommands.Reload.Usage.Realm:                       Displays all accepted values for '/reload mob realm' and '/reload object realm' subcommands.
+AdminCommands.Reload.Header.Realms:                     <----- Realm Syntax ----->
+AdminCommands.Reload.Usage.NoneRealm:                   None = 0, n, no, none
+AdminCommands.Reload.Usage.AlbRealm:                    Albion = 1, a, alb, albion
+AdminCommands.Reload.Usage.MidRealm:                    Midgard = 2, m, mid, midgard
+AdminCommands.Reload.Usage.HibRealm:                    Hibernia = 3, h, hib, hibernia
+AdminCommands.Reload.Msg.TotalMobsRemovedAdded:         Reload complete! {0} mobs were removed and {1} added to this region.
+AdminCommands.Reload.Msg.TotalObjRemovedAdded:          Reload complete! {0} objects were removed and {1} added to this region.
+AdminCommands.Reload.Msg.RemovingReaddingMobs:          Removing and then re-adding all mobs where {0} = {1}.
+AdminCommands.Reload.Msg.RemovingReaddingObjs:          Removing and then re-adding all objects where {0} = {1}.
+AdminCommands.Reload.Msg.NPCTempReloaded:               Reload complete! All NPC Templates have been added to the live cache.
+AdminCommands.Reload.Msg.SpecsReloaded:                 Reload complete! {0} specializations have been added to the live cache.
+AdminCommands.Reload.Msg.SpellsReloaded:                 Reload complete! {0} spells from all spell lines have been added to the live cache.
+AdminCommands.Reload.Msg.TeleportsReloaded:              Reload complete! All teleport locations have been added to the live cache.
 
-# '/serverproperties' Commands
-
-# Old /serverproperties Command
-AdminCommands.ServerProperties.Description:			Reloads server properties from the database
-AdminCommands.ServerProperties.Usage:				/serverproperties
-AdminCommands.ServerProperties.DataBaseXML:			XML is cached sorry, you cannot refresh server properties unless using MySQL!
-AdminCommands.ServerProperties.PropertiesRefreshed:	Refreshed server properties!
+## /serverproperties
+AdminCommands.ServerProp.CmdList.Description:           '/serverproperties' - Refreshes the live cache with any changes from the 'serverproperty' table. 
+AdminCommands.ServerProp.Description:                   Refreshes the live cache with any changes from the 'serverproperty' table.
+AdminCommands.ServerProp.Syntax.ServerProp:             /serverproperties
+AdminCommands.ServerProp.Usage.ServerProp:              Refreshes the server's properties.
+AdminCommands.ServerProp.XMLOld.Sorry:                  XML is cached sorry, you cannot refresh server properties unless using MySQL!
+AdminCommands.ServerProp.Msg.PropsRefreshed:            Atlas' server properties have been refreshed!
 
 # '/shutdown' Commands
 AdminCommands.Shutdown.Msg.CountdownHours:          A server reboot is scheduled to occur in {0} hours!
