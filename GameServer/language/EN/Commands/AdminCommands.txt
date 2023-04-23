@@ -16,7 +16,7 @@ AdminCommands.Header.Syntax.Shutdown:                   <----- '/shutdown' Comma
 # '/account' Commands
 AdminCommands.Account.Description:					    Creates new, manages existing, and controls character assignment for HavenDAoC accounts. We recommend editing the database directly where possible to perform many of these same functions. Otherwise, use the following syntax:
 AdminCommands.Account.Comm.Desc1:                       For more information regarding the '/account' slash command, the Slash Commands Library on the HavenDAoC Developer Wiki.
-AdminCommands.Account.Comm.Desc2:                       It is recommended that Atlas staff utilize the Web Admin tool to perform account management activities where possible, such as resetting passwords and deleting characters or accounts.
+AdminCommands.Account.Comm.Desc2:                       It is recommended that server staff utilize the Web Admin tool to perform account management activities where possible, such as resetting passwords and deleting characters or accounts.
 AdminCommands.Account.Syntax.AccountName:               /account accountname <characterName>
 AdminCommands.Account.Usage.AccountName:			    Identifies the account associated with the character. This may be used on offline characters.
 AdminCommands.Account.Syntax.ChangePassword:            /account changepassword <accountName> <newPassword>
@@ -101,7 +101,6 @@ AdminCommands.Plvl.Comm.Usage2:                         You cannot be attacked b
 AdminCommands.Plvl.Comm.3:                              3 = Admin
 AdminCommands.Plvl.Comm.Usage3:                         You cannot be attacked by mobs or other players or take falling damage. Admins have access to ALL special slash commands (including GM).
 AdminCommands.Plvl.Comm.UseSingleAcct:                  These integers are used when changing your priv level ('/plvl <newPlvl> <playerName>') to test functionality or combat in-game.
-AdminCommands.Plvl.Comm.Desc:                           For more information regarding the '/plvl' command type, see page 22 (post #430) of the GM Commands Library on the Atlas Developers forum.
 AdminCommands.Plvl.Msg.AddSinglePerm:                   You've granted {0} access to the '/{1}' command!
 AdminCommands.Plvl.Msg.GaveSinglePerm:                  {0} has given you access to the '/{1}' command! Type '/{1}' to view the command list.
 AdminCommands.Plvl.Msg.RevokeSinglePerm:                You have revoked {0}'s access to the '/{1}' command!
@@ -179,12 +178,12 @@ AdminCommands.Reload.Msg.SpellsReloaded:                 Reload complete! {0} sp
 AdminCommands.Reload.Msg.TeleportsReloaded:              Reload complete! All teleport locations have been added to the live cache.
 
 ## /serverproperties
-AdminCommands.ServerProp.CmdList.Description:           '/serverproperties' - Refreshes the live cache with any changes from the 'serverproperty' table. 
-AdminCommands.ServerProp.Description:                   Refreshes the live cache with any changes from the 'serverproperty' table.
+AdminCommands.ServerProp.CmdList.Description:           '/serverproperties' - Refreshes the server's cache with any changes from the 'serverproperty' table.
+AdminCommands.ServerProp.Description:                   Refreshes the server's cache with any changes from the 'serverproperty' table.
 AdminCommands.ServerProp.Syntax.ServerProp:             /serverproperties
-AdminCommands.ServerProp.Usage.ServerProp:              Refreshes the server's properties.
-AdminCommands.ServerProp.XMLOld.Sorry:                  XML is cached sorry, you cannot refresh server properties unless using MySQL!
-AdminCommands.ServerProp.Msg.PropsRefreshed:            Atlas' server properties have been refreshed!
+AdminCommands.ServerProp.Usage.ServerProp:              Refreshes the server's cache with any changes from the 'serverproperty' table.
+AdminCommands.ServerProp.XMLOld.Sorry:                  XML values are cached and cannot be updated. Server properties may only be refreshed using MySQL.
+AdminCommands.ServerProp.Msg.PropsRefreshed:            Values from the 'serverproperty' table have been refreshed in the server's cache!
 
 # '/shutdown' Commands
 AdminCommands.Shutdown.Msg.CountdownHours:          A server reboot is scheduled to occur in {0} hours!
@@ -194,7 +193,7 @@ AdminCommands.Shutdown.Msg.CountdownSecs:           A server reboot will occur i
 AdminCommands.Shutdown.Msg.CountdownMnSc:           A server reboot will occur in {0} minutes and {1} seconds!
 AdminCommands.Shutdown.Msg.CountdownLogoutSecs:     Server reboot in {0} seconds! Log out now to avoid any loss of progress!
 AdminCommands.Shutdown.Msg.ScheduledShutdown:       A server reboot has been scheduled to occur at {0}. The Atlas server will then be unavailable temporarily for maintenance.
-AdminCommands.Account.Msg.ServerClosed:             The Atlas server is now closed to all incoming connections! The server will shut down in {0} seconds!
+AdminCommands.Account.Msg.ServerClosed:             The server is now closed to all incoming connections! The server will shut down in {0} seconds!
 AdminCommands.Shutdown.Msg.PlanLogout:              It is recommended that players log out prior to the reboot to ensure RvR kills, ROG drops, and other progress is not lost.
 AdminCommands.Shutdown.Comm.Desc1:                  The '/shutdown' command triggers a countdown timer that prevents any new incoming connections (when fewer than 2 minutes remain) and sends the exit code, stopping all DOL-related activity. This should not be confused with the '/serverreboot' command (which presently does not work).
 AdminCommands.Shutdown.Comm.Desc2:                  Rebooting Atlas is a team effort. Bringing the server back online is performed manually by Clait, Fen, or Suite. Please make sure someone is prepared to run the server once the shutdown is complete. Do not use these commands unless instructed.

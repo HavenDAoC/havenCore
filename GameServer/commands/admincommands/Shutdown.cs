@@ -314,9 +314,10 @@ namespace DOL.GS.Commands
 					foreach (GameClient client in WorldMgr.GetAllPlayingClients())
 					{
 						// Send twice for good measure
-						// Message: "The Atlas server is now closed to all incoming connections! The server will shut down in {0} seconds!"
-						ChatUtil.SendDebugMessage(client, "AdminCommands.Account.Msg.ServerClosed", secs);
-						ChatUtil.SendDebugMessage(client, "AdminCommands.Account.Msg.ServerClosed", secs);
+						// Message: The server is now closed to all incoming connections! The server will shut down in {0} seconds!
+						ChatUtil.SendTypeMessage((int)eMsg.Debug, client, "AdminCommands.Account.Msg.ServerClosed", secs);
+						// Message: The server is now closed to all incoming connections! The server will shut down in {0} seconds!
+						ChatUtil.SendTypeMessage((int)eMsg.Debug, client, "AdminCommands.Account.Msg.ServerClosed", secs);
 					}
 				}
 				
@@ -496,9 +497,10 @@ namespace DOL.GS.Commands
 					foreach (GameClient client in WorldMgr.GetAllPlayingClients())
 					{
 						// Send twice for good measure
-						// Message: "The Atlas server is now closed to all incoming connections! The server will shut down in {0} seconds!"
-						ChatUtil.SendDebugMessage(client, "AdminCommands.Account.Msg.ServerClosed", secs);
-						ChatUtil.SendDebugMessage(client, "AdminCommands.Account.Msg.ServerClosed", secs);
+						// Message: The server is now closed to all incoming connections! The server will shut down in {0} seconds!
+						ChatUtil.SendTypeMessage((int)eMsg.Debug, client, "AdminCommands.Account.Msg.ServerClosed", secs);
+						// Message: The server is now closed to all incoming connections! The server will shut down in {0} seconds!
+						ChatUtil.SendTypeMessage((int)eMsg.Debug, client, "AdminCommands.Account.Msg.ServerClosed", secs);
 					}
 				}
 				
