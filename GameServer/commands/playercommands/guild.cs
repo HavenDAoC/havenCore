@@ -187,10 +187,52 @@ namespace DOL.GS.Commands
 		}
 
 		/// <summary>
-		/// method to handle /gc commands from a client
+		/// Checks to make sure the client initiating the command is a member of a guild currently.
 		/// </summary>
-		/// <param name="client"></param>
-		/// <param name="args"></param>
+		/// <param name="client">The client initiating the command.</param>
+		private void MemberGuild(GameClient client)
+		{
+			// Player must be a member of an existing guild to invite players
+			if (client.Player.Guild == null)
+			{
+				// Message: You must be a member of a guild to use any guild commands.
+				ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
+				return;
+			}
+		}
+
+		/// <summary>
+		/// Checks to make sure the client initiating the command has sufficient guild privileges to perform the associated action.
+		/// </summary>
+		/// <param name="client">The client initiating the command.</param>
+		/// <param name="rank">The required guild privileges for performing the command.</param>
+		private void MemberRank(GameClient client, Guild.eRank rank)
+		{
+			// Inviting player must have sufficient rank privileges in the guild to invite new members
+			if (!client.Player.Guild.HasRank(client.Player, rank))
+			{
+				// Message: You do not have high sufficient privileges in your guild to use that command.
+				ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
+				return;
+			}
+		}
+
+		/// <summary>
+		/// Checks the client's privilege level to see if they're a Player.
+		/// </summary>
+		/// <param name="client">The client initiating the command.</param>
+		private void IsPlayer(GameClient client)
+		{
+			// Players cannot perform this command
+			if (client.Account.PrivLevel == (uint)ePrivLevel.Player)
+				return;
+		}
+
+		/// <summary>
+		/// Handles all guild commands.
+		/// </summary>
+		/// <param name="client">The client initiating the command.</param>
+		/// <param name="args">The arguments, or elements, that make up the executed command.</param>
 		/// <returns></returns>
 		public void OnCommand(GameClient client, string[] args)
 		{
@@ -231,9 +273,7 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "create":
 						{
-							// Players cannot perform this command
-							if (client.Account.PrivLevel == (uint)ePrivLevel.Player)
-								return;
+							IsPlayer(client);
 
 							if (args.Length < 3)
 							{
@@ -302,9 +342,7 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "purge":
 					{
-						// Players cannot perform this command
-						if (client.Account.PrivLevel == (uint)ePrivLevel.Player)
-							return;
+						IsPlayer(client);
 
 						if (args.Length < 3)
 						{
@@ -313,7 +351,9 @@ namespace DOL.GS.Commands
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildGMPurge"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
+						
 						string guildname = String.Join(" ", args, 2, args.Length - 2);
+						
 						if (!GuildMgr.DoesGuildExist(guildname))
 						{
 							// Message: No guild exists with that name.
@@ -337,9 +377,7 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "rename":
 						{
-							// Players cannot perform this command
-							if (client.Account.PrivLevel == (uint)ePrivLevel.Player)
-								return;
+							IsPlayer(client);
 
 							// Must follow syntax of '/gc rename <oldName> to <newName>'
 							if (args.Length < 5)
@@ -400,9 +438,7 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "addplayer":
 						{
-							// Players cannot perform this command
-							if (client.Account.PrivLevel == (uint)ePrivLevel.Player)
-								return;
+							IsPlayer(client);
 
 							// Make sure the command is long enough
 							if (args.Length < 5)
@@ -454,9 +490,7 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "removeplayer":
 						{
-							// Players cannot perform this command
-							if (client.Account.PrivLevel == (uint)ePrivLevel.Player)
-								return;
+							IsPlayer(client);
 
 							// Make sure the command is long enough
 							if (args.Length < 5)
@@ -508,22 +542,9 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "invite":
 						{
-							// Player must be a member of an existing guild to invite players
-							if (client.Player.Guild == null)
-							{
-								// Message: You must be a member of a guild to use any guild commands.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-								return;
-							}
-
-							// Inviting player must have sufficient rank privileges in the guild to invite new members
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Invite))
-							{
-								// Message: You do not have high sufficient privileges in your guild to use that command.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-								return;
-							}
-
+							MemberGuild(client);
+							MemberRank(client, Guild.eRank.Invite);
+							
 							// If possible, players can invite by only targeting the desired character
 							GamePlayer guildInvitee = client.Player.TargetObject as GamePlayer;
 							
@@ -615,21 +636,8 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "remove":
 						{
-							// Player must be a member of an existing guild to remove players
-							if (client.Player.Guild == null)
-							{
-								// Message: You must be a member of a guild to use any guild commands.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-								return;
-							}
-
-							// Inviting player must have sufficient rank privileges in the guild to invite new members
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Remove))
-							{
-								// Message: You do not have high sufficient privileges in your guild to use that command.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-								return;
-							}
+							MemberGuild(client);
+							MemberRank(client, Guild.eRank.Remove);
 
 							// Make sure the command has a player name specified
 							if (args.Length < 3)
@@ -734,21 +742,8 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "removeaccount":
 						{
-							// Player must be a member of an existing guild to remove players
-							if (client.Player.Guild == null)
-							{
-								// Message: You must be a member of a guild to use any guild commands.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-								return;
-							}
-
-							// Player must have sufficient rank privileges in the guild to remove members
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Invite))
-							{
-								// Message: You do not have high sufficient privileges in your guild to use that command.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-								return;
-							}
+							MemberGuild(client);
+							MemberRank(client, Guild.eRank.Remove);
 
 							// Make sure they specify the player name
 							if (args.Length < 3)
@@ -820,24 +815,8 @@ namespace DOL.GS.Commands
 					{
 						bool typed = args.Length != 3;
 
-						// Player must be a member of an existing guild to view guild info
-						if (client.Player.Guild == null)
-						{
-							if (!(args.Length == 3 && args[2] == "1"))
-							{
-								// Message: You must be a member of a guild to use any guild commands.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-							}
-							return;
-						}
-							
-						// Player must have sufficient rank privileges in the guild to view its information
-						if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.View))
-						{
-							// Message: You do not have high sufficient privileges in your guild to use that command.
-							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-							return;
-						}
+						MemberGuild(client);
+						MemberRank(client, Guild.eRank.View);
 
 						// Show guild information
 						if (typed)
@@ -1147,21 +1126,8 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "buff":
 						{
-							// Player must be a member of an existing guild to view guild info
-							if (client.Player.Guild == null)
-							{
-								// Message: You must be a member of a guild to use any guild commands.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-								return;
-							}
-
-							// Player must have sufficient rank privileges in the guild to view its information
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Buff))
-							{
-								// Message: You do not have high sufficient privileges in your guild to use that command.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-								return;
-							}
+							MemberGuild(client);
+							MemberRank(client, Guild.eRank.Buff);
 
 							// Guild must have merit points available to purchase the buff
 							if (client.Player.Guild.MeritPoints < 1000)
@@ -1442,24 +1408,11 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "ranks":
 						{
-							// Obviously need to be a member of a guild to use this command
-							if (client.Player.Guild == null)
-							{
-								// Message: You must be a member of a guild to use any guild commands.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-								return;
-							}
+							MemberGuild(client);
+							MemberRank(client, Guild.eRank.GcHear);
 							
 							client.Player.Guild.UpdateGuildWindow();
-							
-							// Make sure they've got sufficient privileges
-							if (!client.Player.GuildRank.GcHear)
-							{
-								// Message: You do not have sufficient privileges in your guild to use that command.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-								return;
-							}
-							
+
 							List<DBRank> rankList = client.Player.Guild.Ranks.ToList();
 							
 							// List the following info for each rank
@@ -1494,23 +1447,11 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "webpage":
 					{
-						// Obviously need to be a member of a guild to use this command
-						if (client.Player.Guild == null)
-						{
-							// Message: You must be a member of a guild to use any guild commands.
-							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-							return;
-						}
+						MemberGuild(client);
+						MemberRank(client, Guild.eRank.Leader);
 							
 						client.Player.Guild.UpdateGuildWindow();
-							
-						// You need to be Guildmaster to use this command
-						if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
-						{
-							// Message: You do not have sufficient privileges in your guild to use that command.
-							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-						}
-							
+
 						message = String.Join(" ", args, 2, args.Length - 2);
 						client.Player.Guild.Webpage = message;
 							
@@ -1529,23 +1470,11 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "email":
 					{
-						// Obviously need to be a member of a guild to use this command
-						if (client.Player.Guild == null)
-						{
-							// Message: You must be a member of a guild to use any guild commands.
-							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-							return;
-						}
+						MemberGuild(client);
+						MemberRank(client, Guild.eRank.Leader);
 							
 						client.Player.Guild.UpdateGuildWindow();
-							
-						// You need to be Guildmaster to use this command
-						if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
-						{
-							// Message: You do not have sufficient privileges in your guild to use that command.
-							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-						}
-							
+
 						message = String.Join(" ", args, 2, args.Length - 2);
 						client.Player.Guild.Email = message;
 							
@@ -1587,13 +1516,8 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "edit":
 					{
-						// Obviously need to be a member of a guild to use this command
-						if (client.Player.Guild == null)
-						{
-							// Message: You must be a member of a guild to use any guild commands.
-							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-							return;
-						}
+						MemberGuild(client);
+						MemberRank(client, Guild.eRank.Leader);
 							
 						client.Player.Guild.UpdateGuildWindow();
 						GCEditCommand(client, args);
@@ -1732,13 +1656,7 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "leave" or "quit":
 					{
-						// You can't leave a guild if you're not a member of one
-						if (client.Player.Guild == null)
-						{
-							// Message: You must be a member of a guild to use any guild commands.
-							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-							return;
-						}
+						MemberGuild(client);
 							
 						// Message: Do you really want to leave {0}?
 						client.Out.SendGuildLeaveCommand(client.Player, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.ConfirmLeave", client.Player.Guild.Name));
@@ -1771,19 +1689,8 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "promote":
 						{
-							if (client.Player.Guild == null)
-							{
-								// Message: You must be a member of a guild to use any guild commands.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-								return;
-							}
-							
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Promote))
-							{
-								// Message: You do not have sufficient privileges in your guild to use that command.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-								return;
-							}
+							MemberGuild(client);
+							MemberRank(client, Guild.eRank.Promote);
 
 							if (args.Length < 3)
 							{
@@ -1988,21 +1895,8 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "demote":
 						{
-							// Obviously need to be a member of a guild to use this command
-							if (client.Player.Guild == null)
-							{
-								// Message: You must be a member of a guild to use any guild commands.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-								return;
-							}
-
-							// Player must have sufficient rank privileges in the guild to view its information
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Demote))
-							{
-								// Message: You do not have high sufficient privileges in your guild to use that command.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-								return;
-							}
+							MemberGuild(client);
+							MemberRank(client, Guild.eRank.Demote);
 
 							// Check to make sure command is long enough
 							if (args.Length < 3)
@@ -2183,12 +2077,7 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "who":
 						{
-							if (client.Player.Guild == null)
-							{
-								// Message: You must be a member of a guild to use any guild commands.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-								return;
-							}
+							MemberGuild(client);
 
 							int ind = 0;
 							int startInd = 0;
@@ -2281,19 +2170,8 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "leader":
 						{
-							if (client.Player.Guild == null)
-							{
-								// Message: You must be a member of a guild to use any guild commands.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-								return;
-							}
-							
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
-							{
-								// Message: You do not have sufficient privileges in your guild to use that command.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-								return;
-							}
+							MemberGuild(client);
+							MemberRank(client, Guild.eRank.Leader);
 							
 							GamePlayer newLeader = client.Player.TargetObject as GamePlayer;
 							
@@ -2349,20 +2227,8 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "emblem":
 						{
-							if (client.Player.Guild == null)
-							{
-								// Message: You must be a member of a guild to use any guild commands.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
-							{
-								// Message: You do not have sufficient privileges in your guild to use that command.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-								return;
-							}
+							MemberGuild(client);
+							MemberRank(client, Guild.eRank.Leader);
 							
 							if (client.Player.Guild.Emblem != 0)
 							{
@@ -2401,19 +2267,8 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "autoremove":
 						{
-							if (client.Player.Guild == null)
-							{
-								// Message: You must be a member of a guild to use any guild commands.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-								return;
-							}
-							
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Remove))
-							{
-								// Message: You do not have sufficient privileges in your guild to use that command.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-								return;
-							}
+							MemberGuild(client);
+							MemberRank(client, Guild.eRank.Remove);
 
 							if (args.Length == 4 && args[3].ToLower() == "account")
 							{
@@ -2509,19 +2364,8 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "motd":
 					{
-						if (client.Player.Guild == null)
-						{
-							// Message: You must be a member of a guild to use any guild commands.
-							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-							return;
-						}
-							
-						if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
-						{
-							// Message: You do not have sufficient privileges in your guild to use that command.
-							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-							return;
-						}
+						MemberGuild(client);
+						MemberRank(client, Guild.eRank.Leader);
 							
 						message = String.Join(" ", args, 2, args.Length - 2);
 						client.Player.Guild.Motd = message;
@@ -2541,19 +2385,8 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "amotd":
 					{
-						if (client.Player.Guild == null)
-						{
-							// Message: You must be a member of a guild to use any guild commands.
-							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-							return;
-						}
-							
-						if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
-						{
-							// Message: You do not have sufficient privileges in your guild to use that command.
-							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-							return;
-						}
+						MemberGuild(client);
+						MemberRank(client, Guild.eRank.Alli);
 							
 						if (client.Player.Guild.AllianceId == string.Empty)
 						{
@@ -2581,19 +2414,8 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "omotd":
 					{
-						if (client.Player.Guild == null)
-						{
-							// Message: You must be a member of a guild to use any guild commands.
-							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-							return;
-						}
-							
-						if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
-						{
-							// Message: You do not have sufficient privileges in your guild to use that command.
-							ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-							return;
-						}
+						MemberGuild(client);
+						MemberRank(client, Guild.eRank.Leader);
 							
 						message = String.Join(" ", args, 2, args.Length - 2);
 						client.Player.Guild.Omotd = message;
@@ -2613,12 +2435,8 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "alliance":
 						{
-							if (client.Player.Guild == null)
-							{
-								// Message: You must be a member of a guild to use any guild commands.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-								return;
-							}
+							MemberGuild(client);
+							MemberRank(client, Guild.eRank.AcHear);
 
 							Alliance alliance = null;
 							if (client.Player.Guild.AllianceId != null && client.Player.Guild.AllianceId != string.Empty)
@@ -2666,19 +2484,8 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "ainvite":
 						{
-							if (client.Player.Guild == null)
-							{
-								// Message: You must be a member of a guild to use any guild commands.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-								return;
-							}
-							
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Alli))
-							{
-								// Message: You do not have sufficient privileges in your guild to use that command.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-								return;
-							}
+							MemberGuild(client);
+							MemberRank(client, Guild.eRank.Alli);
 							
 							GamePlayer obj = client.Player.TargetObject as GamePlayer;
 							
@@ -2742,19 +2549,8 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "aleader":
 						{
-							if (client.Player.Guild == null)
-							{
-								// Message: You must be a member of a guild to use any guild commands.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-								return;
-							}
-							
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Alli))
-							{
-								// Message: You do not have sufficient privileges in your guild to use that command.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-								return;
-							}
+							MemberGuild(client);
+							MemberRank(client, Guild.eRank.Alli);
 							
 							GamePlayer obj = client.Player.TargetObject as GamePlayer;
 							
@@ -2821,21 +2617,8 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "acancel":
 						{
-							// Check to make sure the player is part of a guild
-							if (client.Player.Guild == null)
-							{
-								// Message: You must be a member of a guild to use any guild commands.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-								return;
-							}
-							
-							// Check to make sure the player has sufficient permission
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
-							{
-								// Message: You do not have sufficient privileges in your guild to use that command.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-								return;
-							}
+							MemberGuild(client);
+							MemberRank(client, Guild.eRank.Leader);
 							
 							GamePlayer obj = client.Player.TargetObject as GamePlayer;
 							
@@ -2869,21 +2652,8 @@ namespace DOL.GS.Commands
 					// --------------------------------------------------------------------------------
 					case "adecline":
 						{
-							// Check to make sure the player is part of a guild
-							if (client.Player.Guild == null)
-							{
-								// Message: You must be a member of a guild to use any guild commands.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotMember", null);
-								return;
-							}
-							
-							// Check to make sure the player has sufficient permission
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
-							{
-								// Message: You do not have sufficient privileges in your guild to use that command.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPrivileges", null);
-								return;
-							}
+							MemberGuild(client);
+							MemberRank(client, Guild.eRank.Leader);
 							
 							GamePlayer inviter = client.Player.TempProperties.getProperty<object>("allianceinvite", null) as GamePlayer;
 							client.Player.TempProperties.removeProperty("allianceinvite");
