@@ -71,6 +71,14 @@ namespace DOL.GS.Commands
 		"AdminCommands.Reload.Syntax.RealmObject",
 		// Message: Reloads all in-game objects in your current region with the 'GameStaticItem' type and matching the realm specified.
 		"AdminCommands.Reload.Usage.RealmObject",
+		// Syntax: /reload npctemplates
+		"AdminCommands.Reload.Syntax.NPCTemplates",
+		// Message: Reloads all database objects from the 'NpcTemplate' table.
+		"AdminCommands.Reload.Usage.NPCTemplates",
+		// Message: /reload realm
+		"AdminCommands.Reload.Syntax.Realm",
+		// Message: Displays all accepted values for '/reload mob realm' and '/reload object realm' subcommands.
+		"AdminCommands.Reload.Usage.Realm",
 		// Syntax: /reload specs
 		"AdminCommands.Reload.Syntax.Specs",
 		// Message: Reloads all database objects from the 'Specialization' table.
@@ -82,15 +90,7 @@ namespace DOL.GS.Commands
 		// Syntax: /reload teleports
 		"AdminCommands.Reload.Syntax.Teleports",
 		// Message: Reloads all database objects from the 'Teleport' table.
-		"AdminCommands.Reload.Usage.Teleports",
-		// Syntax: /reload npctemplates
-		"AdminCommands.Reload.Syntax.NPCTemplates",
-		// Message: Reloads all database objects from the 'NpcTemplate' table.
-		"AdminCommands.Reload.Usage.NPCTemplates",
-		// Message: /reload realm
-		"AdminCommands.Reload.Syntax.Realm",
-		// Message: Displays all accepted values for '/reload mob realm' and '/reload object realm' subcommands.
-		"AdminCommands.Reload.Usage.Realm")]
+		"AdminCommands.Reload.Usage.Teleports")]
 	public class ReloadCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -207,10 +207,11 @@ namespace DOL.GS.Commands
 				case "npctemplates":
 				{
 					NpcTemplateMgr.Reload();
-					client.Out.SendMessage("NPC templates reloaded.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					
 					// Message: Reload complete! All NPC Templates have been added to the live cache.
 					ChatUtil.SendTypeMessage((int)eMsg.Debug, client, "AdminCommands.Reload.Msg.NPCTempReloaded", null);
-					log.Info("NPC templates reloaded.");
+					
+					log.Info("[SUCCESS] - NPC templates reloaded.");
 					return;
 				}
 				case "object":
@@ -310,7 +311,7 @@ namespace DOL.GS.Commands
 					int count = SkillBase.LoadSpecializations();
 					// Message: Reload complete! {0} specializations have been added to the live cache.
 					ChatUtil.SendTypeMessage((int)eMsg.Debug, client, "AdminCommands.Reload.Msg.SpecsReloaded", count);
-					log.Info(string.Format("{0} specializations loaded.", count));
+					log.Info(string.Format("[SUCCESS] - Reloaded DB and {0} specializations loaded!", count));
 					return;
 				}
 				case "spells":
@@ -319,7 +320,7 @@ namespace DOL.GS.Commands
 					int loaded = SkillBase.ReloadSpellLines();
 					// Message: Reload complete! {0} spells from all spell lines have been added to the live cache.
 					ChatUtil.SendTypeMessage((int)eMsg.Debug, client, "AdminCommands.Reload.Msg.SpellsReloaded", loaded);
-					log.Info(string.Format("Reloaded db spells and {0} spells for all spell lines !", loaded));
+					log.Info(string.Format("[SUCCESS] - Reloaded DB and {0} spells for all spell lines!", loaded));
 					return;
 				}
 				case "teleports":
@@ -327,7 +328,7 @@ namespace DOL.GS.Commands
 					WorldMgr.LoadTeleports();
 					// Message: Reload complete! All teleport locations have been added to the live cache.
 					ChatUtil.SendTypeMessage((int)eMsg.Debug, client, "AdminCommands.Reload.Msg.TeleportsReloaded", null);
-					log.Info("Teleport locations reloaded.");
+					log.Info("[SUCCESS] - Teleport locations reloaded.");
 					return;
 				}
 				default:
@@ -344,7 +345,7 @@ namespace DOL.GS.Commands
 		{
 			if (region == 0)
 			{
-				log.Info("Region reload not supported from console.");
+				log.Info("[ERROR] - Region reload not supported from console.");
 				return;
 			}
 
@@ -443,7 +444,7 @@ namespace DOL.GS.Commands
 		{
 			if (region == 0)
 			{
-				log.Info("Region reload not supported from console.");
+				log.Info("[ERROR] - Region reload not supported from console.");
 				return;
 			}
 			
