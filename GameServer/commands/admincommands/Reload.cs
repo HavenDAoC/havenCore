@@ -79,6 +79,10 @@ namespace DOL.GS.Commands
 		"AdminCommands.Reload.Syntax.Realm",
 		// Message: Displays all accepted values for '/reload mob realm' and '/reload object realm' subcommands.
 		"AdminCommands.Reload.Usage.Realm",
+		// Syntax: /reload serverproperties
+		"AdminCommands.Reload.Syntax.Serverproperties",
+		// Message: Reloads the server cache with any changes from the 'serverproperty' table.
+		"AdminCommands.Reload.Usage.Serverproperties",
 		// Syntax: /reload specs
 		"AdminCommands.Reload.Syntax.Specs",
 		// Message: Reloads all database objects from the 'Specialization' table.
@@ -329,6 +333,22 @@ namespace DOL.GS.Commands
 					// Message: Reload complete! All teleport locations have been added to the live cache.
 					ChatUtil.SendTypeMessage((int)eMsg.Debug, client, "AdminCommands.Reload.Msg.TeleportsReloaded", null);
 					log.Info("[SUCCESS] - Teleport locations reloaded.");
+					return;
+				}
+				case "serverproperties":
+				{
+					// Dated code for people still using XML setups instead of MySQL
+					if (GameServer.Instance.Configuration.DBType == DOL.Database.Connection.ConnectionType.DATABASE_XML)
+					{
+						// Message: XML values are cached and cannot be updated. Server properties may only be reloaded using MySQL.
+						ChatUtil.SendTypeMessage((int)eMsg.Debug, client, "AdminCommands.Reload.Err.XMLOld", null);
+						return;
+					}
+			
+					ServerProperties.Properties.Reload();
+					
+					// Message: Values from the 'serverproperty' table have been reloaded into the server's cache!
+					ChatUtil.SendTypeMessage((int)eMsg.Debug, client, "AdminCommands.Reload.Msg.PropsRefreshed", null);
 					return;
 				}
 				default:

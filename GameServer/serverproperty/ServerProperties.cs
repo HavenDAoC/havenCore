@@ -3038,7 +3038,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Refreshes the server properties from the DB
 		/// </summary>
-		public static void Refresh()
+		public static void Reload()
 		{
 			log.Info("Refreshing server properties...");
 			InitProperties();

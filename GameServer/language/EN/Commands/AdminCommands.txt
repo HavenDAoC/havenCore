@@ -153,6 +153,8 @@ AdminCommands.Reload.Syntax.NameObject:                 /reload object name <obj
 AdminCommands.Reload.Usage.NameObject:                  Reloads all in-game objects in your current region with the 'GameStaticItem' type and matching the name specified.
 AdminCommands.Reload.Syntax.RealmObject:                /reload object realm <realm>
 AdminCommands.Reload.Usage.RealmObject:                 Reloads all in-game objects in your current region with the 'GameStaticItem' type and matching the realm specified.
+AdminCommands.Reload.Syntax.Serverproperties:           /reload serverproperties
+AdminCommands.Reload.Usage.Serverproperties:            Reloads the server cache with any changes from the 'serverproperty' table.
 AdminCommands.Reload.Syntax.Specs:                      /reload specs
 AdminCommands.Reload.Usage.Specs:                       Reloads all database objects from the 'Specialization' table.
 AdminCommands.Reload.Syntax.Spells:                     /reload spells
@@ -174,16 +176,10 @@ AdminCommands.Reload.Msg.RemovingReaddingMobs:          Removing and then re-add
 AdminCommands.Reload.Msg.RemovingReaddingObjs:          Removing and then re-adding all objects where {0} = {1}.
 AdminCommands.Reload.Msg.NPCTempReloaded:               Reload complete! All NPC Templates have been added to the live cache.
 AdminCommands.Reload.Msg.SpecsReloaded:                 Reload complete! {0} specializations have been added to the live cache.
-AdminCommands.Reload.Msg.SpellsReloaded:                 Reload complete! {0} spells from all spell lines have been added to the live cache.
-AdminCommands.Reload.Msg.TeleportsReloaded:              Reload complete! All teleport locations have been added to the live cache.
-
-## /serverproperties
-AdminCommands.ServerProp.CmdList.Description:           '/serverproperties' - Refreshes the server's cache with any changes from the 'serverproperty' table.
-AdminCommands.ServerProp.Description:                   Refreshes the server's cache with any changes from the 'serverproperty' table.
-AdminCommands.ServerProp.Syntax.ServerProp:             /serverproperties
-AdminCommands.ServerProp.Usage.ServerProp:              Refreshes the server's cache with any changes from the 'serverproperty' table.
-AdminCommands.ServerProp.XMLOld.Sorry:                  XML values are cached and cannot be updated. Server properties may only be refreshed using MySQL.
-AdminCommands.ServerProp.Msg.PropsRefreshed:            Values from the 'serverproperty' table have been refreshed in the server's cache!
+AdminCommands.Reload.Msg.SpellsReloaded:                Reload complete! {0} spells from all spell lines have been added to the live cache.
+AdminCommands.Reload.Msg.TeleportsReloaded:             Reload complete! All teleport locations have been added to the live cache.
+AdminCommands.Reload.Err.XMLOld:                        XML values are cached and cannot be updated. Server properties may only be reloaded using MySQL.
+AdminCommands.Reload.Msg.PropsRefreshed:                Values from the 'serverproperty' table have been reloaded in the server's cache!
 
 # '/shutdown' Commands
 AdminCommands.Shutdown.Msg.CountdownHours:          A server reboot is scheduled to occur in {0} hours!

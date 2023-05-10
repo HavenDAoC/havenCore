@@ -20,6 +20,7 @@ using System;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
+/* Moved to the '/reload' command
 namespace DOL.GS.Commands
 {
 	/// <summary>
@@ -51,9 +52,10 @@ namespace DOL.GS.Commands
 				return;
 			}
 			
-			ServerProperties.Properties.Refresh();
+			ServerProperties.Properties.Reload();
 			// Message: Atlas' server properties have been refreshed!
 			ChatUtil.SendTypeMessage((int)eMsg.Debug, client, "AdminCommands.ServerProp.Msg.PropsRefreshed", null);
 		}
 	}
 }
+*/
