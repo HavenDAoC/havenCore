@@ -37,7 +37,7 @@ namespace DOL.GS.Commands
 		"PLCommands.Advice.Syntax.AdvChannel",
 		// Message: '/advice' - Lists all online Advisors.
 		"PLCommands.Advice.Syntax.Advice",
-		// '/advisor' - Flags your character as an Advisor (<ADV>) to indicate that you are willing to answer new players' questions.
+		// Message: '/advisor' - Flags your character as an Advisor (<ADV>) to indicate that you are willing to answer new players' questions.
 		"PLCommands.Advisor.Syntax.Advisor",
 		// Message: '/advisor <advisorName> <message>' - Directly messages an Advisor with your question.
 		"PLCommands.Advice.Syntax.SendAdvisor")]
@@ -48,8 +48,8 @@ namespace DOL.GS.Commands
 		{
 			if (client.Player.IsMuted)
 			{
-				// Message: You have been muted by Atlas staff and are not allowed to speak in this channel.
-				ChatUtil.SendGMMessage(client, "GMCommands.Mute.Err.NoSpeakChannel", null);
+				// Message: You have been muted by server staff and are not allowed to speak in this channel.
+				ChatUtil.SendTypeMessage((int)eMsg.Help, client, "GMCommands.Mute.Err.NoSpeakChannel", null);
 				return;
 			}
 
@@ -62,7 +62,7 @@ namespace DOL.GS.Commands
 			if ((GameLoop.GameLoopTime - lastAdviceTick) < slowModeLength && client.Account.PrivLevel == 1) // 60 secs
 			{
 				// Message: You must wait {0} seconds before using this command again.
-				ChatUtil.SendSystemMessage(client, "PLCommands.Advice.List.Wait", Properties.ADVICE_SLOWMODE_LENGTH - (GameLoop.GameLoopTime - lastAdviceTick) / 1000);
+				ChatUtil.SendTypeMessage((int)eMsg.Error, client, "PLCommands.Advice.List.Wait", Properties.ADVICE_SLOWMODE_LENGTH - (GameLoop.GameLoopTime - lastAdviceTick) / 1000);
 				return;
 			}
 
@@ -80,7 +80,7 @@ namespace DOL.GS.Commands
 				TimeSpan showPlayed = TimeSpan.FromSeconds(client.Player.PlayedTime);
 				
 				// Message: The following players are flagged as Advisors:
-				ChatUtil.SendSystemMessage(client, "PLCommands.Advice.List.TheFollowing", null);
+				ChatUtil.SendTypeMessage((int)eMsg.System, client, "PLCommands.Advice.List.TheFollowing", null);
 				
 				foreach (GameClient playerClient in WorldMgr.GetAllClients())
 				{
@@ -94,20 +94,20 @@ namespace DOL.GS.Commands
 						{
 							// Message: {0}) {1}, Level {2} {3} ({4} days, {5} hours, {6} minutes played)
 							// Example: 1) Fen, Level 43 Legendary Grandmaster Basic Crafter (1 days, 3 hours, 31 minutes played)
-							ChatUtil.SendSystemMessage(client, "PLCommands.Advice.List.Result", total, playerClient.Player.Name, playerClient.Player.Level, playerClient.Player.CraftTitle.GetValue(playerClient.Player, client.Player), showPlayed.Days, showPlayed.Hours, showPlayed.Minutes);
+							ChatUtil.SendTypeMessage((int)eMsg.System, client, "PLCommands.Advice.List.Result", total, playerClient.Player.Name, playerClient.Player.Level, playerClient.Player.CraftTitle.GetValue(playerClient.Player, client.Player), showPlayed.Days, showPlayed.Hours, showPlayed.Minutes);
 						}
 						else
 							// Message: "{0}) {1}, Level {2} {3} ({4} days, {5} hours, {6} minutes played)"
 							// Example: 1) Kelt, Level 50 Bard (14 days, 3 hours, 31 minutes played)
-							ChatUtil.SendSystemMessage(client, "PLCommands.Advice.List.Result", total, playerClient.Player.Name, playerClient.Player.Level, playerClient.Player.CharacterClass.Name, showPlayed.Days, showPlayed.Hours, showPlayed.Minutes);
+							ChatUtil.SendTypeMessage((int)eMsg.System, client, "PLCommands.Advice.List.Result", total, playerClient.Player.Name, playerClient.Player.Level, playerClient.Player.CharacterClass.Name, showPlayed.Days, showPlayed.Hours, showPlayed.Minutes);
 					}
 				}
 				if (total == 1)
 					// Message: There is 1 Advisor online!
-					ChatUtil.SendSystemMessage(client, "PLCommands.Advice.List.1AdvisorOn", null);
+					ChatUtil.SendTypeMessage((int)eMsg.System, client, "PLCommands.Advice.List.1AdvisorOn", null);
 				else
 					// Message: There are {0} Advisors online!
-					ChatUtil.SendSystemMessage(client, "PLCommands.Advice.List.AdvisorsOn", total);
+					ChatUtil.SendTypeMessage((int)eMsg.System, client, "PLCommands.Advice.List.AdvisorsOn", null);
 				return;
 			}
 			foreach (GameClient playerClient in WorldMgr.GetAllClients())
@@ -118,7 +118,7 @@ namespace DOL.GS.Commands
 				    playerClient.Account.PrivLevel > 1)
 				{
 					// Message: [ADVICE {0}] {1}: {2}
-					ChatUtil.SendAdviceMessage(playerClient, "Social.SendAdvice.Msg.Channel", getRealmString(client.Player.Realm), client.Player.Name, msg);
+					ChatUtil.SendTypeMessage((int)eMsg.Advice, client, "Social.SendAdvice.Msg.Channel", getRealmString(client.Player.Realm), client.Player.Name, msg);
 				}
 
 			}

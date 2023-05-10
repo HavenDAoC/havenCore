@@ -376,8 +376,8 @@ GMCommands.Merchant.Type.Changed:			Merchant type changed to {0}.
 ## /mob
 
 ## /mute
-GMCommands.Mute.Err.NoSpeakChannel:                   You have been muted by Atlas staff and are not allowed to speak in this channel.
-GMCommands.Mute.Err.NoUseCommand:                     You have been muted by Atlas staff and are not allowed to use this command.
+GMCommands.Mute.Err.NoSpeakChannel:                   You have been muted by server staff and are not allowed to speak in this channel.
+GMCommands.Mute.Err.NoUseCommand:                     You have been muted by server staff and are not allowed to use this command.
 
 ## /team or /te
 GMCommands.Header.Command.Team:                         <----- '/team' Commands (plvl 2) ----->
