@@ -228,6 +228,32 @@ namespace DOL.GS.Commands
 				return;
 		}
 
+		private void IsInAlli(GameClient client)
+		{
+			// Check to make sure the client executing the command is in an alliance
+			if (client.Player.Guild.Alliance == null)
+			{
+				// Message: You must be in an alliance to do that!
+				ChatUtil.SendTypeMessage((int)eMsg.Alliance, client, "Scripts.Player.Guild.AllianceNotMember", null);
+				return;
+			}
+		}
+		
+		/// <summary>
+		/// Checks the client to make sure they're a member of the guild leading an alliance.
+		/// </summary>
+		/// <param name="client"></param>
+		private void IsAlliLeader(GameClient client)
+		{
+			// Check to make sure the client executing the command is leader of an alliance
+			if (client.Player.Guild.GuildID != client.Player.Guild.Alliance.Dballiance.DBguildleader.GuildID)
+			{
+				// Message: You must be the leader of the alliance to use this command.
+				ChatUtil.SendTypeMessage((int)eMsg.Alliance, client, "Scripts.Player.Guild.AllianceNotLeader", null);
+				return;
+			}
+		}
+
 		/// <summary>
 		/// Handles all guild commands.
 		/// </summary>
@@ -918,10 +944,10 @@ namespace DOL.GS.Commands
 							}
 
 							// Make sure there is a message and the player has access to the alliance chat channel
-							if (client.Player.Guild.alliance != null && client.Player.GuildRank.AcHear && !Util.IsEmpty(client.Player.Guild.alliance.Dballiance.Motd))
+							if (client.Player.Guild.Alliance != null && client.Player.GuildRank.AcHear && !Util.IsEmpty(client.Player.Guild.Alliance.Dballiance.Motd))
 							{
 								// Message: Alliance Message: {0}
-								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.InfoaMotd", client.Player.Guild.alliance.Dballiance.Motd);
+								ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.InfoaMotd", client.Player.Guild.Alliance.Dballiance.Motd);
 							}
 								
 							// If the guild has a claimed keep, then mention it
@@ -2103,7 +2129,7 @@ namespace DOL.GS.Commands
 							{
 								if (args[2] == "alliance" || args[2] == "a")
 								{
-									foreach (Guild guild in client.Player.Guild.alliance.Guilds)
+									foreach (Guild guild in client.Player.Guild.Alliance.Guilds)
 									{
 										lock (guild.GetListOfOnlineMembers())
 										{
@@ -2396,8 +2422,8 @@ namespace DOL.GS.Commands
 						}
 							
 						message = String.Join(" ", args, 2, args.Length - 2);
-						client.Player.Guild.alliance.Dballiance.Motd = message;
-						GameServer.Database.SaveObject(client.Player.Guild.alliance.Dballiance);
+						client.Player.Guild.Alliance.Dballiance.Motd = message;
+						GameServer.Database.SaveObject(client.Player.Guild.Alliance.Dballiance);
 							
 						// Message: You have set the Alliance Message of the Day (MODT) for the guild.
 						ChatUtil.SendTypeMessage((int)eMsg.Guild, client, "Scripts.Player.Guild.AMotdSet", null);
@@ -2441,7 +2467,7 @@ namespace DOL.GS.Commands
 							Alliance alliance = null;
 							if (client.Player.Guild.AllianceId != null && client.Player.Guild.AllianceId != string.Empty)
 							{
-								alliance = client.Player.Guild.alliance;
+								alliance = client.Player.Guild.Alliance;
 							}
 							else
 							{
@@ -2486,6 +2512,8 @@ namespace DOL.GS.Commands
 						{
 							MemberGuild(client);
 							MemberRank(client, Guild.eRank.Alli);
+							IsInAlli(client);
+							IsAlliLeader(client);
 							
 							GamePlayer obj = client.Player.TargetObject as GamePlayer;
 							
@@ -2503,7 +2531,7 @@ namespace DOL.GS.Commands
 								return;
 							}
 							
-							if (obj.Guild.alliance != null)
+							if (obj.Guild.Alliance != null)
 							{
 								// Message: That guild already has an alliance.
 								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.AllianceAlreadyOther", null);
@@ -2519,9 +2547,9 @@ namespace DOL.GS.Commands
 							
 							if (ServerProperties.Properties.ALLIANCE_MAX != -1)
 							{
-								if (client.Player.Guild.alliance != null)
+								if (client.Player.Guild.Alliance != null)
 								{
-									if (client.Player.Guild.alliance.Guilds.Count + 1 > ServerProperties.Properties.ALLIANCE_MAX)
+									if (client.Player.Guild.Alliance.Guilds.Count + 1 > ServerProperties.Properties.ALLIANCE_MAX)
 									{
 										// Message: You cannot invite that guild to your alliance, as your alliance has already reached the maximum allowable number of guilds.
 										ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.AllianceMax", null);
@@ -2551,6 +2579,8 @@ namespace DOL.GS.Commands
 						{
 							MemberGuild(client);
 							MemberRank(client, Guild.eRank.Alli);
+							IsInAlli(client);
+							IsAlliLeader(client);
 							
 							GamePlayer obj = client.Player.TargetObject as GamePlayer;
 							
@@ -2568,23 +2598,16 @@ namespace DOL.GS.Commands
 								return;
 							}
 							
-							if (obj.Guild.alliance != client.Player.Guild.alliance)
+							if (obj.Guild.Alliance != client.Player.Guild.Alliance)
 							{
 								// Message: You must be a member of the same alliance to use this command.
 								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NotInSameAlliance", null);
 								return;
 							}
 							
-							if (client.Player.Guild.alliance.Dballiance.LeaderGuildID != client.Player.Guild.GuildID)
-							{
-								// Message: You must be the leader of the alliance to use this command.
-								ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.AllianceNotLeader", null);
-								return;
-							}
-							
-							client.Player.Guild.alliance.Dballiance.AllianceName = obj.Guild.Name;
-							client.Player.Guild.alliance.Dballiance.LeaderGuildID = obj.Guild.GuildID;
-							GameServer.Database.SaveObject(client.Player.Guild.alliance.Dballiance);
+							client.Player.Guild.Alliance.Dballiance.AllianceName = obj.Guild.Name;
+							client.Player.Guild.Alliance.Dballiance.LeaderGuildID = obj.Guild.GuildID;
+							GameServer.Database.SaveObject(client.Player.Guild.Alliance.Dballiance);
 							
 							// Message: You have made {0} the new leader of the alliance!
 							ChatUtil.SendTypeMessage((int)eMsg.Alliance, client, "Scripts.Player.Guild.NewLeaderAlliance", null);
@@ -2618,7 +2641,9 @@ namespace DOL.GS.Commands
 					case "acancel":
 						{
 							MemberGuild(client);
-							MemberRank(client, Guild.eRank.Leader);
+							MemberRank(client, Guild.eRank.Alli);
+							IsInAlli(client);
+							IsAlliLeader(client);
 							
 							GamePlayer obj = client.Player.TargetObject as GamePlayer;
 							
@@ -2640,7 +2665,7 @@ namespace DOL.GS.Commands
 							ChatUtil.SendTypeMessage((int)eMsg.Alliance, client, "Scripts.Player.Guild.AllianceAnsCancel", null);
 							
 							// Message: The alliance offer has been canceled.
-							ChatUtil.SendTypeMessage((int)eMsg.Alliance, client, "Scripts.Player.Guild.AllianceOfferCancel", null);
+							ChatUtil.SendTypeMessage((int)eMsg.Alliance, obj, "Scripts.Player.Guild.AllianceOfferCancel", null);
 							return;
 						}
 					#endregion Alliance Invite Cancel
@@ -2654,44 +2679,31 @@ namespace DOL.GS.Commands
 						{
 							MemberGuild(client);
 							MemberRank(client, Guild.eRank.Leader);
-							
-							GamePlayer inviter = client.Player.TempProperties.getProperty<object>("allianceinvite", null) as GamePlayer;
+
+							GamePlayer invitee = client.Player.TempProperties.getProperty<object>("allianceinvite", null) as GamePlayer;
 							client.Player.TempProperties.removeProperty("allianceinvite");
 							
 							// Message: You decline the alliance offer.
 							ChatUtil.SendTypeMessage((int)eMsg.Alliance, client, "Scripts.Player.Guild.AllianceDeclined", null);
 							// Message: The alliance offer has been declined.
-							ChatUtil.SendTypeMessage((int)eMsg.Alliance, inviter, "Scripts.Player.Guild.AllianceDeclinedOther", null);
+							ChatUtil.SendTypeMessage((int)eMsg.Alliance, invitee, "Scripts.Player.Guild.AllianceDeclinedOther", null);
 							
 							return;
 						}
 					#endregion Alliance Invite Decline
-						#region Alliance Remove
-						// --------------------------------------------------------------------------------
-						// AREMOVE
-						// --------------------------------------------------------------------------------
+					#region Alliance Remove
+					// --------------------------------------------------------------------------------
+					// AREMOVE
+					// '/gc aremove'
+					// Removes an entire guild from your alliance, identified by name.
+					// --------------------------------------------------------------------------------
 					case "aremove":
 						{
-							if (client.Player.Guild == null)
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Alli))
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							if (client.Player.Guild.alliance == null)
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceNotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							if (client.Player.Guild.GuildID != client.Player.Guild.alliance.Dballiance.DBguildleader.GuildID)
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceNotLeader"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
+							MemberGuild(client);
+							MemberRank(client, Guild.eRank.Alli);
+							IsInAlli(client);
+							IsAlliLeader(client);
+							
 							if (args.Length > 3)
 							{
 								if (args[2] == "alliance")
@@ -2699,41 +2711,63 @@ namespace DOL.GS.Commands
 									try
 									{
 										int index = Convert.ToInt32(args[3]);
-										Guild myguild = (Guild)client.Player.Guild.alliance.Guilds[index];
+										Guild myguild = (Guild)client.Player.Guild.Alliance.Guilds[index];
 										if (myguild != null)
-											client.Player.Guild.alliance.RemoveGuild(myguild);
+											client.Player.Guild.Alliance.RemoveGuild(myguild);
 									}
 									catch
 									{
-										client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceIndexNotVal"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										// Message: The alliance index is not a valid number.
+										ChatUtil.SendTypeMessage((int)eMsg.Debug, client, "Scripts.Player.Guild.AllianceIndexNotVal", null);
 									}
 
 								}
-								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildARemove"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildARemoveAlli"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+								
+								// Message: '/gc aremove <guildName>' - Removes an entire guild from your alliance, identified by name.
+								ChatUtil.SendTypeMessage((int)eMsg.Alliance, client, "Scripts.Player.Guild.Help.GuildARemove", null);
+								// Message: '/gc aremove alliance <guild#>' - Removes a guild from your alliance, identified by number.
+								ChatUtil.SendTypeMessage((int)eMsg.Alliance, client, "Scripts.Player.Guild.Help.GuildARemoveAlli", null);
 								return;
 							}
 							else
 							{
 								GamePlayer obj = client.Player.TargetObject as GamePlayer;
+								
+								// Check to make sure a player is being targeted.
 								if (obj == null)
 								{
-									client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPlayerSelected"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									// Message: You must target a player or provide a player name.
+									ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.NoPlayerSelected", null);
 									return;
 								}
-								if (obj.Guild == null)
+								
+								// Check to make sure the target of the command is in a guild and a member of the client's alliance
+								if (obj.Guild == null || obj.Guild.Alliance != client.Player.Guild.Alliance)
 								{
-									client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceMemNotSel"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									// Message: You must select a player from the same alliance.
+									ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.AllianceMemNotSel", null);
 									return;
 								}
-								if (obj.Guild.alliance != client.Player.Guild.alliance)
+								
+								// Inviting player must have sufficient rank privileges in the guild to invite new members
+								if (!obj.Guild.HasRank(obj, Guild.eRank.Leader))
 								{
-									client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceMemNotSel"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									// Message: You must target or specify a guild's Guildmaster to perform this command.
+									ChatUtil.SendTypeMessage((int)eMsg.Error, client, "Scripts.Player.Guild.AllianceTargetGM", null);
 									return;
 								}
-								client.Player.Guild.alliance.RemoveGuild(obj.Guild);
+								
+								// Message: You have removed {0} from your alliance.
+								ChatUtil.SendTypeMessage((int)eMsg.Alliance, client, "Scripts.Player.Guild.AllianceRemoveGuild", obj.Guild.Name);
+								// Message: Your guild has been removed from its current alliance.
+								ChatUtil.SendTypeMessage((int)eMsg.Alliance, client, "Scripts.Player.Guild.GuildRemovedAlliance", null);
+								
+								// Complete the action
+								client.Player.Guild.Alliance.RemoveGuild(obj.Guild);
+								obj.Guild.UpdateGuildWindow();
 							}
 							client.Player.Guild.UpdateGuildWindow();
+							
 							return;
 						}
 						#endregion
@@ -2753,12 +2787,12 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							if (client.Player.Guild.alliance == null)
+							if (client.Player.Guild.Alliance == null)
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AllianceNotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							client.Player.Guild.alliance.RemoveGuild(client.Player.Guild);
+							client.Player.Guild.Alliance.RemoveGuild(client.Player.Guild);
 							client.Player.Guild.UpdateGuildWindow();
 							return;
 						}
@@ -3241,7 +3275,7 @@ namespace DOL.GS.Commands
 			player.TempProperties.removeProperty("allianceinvite");
 
 			// Trigger if the guild is not part of an alliance
-			if (player.Guild.alliance == null)
+			if (player.Guild.Alliance == null)
 			{
 				// Create a new alliance with the inviting guild as leader
 				Alliance alli = new Alliance();
@@ -3252,13 +3286,13 @@ namespace DOL.GS.Commands
 				dballi.Motd = "";
 				alli.Dballiance = dballi;
 				alli.Guilds.Add(invitee.Guild);
-				player.Guild.alliance = alli;
-				player.Guild.AllianceId = player.Guild.alliance.Dballiance.ObjectId;
+				player.Guild.Alliance = alli;
+				player.Guild.AllianceId = player.Guild.Alliance.Dballiance.ObjectId;
 			}
 			
 			// Adds the guild to the alliance
-			invitee.Guild.alliance.AddGuild(player.Guild);
-			invitee.Guild.alliance.SaveIntoDatabase();
+			invitee.Guild.Alliance.AddGuild(player.Guild);
+			invitee.Guild.Alliance.SaveIntoDatabase();
 			player.Guild.UpdateGuildWindow();
 			invitee.Guild.UpdateGuildWindow();
 		}

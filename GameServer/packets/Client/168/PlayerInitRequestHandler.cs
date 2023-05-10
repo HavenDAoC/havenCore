@@ -367,11 +367,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 							LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerInitRequestHandler.OfficerMessage", player.Guild.Omotd),
 							eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
-					if (player.Guild.alliance != null && player.GuildRank.AcHear && player.Guild.alliance.Dballiance.Motd != "")
+					if (player.Guild.Alliance != null && player.GuildRank.AcHear && player.Guild.Alliance.Dballiance.Motd != "")
 					{
 						player.Out.SendMessage(
 							LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerInitRequestHandler.AllianceMessage",
-							                           player.Guild.alliance.Dballiance.Motd), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							                           player.Guild.Alliance.Dballiance.Motd), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 				}
 				catch (Exception ex)

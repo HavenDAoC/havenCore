@@ -109,7 +109,7 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			if (client.Player.Guild.alliance == null)
+			if (client.Player.Guild.Alliance == null)
 			{
 				DisplayMessage(client, "Your guild doesn't belong to any alliance.");
 				return;
@@ -128,7 +128,7 @@ namespace DOL.GS.Commands
 			}
 
 			string message = "[Alliance] " + client.Player.Name + ": \"" + string.Join(" ", args, 1, args.Length - 1) + "\"";
-			foreach (Guild gui in client.Player.Guild.alliance.Guilds)
+			foreach (Guild gui in client.Player.Guild.Alliance.Guilds)
 			{
 				foreach (GamePlayer ply in gui.GetListOfOnlineMembers())
 				{

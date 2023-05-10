@@ -99,8 +99,8 @@ namespace DOL.GS.Commands
                                 //Lets check if the client and it's targeted player are in the same alliance.
 								if (client.Player.Guild != null)
 								{
-									if (client.Player.Guild.alliance != null &&
-										client.Player.Guild.alliance.Contains(assistPlayer.Guild))
+									if (client.Player.Guild.Alliance != null &&
+										client.Player.Guild.Alliance.Contains(assistPlayer.Guild))
 									{
 										//We cannot assist our target when it has no target.
 										if (!HasTarget(client, assistPlayer))
@@ -253,7 +253,7 @@ namespace DOL.GS.Commands
                                     GamePlayer targetPlayer = client.Player.TargetObject as GamePlayer;
 
                                     //Lets check if the client and it's targeted player are in the same alliance.
-									if (client.Player.Guild != null && client.Player.Guild.alliance != null && client.Player.Guild.alliance.Contains(targetPlayer.Guild))
+									if (client.Player.Guild != null && client.Player.Guild.Alliance != null && client.Player.Guild.Alliance.Contains(targetPlayer.Guild))
 									{
 										//We cannot assist our target when it has no target
 										if (!HasTarget(client, targetPlayer))
@@ -331,7 +331,7 @@ namespace DOL.GS.Commands
                                             GamePlayer targetPlayer = targetPet.Owner as GamePlayer;
 
                                             //Lets check if the client and it's targeted pets owner are in the same alliance.
-											if (client.Player.Guild != null && client.Player.Guild.alliance != null && client.Player.Guild.alliance.Contains(targetPlayer.Guild))
+											if (client.Player.Guild != null && client.Player.Guild.Alliance != null && client.Player.Guild.Alliance.Contains(targetPlayer.Guild))
 											{
 												//We cannot assist our target when it has no target
 												if (!HasTarget(client, targetPet))
@@ -445,7 +445,7 @@ namespace DOL.GS.Commands
                                         }
 
                                         //Is the guard of one of our alliance guilds?
-                                        if(client.Player.Guild.alliance.Contains(targetedGuardGuild))
+                                        if(client.Player.Guild.Alliance.Contains(targetedGuardGuild))
                                         {
                                             //We cannot assist our target when it has no target
                                             if (!HasTarget(client, targetGuard))

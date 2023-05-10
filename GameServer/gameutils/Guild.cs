@@ -36,6 +36,9 @@ namespace DOL.GS
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		/// <summary>
+		/// The individual privileges that may be assigned to each guild's rank.
+		/// </summary>
 		public enum eRank : int
 		{
 			Emblem,
@@ -401,7 +404,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the guild alliance
 		/// </summary>
-		public Alliance alliance
+		public Alliance Alliance
 		{
 			get 
 			{ 

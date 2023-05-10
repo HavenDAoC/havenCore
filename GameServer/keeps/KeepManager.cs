@@ -624,9 +624,9 @@ namespace DOL.GS.Keeps
 				}
 
 				//guild alliance
-				if (keep.Guild != null && keep.Guild.alliance != null)
+				if (keep.Guild != null && keep.Guild.Alliance != null)
 				{
-					if (keep.Guild.alliance.Guilds.Contains(target.Guild))
+					if (keep.Guild.Alliance.Guilds.Contains(target.Guild))
 						return false;
 				}
 

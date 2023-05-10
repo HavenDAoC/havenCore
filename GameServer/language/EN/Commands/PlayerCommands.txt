@@ -359,7 +359,7 @@ Scripts.Player.Guild.Help.GuildAlli:			            '/gc alliance' - Shows inform
 Scripts.Player.Guild.Help.GuildAMotd:			            '/gc amotd <text>' - Sets the message of the day (MOTD) for your alliance.	
 Scripts.Player.Guild.Help.GuildALeader:			            '/gc aleader' - Promotes another guild to alliance leader. Only one alliance leader may exist at a time.
 Scripts.Player.Guild.Help.GuildARemove:			            '/gc aremove <guildName>' - Removes an entire guild from your alliance, identified by name.
-Scripts.Player.Guild.Help.GuildARemoveAlli:		            '/gc aremove alliance <guild#>' - Removes a guild from your alliance, identified by number.	
+Scripts.Player.Guild.Help.GuildARemoveAlli:		            '/gc aremove alliance <guild#>' - Removes a guild from your alliance, identified by number.
 Scripts.Player.Guild.Help.GuildBuff:			            '/gc buff < bps | crafting | rps | xp >' - Activates a guild-wide buff for the desired 5% bonus type. Each activation lasts 24 hours and costs 1000 Merit Points.
 Scripts.Player.Guild.Help.GuildClaim:			            '/gc claim' - Claims an available keep for your guild. This must be done on an unclaimed keep and within a set distance of the keep.
 Scripts.Player.Guild.Help.GuildDecline:			            '/gc decline' - Declines an active invitation to join a guild.
@@ -422,7 +422,7 @@ Scripts.Player.Guild.AllianceOfferCancel:			        The alliance offer has been 
 Scripts.Player.Guild.AllianceDeclined:			            You decline the alliance offer.
 Scripts.Player.Guild.AllianceDeclinedOther:		            The alliance offer has been declined.
 Scripts.Player.Guild.AllianceDisabled:			            Alliances are disabled on this server.
-Scripts.Player.Guild.AllianceIndexNotVal:		The alliance index is not a valid number.
+Scripts.Player.Guild.AllianceIndexNotVal:		            [ERROR] - The alliance index is not a valid number.
 Scripts.Player.Guild.AllianceInfo:			                Alliance info for {0}:
 Scripts.Player.Guild.AllianceInvite:			            You have invited {0} to join your alliance. Use '/gc acancel' to cancel the invitation.
 Scripts.Player.Guild.AllianceInvited:			            Your guild has been invited to enter an alliance with {0}. Use '/gc aaccept' to accept the invitation, or '/gc adecline' to decline.
@@ -430,13 +430,16 @@ Scripts.Player.Guild.AllianceLeader:			            Alliance leader: {0}
 Scripts.Player.Guild.AllianceMax:			                You cannot invite that guild to your alliance, as your alliance has already reached the maximum allowable number of guilds.
 Scripts.Player.Guild.AllianceMember:			            {0} - {1}
 Scripts.Player.Guild.AllianceMembers:			            Alliance members:
-Scripts.Player.Guild.AllianceMemNotSel:			You must select a player from the same alliance.
+Scripts.Player.Guild.AllianceMemNotSel:			            You must select a player from the same alliance.
 Scripts.Player.Guild.AllianceNoGMSelected:		            You must target or specify the Guildmaster for the guild you want to invite.
+Scripts.Player.Guild.AllianceTargetGM:                      You must target or specify a guild's Guildmaster to perform this command.
 Scripts.Player.Guild.AllianceNoLeader:			            No alliance leader
 Scripts.Player.Guild.NotInSameAlliance:                     You must be a member of the same alliance to use this command.
 Scripts.Player.Guild.AllianceNotLeader:			            You must be the leader of the alliance to use this command.
 Scripts.Player.Guild.NewLeaderAlliance:                     You have made {0} the new leader of the alliance!
-Scripts.Player.Guild.AllianceNotMember:			You must be in an alliance to do that!
+Scripts.Player.Guild.AllianceNotMember:			            You must be in an alliance to do that!
+Scripts.Player.Guild.AllianceRemoveGuild:                   You have removed {0} from your alliance.
+Scripts.Player.Guild.GuildRemovedAlliance:                  Your guild has been removed from its current alliance.
 Scripts.Player.Guild.AlreadyInGuild:			{0} is already a member of a guild.
 Scripts.Player.Guild.AlreadyInYourGuild:        {0} is already a member of you guild.
 Scripts.Player.Guild.AlreadyInGuild:			They are already a member of a guild.

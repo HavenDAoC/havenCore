@@ -502,7 +502,7 @@ namespace DOL.GS
 					{
 						var gui = GetGuildByName(mydbgui.GuildName);
 						myalliance.Guilds.Add(gui);
-						gui.alliance = myalliance;
+						gui.Alliance = myalliance;
 					}
 				}
 			}
