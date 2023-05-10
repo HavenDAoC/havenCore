@@ -25,9 +25,9 @@ namespace DOL.GS.Commands
 	[CmdAttribute(
 		"&afk",
 		ePrivLevel.Player,
-		// Displays next to the command when '/cmd' is entered
-		"Enables/disables a flag that indicates you are \"away from keyboard,\" and allows you to attach a message that will auto-send to any player that uses '/send' to you (e.g., '/afk Bio break').",
-		// Syntax: '/afk' - Enables/disables a flag that indicates you are "away from keyboard," and allows you to attach a message that will auto-send to any player that uses '/send' to you (e.g., '/afk Bio break').
+		// Message: Enables/Disables a flag to indicate to other players that you are "away from keyboard".
+		"PLCommands.AFK.Description",
+		// Syntax: '/afk' - Enables/disables a flag that indicates you are "away from keyboard" to any play that performs a '/who' search or uses '/send' on you.
 		"PLCommands.AFK.Syntax.AFK",
 		// Syntax: '/afk <message>' - Sets yourself as "away from keyboard," and attaches a message that will auto-send to any player that uses '/send' to you.
 		"PLCommands.AFK.Syntax.MessageAFK")]
@@ -39,7 +39,7 @@ namespace DOL.GS.Commands
 			{
 				client.Player.TempProperties.removeProperty(GamePlayer.AFK_MESSAGE);
 				// Message: Your AFK flag is now off.
-				ChatUtil.SendErrorMessage(client, "PLCommands.AFK.Msg.Off", null);
+				ChatUtil.SendTypeMessage((int)eMsg.Important, client, "PLCommands.AFK.Msg.Off", null);
 			}
 			else
 			{
@@ -54,7 +54,7 @@ namespace DOL.GS.Commands
 				}
 				
 				// Message: Your AFK flag is now on.
-				ChatUtil.SendErrorMessage(client, "PLCommands.AFK.Msg.On", null);
+				ChatUtil.SendTypeMessage((int)eMsg.Important, client, "PLCommands.AFK.Msg.On", null);
 			}
 		}
 	}

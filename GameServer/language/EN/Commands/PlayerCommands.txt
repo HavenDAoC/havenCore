@@ -48,10 +48,11 @@ PLCommands.Advisor.Err.NoMessage:                       You must include a messa
 PLCommands.Advisor.Err.MinimumReqs:                     You do not yet meet the requirements to become an Advisor. Class Advisors must have at least 15 hours of played time while at level 50. Tradeskill Advisors must have Legendary status in a primary tradeskill, '/setwho craft' enabled, and a minimum of 15 total hours played.
 
 ## /afk
-PLCommands.AFK.Syntax.AFK:              '/afk' - '/afk' - Enables/disables a flag that indicates you are "away from keyboard," and allows you to attach a message that will auto-send to any player that uses '/send' to you (e.g., '/afk Bio break').
-PLCommands.AFK.Syntax.MessageAFK:       '/afk <message>' - Sets yourself as "away from keyboard," and attaches a message that will auto-send to any player that uses '/send' to you.
-PLCommands.AFK.Msg.Off:				Your AFK flag is now off.
-PLCommands.AFK.Msg.On:					Your AFK flag is now on.
+PLCommands.AFK.Description:                             Enables/Disables a flag to indicate to other players that you are "away from keyboard".
+PLCommands.AFK.Syntax.AFK:                              '/afk' - Enables/disables a flag that indicates you are "away from keyboard" to any player that performs a '/who' search or uses '/send' on you.
+PLCommands.AFK.Syntax.MessageAFK:                       '/afk <message>' - Sets yourself as "away from keyboard," and attaches a message that will auto-send to any player that uses '/send' to you.
+PLCommands.AFK.Msg.Off:				                    Your AFK flag is now off.
+PLCommands.AFK.Msg.On:					                Your AFK flag is now on.
 
 ## /anonymous
 PLCommands.Anonymous.Syntax.Anon:                   '/anonymous' or '/anon' - Enables/disables anonymous mode, which hides you from player searches (e.g., '/who').
